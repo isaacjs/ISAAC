@@ -1,0 +1,235 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<title>ISAAC Physics</title>
+		<script type="text/javascript" src="o3d-webgl/base.js"></script>
+		<script type="text/javascript" src="o3djs/base.js"></script>
+		<script type="text/javascript">
+			o3djs.base.o3d = o3d;
+			o3djs.require('o3djs.webgl');
+			o3djs.require('o3djs.util');
+			o3djs.require('o3djs.math');
+			o3djs.require('o3djs.rendergraph');
+			o3djs.require('o3djs.primitives');
+			
+			// Events - init is called when page is loaded, uninit is called when page is unloaded.
+			window.onload = init;
+			window.onunload = uninit;
+			
+			// Global Variables
+			var g_o3d;
+			var g_math;
+			var g_client;
+			var g_pack;
+			var g_clock = 0;
+			var g_timeMult = 1;
+			var g_cubeTransform;
+			var g_viewInfo;
+			var g_3dRoot;
+			var g_keyPressDelta = 0.1;
+			
+			var Camera = {
+				upArray : [0, 1, 0],
+				currX : 0,
+				currY : 1,
+				currZ : 5,
+				
+				targetX : 0,
+				targetY : 0,
+				targetZ : 0,
+				
+				targetArray : [0, 0, 0],
+				
+				moveLeft: function(amount, drawContext) {
+					this.currX = this.currX - amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				},
+				moveRight: function(amount, drawContext) {
+					this.currX = this.currX + amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				},
+				moveUp: function(amount, drawContext) {
+					this.currY = this.currY + amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				},
+				moveDown: function(amount, drawContext) {
+					this.currY = this.currY - amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				},
+				moveForward: function(amount, drawContext) {
+					this.currZ = this.currZ - amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				},
+				moveBackward: function(amount, drawContext) {
+					this.currZ = this.currZ + amount;
+					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
+					this.targetArray, this.upArray);
+				}
+			};
+			
+			function renderCallback(renderEvent) {
+				g_clock += renderEvent.elapsedTime * g_timeMult;
+				
+				// Rotate the cube around the X and Y axis.
+				//	g_cubeTransform.identity();
+				//	g_cubeTransform.rotateY(1.0 * g_clock);
+				//	g_cubeTransform.rotateX(2.0 * g_clock);
+			}
+			
+			// Handle keyboard input.
+			function keyPressedAction(keyPressed, delta) {
+				var actionTake = false;
+				
+				switch(keyPressed) {
+					case 'a': Camera.moveLeft(delta, g_viewInfo.drawContext);
+					actionTaken = true;
+					break;
+					case 'd': Camera.moveRight(delta, g_viewInfo.drawContext);
+					actionTaken = true;  
+					break;  
+					case 'w': Camera.moveForward(delta, g_viewInfo.drawContext);
+					actionTaken = true;  
+					break;  
+					case 's': Camera.moveBackward(delta, g_viewInfo.drawContext);
+					actionTaken = true;  
+					break;  
+				}  
+				return actionTaken;  
+			}  
+			
+			function keyPressedCallback(event) {  
+				event = event || window.event;  
+				
+				if (event.metaKey)  
+				return;  
+				
+				var keyChar =String.fromCharCode(o3djs.event.getEventKeyChar(event));  
+				keyChar = keyChar.toLowerCase();  
+				
+				if (keyPressedAction(keyChar, g_keyPressDelta)) {  
+					o3djs.event.cancel(event);  
+				}  
+			}  
+			
+			// Create the client area.
+			function init() {
+				o3djs.webgl.makeClients(initStep2);
+			}
+			
+			// Initialise O3D.
+			function initStep2(clientElements) {
+				// Initializes global variables and libraries.
+				var o3dElement = clientElements[0];
+				g_client = o3dElement.client;
+				g_o3d = o3dElement.o3d;
+				g_math = o3djs.math;
+				
+				// Create a pack to manage the objects created.
+				g_pack = g_client.createPack();
+				
+				// Create a root transform.
+				g_3dRoot = g_client.root;
+				
+				// Create the render graph for a view.
+				g_viewInfo = o3djs.rendergraph.createBasicView(
+				g_pack,
+				g_client.root,
+				g_client.renderGraphRoot);
+				
+				// Set up a perspective projection.
+				g_viewInfo.drawContext.projection = g_math.matrix4.perspective(
+				g_math.degToRad(90), // 90 degree fov.
+				g_client.width / g_client.height,
+				1,                  // Near plane.
+				5000);              // Far plane.
+				
+				// Set up our view transformation to look towards the world origin where the
+				// cube is located.
+				g_viewInfo.drawContext.view = g_math.matrix4.lookAt([0, 1, 5],  // eye
+				[0, 0, 0],  // target
+				[0, 1, 0]); // up
+				
+				// Create an Effect object and initialize it using the shaders from the
+				// text area.
+				var redEffect = g_pack.createObject('Effect');
+				var vertexShaderString = document.getElementById('vshader').value;
+				var pixelShaderString = document.getElementById('pshader').value;
+			redEffect.loadVertexShaderFromString(vertexShaderString);
+			redEffect.loadPixelShaderFromString(pixelShaderString);
+			
+			// Create a Material for the mesh.
+			var redMaterial = g_pack.createObject('Material');
+			
+			// Set the material's drawList.
+			redMaterial.drawList = g_viewInfo.performanceDrawList;
+			
+			// Apply our effect to this material. The effect tells the 3D hardware
+			// which shaders to use.
+			redMaterial.effect = redEffect;
+			
+			// Create the cube.
+			var cubeShape = o3djs.primitives.createCube(g_pack, redMaterial, 2, g_math.matrix4.identity());
+			
+			// Parent the cube to a new transform.
+			g_cubeTransform = g_pack.createObject('Transform');
+			g_cubeTransform.addShape(cubeShape);
+			
+			// Parent the cube's transform to the client root.
+			g_cubeTransform.parent = g_client.root;
+			
+			// Set our render callback for animation.
+			// This sets a function to be executed every time a frame is rendered.
+			g_client.setRenderCallback(renderCallback);
+			
+			window.document.onkeypress = keyPressedCallback;
+			}
+			// Cleanup after the page is unloaded.
+			function uninit() {
+			if(g_client) {
+			g_client.cleanup();
+			}
+			}
+			</script>
+			</head>
+			<body>
+			<h1>Rendering Area</h1>
+			<div id="o3d" style="width: 800 px; height: 600px;"></div>
+			
+			<!-- Textarea copied from hellocube -->
+			<div style="display:none">
+			<!-- Start of effect -->
+			<textarea id="vshader">
+			// World View Projection matrix that will transform the input vertices
+			// to screen space.
+			attribute vec4 position;
+			
+			uniform mat4 world;
+			uniform mat4 view;
+			uniform mat4 projection;
+			
+			/**
+			* The vertex shader simply transforms the input vertices to screen space.
+			*/
+			void main() {
+			// Multiply the vertex positions by the worldViewProjection matrix to
+			// transform them to screen space.
+			gl_Position = projection * view * world * position;
+			}
+			</textarea>
+			<textarea id="pshader">
+			/**
+			* This pixel shader just returns the color red.
+			*/
+			void main() {
+			gl_FragColor = vec4(0, 0, 0, 0);  // Red.
+			}
+			</textarea>
+			<!-- End of effect -->
+			</div>
+			</body>
+			</html>						
