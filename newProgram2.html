@@ -38,37 +38,108 @@
 				targetY : 0,
 				targetZ : 0,
 				
-				targetArray : [0, 0, 0],
+				// Camera Update Method
+				update: function(newParams) {
+					var eyeX, eyeY, eyeZ, targetX, targetY, targetZ;
+					for(name in newParams) {
+						switch(name) {
+							case "eyeX": eyeX = newParams["eyeX"];
+							break;
+							case "eyeY": eyeY = newParams["eyeY"];
+							break;
+							case "eyeZ": eyeZ = newParams["eyeZ"];
+							break;
+							case "targetX": targetX = newParams["targetX"];
+							break;
+							case "targetY": targetY = newParams["targetY"];
+							break;
+							case "targetZ": targetZ = newParams["targetZ"];
+							break;
+						}
+					}
+					g_viewInfo.drawContext.view = g_math.matrix4.lookAt([eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
+					[targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], this.upArray);
+				},
 				
-				moveLeft: function(amount, drawContext) {
+				
+				// Camera Movement Methods
+				moveLeft: function(amount) {
+					// Calculate the new position and target values.
 					this.currX = this.currX - amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetX = this.targetX - amount;
+					
+					// Update the camera position.
+					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
 				},
-				moveRight: function(amount, drawContext) {
+				moveRight: function(amount) {
+					// Calculate the new position and target values.
 					this.currX = this.currX + amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetX = this.targetX + amount;
+					
+					// Update the camera position.
+					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
 				},
-				moveUp: function(amount, drawContext) {
+				moveUp: function(amount) {
+					// Calculate the new position and target values.
 					this.currY = this.currY + amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetY = this.targetY + amount;
+					
+					// Update the camera position.
+					this.update({ "eyeY" : this.currY, "targetY" : this.targetY });
 				},
-				moveDown: function(amount, drawContext) {
+				moveDown: function(amount) {
+					// Calculate the new position and target values.
 					this.currY = this.currY - amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetY = this.targetY - amount;
+					
+					// Update the camera position.
+					this.update({ "eyeY" : this.currY, "targetY" : this.targetY });
 				},
-				moveForward: function(amount, drawContext) {
+				moveForward: function(amount) {
+					// Calculate the new position and target values.
 					this.currZ = this.currZ - amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetZ = this.targetZ - amount;
+					
+					// Update the camera position.
+					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
 				},
-				moveBackward: function(amount, drawContext) {
+				moveBackward: function(amount) {
+					// Calculate the new position and target values.
 					this.currZ = this.currZ + amount;
-					drawContext.view = g_math.matrix4.lookAt([this.currX, this.currY, this.currZ],
-					this.targetArray, this.upArray);
+					this.targetZ = this.targetZ + amount;
+					
+					// Update the camera position.
+					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+				},
+				
+				// Camera Rotation Methods
+				rotateLeft: function(amount) {
+					// Calculate new target value.
+					this.targetX = this.targetX - amount;
+					
+					// Update the camera.
+					this.update({ "targetX" : this.targetX });
+				},
+				rotateRight: function(amount) {
+					// Calculate new target value.
+					this.targetX = this.targetX + amount;
+					
+					// Update the camera.
+					this.update({ "targetX" : this.targetX });
+				},
+				rotateUp: function(amount) {
+					// Calculate new target value.
+					this.targetY = this.targetY + amount;
+					
+					// Update the camera.
+					this.update({ "targetY" : this.targetY });
+				},
+				rotateDown: function(amount) {
+					// Calculate new target value.
+					this.targetY = this.targetY - amount;
+					
+					// Update the camera.
+					this.update({ "targetY" : this.targetY });
 				}
 			};
 			
@@ -83,21 +154,42 @@
 			
 			// Handle keyboard input.
 			function keyPressedAction(keyPressed, delta) {
-				var actionTake = false;
+				var actionTaken = false;
 				
 				switch(keyPressed) {
-					case 'a': Camera.moveLeft(delta, g_viewInfo.drawContext);
+					// Camera Movement Keys
+					case 'a': Camera.moveLeft(delta);
 					actionTaken = true;
 					break;
-					case 'd': Camera.moveRight(delta, g_viewInfo.drawContext);
+					case 'd': Camera.moveRight(delta);
 					actionTaken = true;  
 					break;  
-					case 'w': Camera.moveForward(delta, g_viewInfo.drawContext);
+					case 'w': Camera.moveForward(delta);
 					actionTaken = true;  
 					break;  
-					case 's': Camera.moveBackward(delta, g_viewInfo.drawContext);
+					case 's': Camera.moveBackward(delta);
 					actionTaken = true;  
+					break;
+					case 'z': Camera.moveUp(delta);
+					actionTaken = true;
 					break;  
+					case 'x': Camera.moveDown(delta);
+					actionTaken = true;
+					break;
+					
+					// Camera Rotation Keys
+					case 'j': Camera.rotateLeft(delta);
+					actionTaken = true;
+					break;
+					case 'l' : Camera.rotateRight(delta);
+					actionTaken = true;
+					break;
+					case 'i' : Camera.rotateUp(delta);
+					actionTaken = true;
+					break;
+					case 'k' : Camera.rotateDown(delta);
+					actionTaken = true;
+					break;
 				}  
 				return actionTaken;  
 			}  
