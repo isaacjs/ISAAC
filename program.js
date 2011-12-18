@@ -1,9 +1,3 @@
-// O3D Initialisation
-o3djs.base.o3d = o3d;
-o3djs.require('o3djs.webgl');
-o3djs.require('o3djs.math');
-o3djs.require('o3djs.rendergraph');
-
 // From JavaScript: The Good Parts - provide a way to
 // create new instances of a particular "blueprint" object.
 if (typeof Object.create !== 'function') {
