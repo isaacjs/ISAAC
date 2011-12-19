@@ -36,15 +36,15 @@
 			var Camera = {
 				upArray : [0, 0, 1],
 				currX : 0,
-				currY : 5,
+				currY : 0,
 				currZ : 0,
 				
 				targetX : 0,
-				targetY : 0,
+				targetY : 5,
 				targetZ : 0,
 				
-				lastXAngle: 0,
-				lastYAngle: 0,
+				lastXAngle: Math.PI/2,
+				lastYAngle: Math.PI/2,
 				lastZAngle: 0,
 				
 				// Camera Initialise Method
@@ -93,6 +93,10 @@
 					// Uses the || operator's handling of falsy values.
 					g_viewInfo.drawContext.view = g_math.matrix4.lookAt(eyeVector || [eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
 					targetVector || [targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], this.upArray);
+					
+					console.log("Target: " + this.targetX + " " + this.targetY + " " + this.targetZ);
+				console.log("Pos: " + this.currX + " " + this.currY + " " + this.currZ);
+				console.log("Last: " + this.lastXAngle + " " + this.lastYAngle + " " + this.lastZAngle);
 				},
 				
 				
@@ -120,16 +124,16 @@
 				
 				moveLeft: function(amount) {
 					// Calculate the new position and target values.
-					this.currX = this.currX - amount;
-					this.targetX = this.targetX - amount;
+					this.currX = this.currX + amount;
+					this.targetX = this.targetX + amount;
 					
 					// Update the camera position.
 					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
 				},
 				moveRight: function(amount) {
 					// Calculate the new position and target values.
-					this.currX = this.currX + amount;
-					this.targetX = this.targetX + amount;
+					this.currX = this.currX - amount;
+					this.targetX = this.targetX - amount;
 					
 					// Update the camera position.
 					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
@@ -170,7 +174,7 @@
 				// Camera Rotation Methods
 				rotate: function(amount, direction){
 					//var distance = Math.floor(Math.sqrt(square(this.targetX - this.currX) + square(this.targetY - this.currY) + square(this.targetZ - this.currZ)));
-					var distance = 5;
+					var distance = 1;
 					var newAngle, cosAmount, sinAmount;
 					//var cosAmount = Math.cos(amount) * distance;
 					//var sinAmount = Math.sin(amount) * distance;
@@ -208,13 +212,13 @@
 						"targetY" : this.targetY,
 						"targetZ" : this.targetZ
 					});
-					console.log("Amount: " + amount);
-					console.log("Distance: " + distance);
-					console.log("cosAmount: " + cosAmount);
-					console.log("sinAmount: " + sinAmount);
-					console.log("Target X: " + this.targetX);
-					console.log("Target Y: " + this.targetY);
-					console.log("Target Z: " + this.targetZ);
+					//console.log("Amount: " + amount);
+					//console.log("Distance: " + distance);
+					//console.log("cosAmount: " + cosAmount);
+					//console.log("sinAmount: " + sinAmount);
+					//console.log("Target X: " + this.targetX);
+					//console.log("Target Y: " + this.targetY);
+					//console.log("Target Z: " + this.targetZ);
 				},
 					
 				rotateLeft: function(amount) {
@@ -373,12 +377,16 @@
 			g_cubeTransform = g_pack.createObject('Transform');
 			g_cubeTransform.addShape(cubeShape);
 			
+			// Move the cube.
+			g_cubeTransform.translate(0, 5, 0);
+			
 			// Parent the cube's transform to the client root.
 			g_cubeTransform.parent = g_client.root;
 			
 			// Set our render callback for animation.
 			// This sets a function to be executed every time a frame is rendered.
 			g_client.setRenderCallback(renderCallback);
+			
 			
 			window.document.onkeypress = keyPressedCallback;
 			}
