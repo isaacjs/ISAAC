@@ -26,7 +26,6 @@
 			var g_cubeTransform;
 			var g_viewInfo;
 			var g_3dRoot;
-			var g_keyPressDelta = 0.1;
 			
 			// Function to square a number.
 			function square(x) {
@@ -43,8 +42,8 @@
 				targetY : 5,
 				targetZ : 0,
 				
-				lastXAngle: Math.PI/2,
-				lastYAngle: Math.PI/2,
+				lastXAngle: 90,
+				lastYAngle: 90,
 				lastZAngle: 0,
 				
 				// Camera Initialise Method
@@ -182,24 +181,24 @@
 						case "left": 
 						this.lastXAngle += amount;
 						this.lastYAngle += amount;
-						cosAmount = Math.cos(this.lastXAngle);
-						sinAmount = Math.sin(this.lastYAngle);
+						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
 						this.targetX = this.currX + cosAmount;
 						this.targetY = this.currY + sinAmount;
 						break;
 						case "right": 
 						this.lastXAngle -= amount;
 						this.lastYAngle -= amount;
-						cosAmount = Math.cos(this.lastXAngle);
-						sinAmount = Math.sin(this.lastYAngle);
+						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
 						this.targetX = this.currX + cosAmount;
 						this.targetY = this.currY + sinAmount;
 						break;
 						case "up": 
 						this.lastXAngle += amount;
 						this.lastZAngle += amount;
-						cosAmount = Math.cos(this.lastZAngle);
-						sinAmount = Math.sin(this.lastXAngle);
+						cosAmount = Math.cos(g_math.degToRad(this.lastZAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastXAngle));
 						this.targetZ = this.currZ + cosAmount;
 						this.targetX = this.currX + sinAmount;
 						break;
@@ -261,41 +260,43 @@
 			}
 			
 			// Handle keyboard input.
-			function keyPressedAction(keyPressed, delta) {
+			function keyPressedAction(keyPressed) {
 				var actionTaken = false;
+				var keyMoveDelta = 0.1;
+				var keyRotateDelta = 1;
 				
 				switch(keyPressed) {
 					// Camera Movement Keys
-					case 'a': Camera.moveLeft(delta);
+					case 'a': Camera.moveLeft(keyMoveDelta);
 					actionTaken = true;
 					break;
-					case 'd': Camera.moveRight(delta);
+					case 'd': Camera.moveRight(keyMoveDelta);
 					actionTaken = true;  
 					break;  
-					case 'w': Camera.move(delta, "forward");
+					case 'w': Camera.move(keyMoveDelta, "forward");
 					actionTaken = true;  
 					break;  
-					case 's': Camera.move(delta, "back");
+					case 's': Camera.move(keyMoveDelta, "back");
 					actionTaken = true;  
 					break;
-					case 'z': Camera.moveUp(delta);
+					case 'z': Camera.moveUp(keyMoveDelta);
 					actionTaken = true;
 					break;  
-					case 'x': Camera.moveDown(delta);
+					case 'x': Camera.moveDown(keyMoveDelta);
 					actionTaken = true;
 					break;
 					
 					// Camera Rotation Keys
-					case 'j': Camera.rotate(delta, "left");
+					case 'j': Camera.rotate(keyRotateDelta, "left");
 					actionTaken = true;
 					break;
-					case 'l' : Camera.rotate(delta, "right");
+					case 'l' : Camera.rotate(keyRotateDelta, "right");
 					actionTaken = true;
 					break;
-					case 'i' : Camera.rotate(delta, "up");
+					case 'i' : Camera.rotate(keyRotateDelta, "up");
 					actionTaken = true;
 					break;
-					case 'k' : Camera.rotate(delta, "down");
+					case 'k' : Camera.rotate(keyRotateDelta, "down");
 					actionTaken = true;
 					break;
 				}  
@@ -308,10 +309,10 @@
 				if (event.metaKey)  
 				return;  
 				
-				var keyChar =String.fromCharCode(o3djs.event.getEventKeyChar(event));  
+				var keyChar = String.fromCharCode(o3djs.event.getEventKeyChar(event));  
 				keyChar = keyChar.toLowerCase();  
 				
-				if (keyPressedAction(keyChar, g_keyPressDelta)) {  
+				if (keyPressedAction(keyChar)) {  
 					o3djs.event.cancel(event);  
 				}  
 			}  
