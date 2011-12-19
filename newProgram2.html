@@ -28,15 +28,31 @@
 			var g_3dRoot;
 			var g_keyPressDelta = 0.1;
 			
+			// Function to square a number.
+			function square(x) {
+				return x * x;
+			}
+			
 			var Camera = {
-				upArray : [0, 1, 0],
+				upArray : [0, 0, 1],
 				currX : 0,
-				currY : 1,
-				currZ : 5,
+				currY : 5,
+				currZ : 0,
 				
 				targetX : 0,
 				targetY : 0,
 				targetZ : 0,
+				
+				lastXAngle: 0,
+				lastYAngle: 0,
+				lastZAngle: 0,
+				
+				// Camera Initialise Method
+				initialise: function() {
+					this.update({"eyeX" : this.currX, "eyeY" : this.currY, "eyeZ" : this.currZ,
+				"targetX" : this.targetX, "targetY" : this.targetY, "targetZ" : this.targetZ});
+				},
+				
 				
 				// Camera Update Method
 				update: function(newParams) {
@@ -57,6 +73,8 @@
 							break;
 						}
 					}
+					
+					// Uses the || operator's handling of falsy values.
 					g_viewInfo.drawContext.view = g_math.matrix4.lookAt([eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
 					[targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], this.upArray);
 				},
@@ -113,6 +131,55 @@
 				},
 				
 				// Camera Rotation Methods
+				rotate: function(amount, direction){
+					//var distance = Math.floor(Math.sqrt(square(this.targetX - this.currX) + square(this.targetY - this.currY) + square(this.targetZ - this.currZ)));
+					var distance = 5;
+					var newAngle, cosAmount, sinAmount;
+					//var cosAmount = Math.cos(amount) * distance;
+					//var sinAmount = Math.sin(amount) * distance;
+					switch(direction){
+						case "left": 
+						this.lastXAngle += amount;
+						this.lastYAngle += amount;
+						cosAmount = Math.cos(this.lastXAngle);
+						sinAmount = Math.sin(this.lastYAngle);
+						this.targetX = this.currX + cosAmount;
+						this.targetY = this.currY + sinAmount;
+						break;
+						case "right": 
+						this.lastXAngle -= amount;
+						this.lastYAngle -= amount;
+						cosAmount = Math.cos(this.lastXAngle);
+						sinAmount = Math.sin(this.lastYAngle);
+						this.targetX = this.currX + cosAmount;
+						this.targetY = this.currY + sinAmount;
+						break;
+						case "up": 
+						this.lastXAngle += amount;
+						this.lastZAngle += amount;
+						cosAmount = Math.cos(this.lastZAngle);
+						sinAmount = Math.sin(this.lastXAngle);
+						this.targetZ = this.currZ + cosAmount;
+						this.targetX = this.currX + sinAmount;
+						break;
+						case "down": this.targetY = this.currY - cosAmount;
+						this.targetZ = this.currZ + sinAmount;
+						break;
+					}
+					
+					this.update({ "targetX" : this.targetX,
+						"targetY" : this.targetY,
+						"targetZ" : this.targetZ
+					});
+					console.log("Amount: " + amount);
+					console.log("Distance: " + distance);
+					console.log("cosAmount: " + cosAmount);
+					console.log("sinAmount: " + sinAmount);
+					console.log("Target X: " + this.targetX);
+					console.log("Target Y: " + this.targetY);
+					console.log("Target Z: " + this.targetZ);
+				},
+					
 				rotateLeft: function(amount) {
 					// Calculate new target value.
 					this.targetX = this.targetX - amount;
@@ -178,16 +245,16 @@
 					break;
 					
 					// Camera Rotation Keys
-					case 'j': Camera.rotateLeft(delta);
+					case 'j': Camera.rotate(delta, "left");
 					actionTaken = true;
 					break;
-					case 'l' : Camera.rotateRight(delta);
+					case 'l' : Camera.rotate(delta, "right");
 					actionTaken = true;
 					break;
-					case 'i' : Camera.rotateUp(delta);
+					case 'i' : Camera.rotate(delta, "up");
 					actionTaken = true;
 					break;
-					case 'k' : Camera.rotateDown(delta);
+					case 'k' : Camera.rotate(delta, "down");
 					actionTaken = true;
 					break;
 				}  
@@ -242,9 +309,7 @@
 				
 				// Set up our view transformation to look towards the world origin where the
 				// cube is located.
-				g_viewInfo.drawContext.view = g_math.matrix4.lookAt([0, 1, 5],  // eye
-				[0, 0, 0],  // target
-				[0, 1, 0]); // up
+				Camera.initialise();
 				
 				// Create an Effect object and initialize it using the shaders from the
 				// text area.
