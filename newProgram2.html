@@ -32,6 +32,22 @@
 				return x * x;
 			}
 			
+			// Function to round a number. Takes in the item to be rounded and the amount of decimal places,
+			// returns the item rounded to that amount of decimal places.
+			// If the item is an array/vector, every element will be rounded. This function will break if an object
+			// that isn't an array/vector is passed to it.
+			function round(x, dp) {
+				var power = Math.pow(10, dp);
+				if(typeof(x) === "object") {
+					for(i = 0; i < x.length; i++) {
+						x[i] = round(x[i], dp);
+					}
+					return x;
+				}
+				
+				return (Math.round(x * power) / power);
+			}
+			
 			var Camera = {
 				upArray : [0, 0, 1],
 				currX : 0,
@@ -39,7 +55,7 @@
 				currZ : 0,
 				
 				targetX : 0,
-				targetY : 5,
+				targetY : 1,
 				targetZ : 0,
 				
 				lastXAngle: 90,
@@ -57,6 +73,9 @@
 				update: function(newParams) {
 					var eyeX, eyeY, eyeZ, targetX, targetY, targetZ, eyeVector, targetVector;
 					for(name in newParams) {
+						// Round everything off to two decimal places.
+						newParams[name] = round(newParams[name], 2);
+						
 						switch(name) {
 							case "eyeX": eyeX = newParams["eyeX"];
 							break;
@@ -90,12 +109,14 @@
 					}
 					
 					// Uses the || operator's handling of falsy values.
-					g_viewInfo.drawContext.view = g_math.matrix4.lookAt(eyeVector || [eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
-					targetVector || [targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], this.upArray);
+					g_viewInfo.drawContext.view = g_math.matrix4.lookAt(
+						eyeVector || [eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
+						targetVector || [targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], 
+						this.upArray);
 					
 					console.log("Target: " + this.targetX + " " + this.targetY + " " + this.targetZ);
-				console.log("Pos: " + this.currX + " " + this.currY + " " + this.currZ);
-				console.log("Last: " + this.lastXAngle + " " + this.lastYAngle + " " + this.lastZAngle);
+					console.log("Pos: " + this.currX + " " + this.currY + " " + this.currZ);
+					console.log("Last: " + this.lastXAngle + " " + this.lastYAngle + " " + this.lastZAngle);
 				},
 				
 				
@@ -106,21 +127,146 @@
 					
 					var diffVector = g_math.subVector(posArray, targetArray);
 					var adjustmentVector = g_math.mulVectorScalar(diffVector, amount);
+					var newPos, newTarget;
 					
 					switch(direction) {
 						case "forward":
-							var newPos = g_math.subVector(posArray, adjustmentVector);
-							var newTarget = g_math.subVector(targetArray, adjustmentVector);
+							newPos = g_math.subVector(posArray, adjustmentVector);
+							newTarget = g_math.subVector(targetArray, adjustmentVector);
 							this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
 							break;
 						case "back":
-							var newPos = g_math.addVector(posArray, adjustmentVector);
-							var newTarget = g_math.addVector(targetArray, adjustmentVector);
+							newPos = g_math.addVector(posArray, adjustmentVector);
+							newTarget = g_math.addVector(targetArray, adjustmentVector);
 							this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
 							break;
 					}
 				},
 				
+				// Right-handed coordinate system.
+				// X is to the right (because we start 90 degrees facing right.)
+				// Y is forward (only because we're looking right.)
+				// Z is up.
+				strafe: function(amount, direction) {
+					var posArray = [this.currX, this.currY, this.currZ];
+					
+					// We want the target point "normalised" to the same height level as our current position.
+					var normalisedTarget = [this.targetX, this.targetY, this.currZ];
+					
+					// Get the vector from our current position to the normalised target.
+					var posVector = g_math.subVector(posArray, normalisedTarget);
+					
+					var shiftVector, adjustmentVector, newPos, newTarget;
+					
+					switch(direction) {
+						case "left":
+							shiftVector = g_math.cross(posVector, this.upArray);
+							break;
+						case "right":
+							shiftVector = g_math.cross(posVector, g_math.mulVectorScalar(this.upArray, -1));
+							break;
+					}
+					adjustmentVector = g_math.mulVectorScalar(shiftVector, amount);
+					
+					//console.log("Normal Target: " + normalisedTarget);
+					//console.log("Pos to Target: " + posVector);
+					//console.log("Cross: " + shiftVector);
+					//console.log("Adjustment: " + adjustmentVector);
+					
+					newPos = g_math.addVector(posArray, adjustmentVector);
+					
+					//console.log("Added: " + newPos);
+					newTarget = g_math.addVector([this.targetX, this.targetY, this.targetZ], adjustmentVector);
+					
+					this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
+				},
+				
+				moveUp: function(amount) {
+					// Calculate the new position and target values.
+					this.currZ = this.currZ + amount;
+					this.targetZ = this.targetZ + amount;
+					
+					// Update the camera position.
+					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+				},
+				moveDown: function(amount) {
+					// Calculate the new position and target values.
+					this.currZ = this.currZ - amount;
+					this.targetZ = this.targetZ - amount;
+					
+					// Update the camera position.
+					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+				},
+				
+				// Camera Rotation Methods
+				rotate: function(amount, direction){
+					// Reset the camera angle if it goes beyond +-180. This is to ensure
+					// we don't end up with massive camera angles after a while.
+					if(this.lastXAngle >= 180) {
+						this.lastXAngle = -180;
+					} else if(this.lastXAngle <= -180) {
+						this.lastXAngle = 180;
+					}
+					
+					if(this.lastYAngle >= 180) {
+						this.lastYAngle = -180;
+					} else if(this.lastYAngle <= -180) {
+						this.lastYAngle = 180;
+					}
+					
+					// Restrict vertical camera angle to 60 degrees.
+					if(this.lastZAngle >= 60) {
+						this.lastZAngle = 60;
+					} else if(this.lastZAngle <= -60) {
+						this.lastZAngle = -60;
+					}
+					
+					var distance = 1;
+					var newAngle, cosAmount, sinAmount, newX, newY, newZ;
+
+					switch(direction){
+						case "left": 
+						this.lastXAngle += amount;
+						this.lastYAngle += amount;
+						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
+						newX = this.currX + cosAmount;
+						newY = this.currY + sinAmount;
+						break;
+						case "right": 
+						this.lastXAngle -= amount;
+						this.lastYAngle -= amount;
+						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
+						newX = this.currX + cosAmount;
+						newY = this.currY + sinAmount;
+						break;
+						case "up": 
+						this.lastXAngle += amount;
+						this.lastZAngle += amount;
+						cosAmount = Math.cos(g_math.degToRad(this.lastZAngle));
+						sinAmount = Math.sin(g_math.degToRad(this.lastXAngle));
+						newZ = this.currZ + cosAmount;
+						newX = this.currX + sinAmount;
+						break;
+						case "down": this.targetY = this.currY - cosAmount;
+						newZ = this.currZ + sinAmount;
+						break;
+					}
+					
+					this.update({ "targetVector" : [newX || this.targetX, newY || this.targetY, newZ || this.targetZ] });
+					//console.log("Amount: " + amount);
+					//console.log("Distance: " + distance);
+					//console.log("cosAmount: " + cosAmount);
+					//console.log("sinAmount: " + sinAmount);
+					//console.log("Target X: " + this.targetX);
+					//console.log("Target Y: " + this.targetY);
+					//console.log("Target Z: " + this.targetZ);
+				},
+				
+				
+				// The following methods have been deprecated, and are kept here soley for reference.
+				// They do not operate correctly and should not be used.
 				moveLeft: function(amount) {
 					// Calculate the new position and target values.
 					this.currX = this.currX + amount;
@@ -136,22 +282,6 @@
 					
 					// Update the camera position.
 					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
-				},
-				moveUp: function(amount) {
-					// Calculate the new position and target values.
-					this.currY = this.currY + amount;
-					this.targetY = this.targetY + amount;
-					
-					// Update the camera position.
-					this.update({ "eyeY" : this.currY, "targetY" : this.targetY });
-				},
-				moveDown: function(amount) {
-					// Calculate the new position and target values.
-					this.currY = this.currY - amount;
-					this.targetY = this.targetY - amount;
-					
-					// Update the camera position.
-					this.update({ "eyeY" : this.currY, "targetY" : this.targetY });
 				},
 				moveForward: function(amount) {
 					// Calculate the new position and target values.
@@ -169,57 +299,6 @@
 					// Update the camera position.
 					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
 				},
-				
-				// Camera Rotation Methods
-				rotate: function(amount, direction){
-					//var distance = Math.floor(Math.sqrt(square(this.targetX - this.currX) + square(this.targetY - this.currY) + square(this.targetZ - this.currZ)));
-					var distance = 1;
-					var newAngle, cosAmount, sinAmount;
-					//var cosAmount = Math.cos(amount) * distance;
-					//var sinAmount = Math.sin(amount) * distance;
-					switch(direction){
-						case "left": 
-						this.lastXAngle += amount;
-						this.lastYAngle += amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
-						this.targetX = this.currX + cosAmount;
-						this.targetY = this.currY + sinAmount;
-						break;
-						case "right": 
-						this.lastXAngle -= amount;
-						this.lastYAngle -= amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
-						this.targetX = this.currX + cosAmount;
-						this.targetY = this.currY + sinAmount;
-						break;
-						case "up": 
-						this.lastXAngle += amount;
-						this.lastZAngle += amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastZAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastXAngle));
-						this.targetZ = this.currZ + cosAmount;
-						this.targetX = this.currX + sinAmount;
-						break;
-						case "down": this.targetY = this.currY - cosAmount;
-						this.targetZ = this.currZ + sinAmount;
-						break;
-					}
-					
-					this.update({ "targetX" : this.targetX,
-						"targetY" : this.targetY,
-						"targetZ" : this.targetZ
-					});
-					//console.log("Amount: " + amount);
-					//console.log("Distance: " + distance);
-					//console.log("cosAmount: " + cosAmount);
-					//console.log("sinAmount: " + sinAmount);
-					//console.log("Target X: " + this.targetX);
-					//console.log("Target Y: " + this.targetY);
-					//console.log("Target Z: " + this.targetZ);
-				},
-					
 				rotateLeft: function(amount) {
 					// Calculate new target value.
 					this.targetX = this.targetX - amount;
@@ -263,14 +342,14 @@
 			function keyPressedAction(keyPressed) {
 				var actionTaken = false;
 				var keyMoveDelta = 0.1;
-				var keyRotateDelta = 1;
+				var keyRotateDelta = 2;
 				
 				switch(keyPressed) {
 					// Camera Movement Keys
-					case 'a': Camera.moveLeft(keyMoveDelta);
+					case 'a': Camera.strafe(keyMoveDelta, "left");
 					actionTaken = true;
 					break;
-					case 'd': Camera.moveRight(keyMoveDelta);
+					case 'd': Camera.strafe(keyMoveDelta, "right");
 					actionTaken = true;  
 					break;  
 					case 'w': Camera.move(keyMoveDelta, "forward");
