@@ -50,9 +50,9 @@
 			
 			var Camera = {
 				upArray : [0, 0, 1],
-				currX : 0,
-				currY : 0,
-				currZ : 0,
+				eyeX : 0,
+				eyeY : 0,
+				eyeZ : 0,
 				
 				targetX : 0,
 				targetY : 1,
@@ -64,7 +64,7 @@
 				
 				// Camera Initialise Method
 				initialise: function() {
-					this.update({"eyeX" : this.currX, "eyeY" : this.currY, "eyeZ" : this.currZ,
+					this.update({"eyeX" : this.eyeX, "eyeY" : this.eyeY, "eyeZ" : this.eyeZ,
 				"targetX" : this.targetX, "targetY" : this.targetY, "targetZ" : this.targetZ});
 				},
 				
@@ -73,8 +73,8 @@
 				update: function(newParams) {
 					var eyeX, eyeY, eyeZ, targetX, targetY, targetZ, eyeVector, targetVector;
 					for(name in newParams) {
-						// Round everything off to two decimal places.
-						newParams[name] = round(newParams[name], 2);
+						// Round everything off to five decimal places.
+						newParams[name] = round(newParams[name], 5);
 						
 						switch(name) {
 							case "eyeX": eyeX = newParams["eyeX"];
@@ -97,9 +97,9 @@
 					}
 					
 					if(typeof(eyeVector) != "undefined") {
-						this.currX = eyeVector[0];
-						this.currY = eyeVector[1];
-						this.currZ = eyeVector[2];
+						this.eyeX = eyeVector[0];
+						this.eyeY = eyeVector[1];
+						this.eyeZ = eyeVector[2];
 					}
 					
 					if(typeof(targetVector) != "undefined") {
@@ -110,19 +110,19 @@
 					
 					// Uses the || operator's handling of falsy values.
 					g_viewInfo.drawContext.view = g_math.matrix4.lookAt(
-						eyeVector || [eyeX || this.currX, eyeY || this.currY, eyeZ || this.currZ],
+						eyeVector || [eyeX || this.eyeX, eyeY || this.eyeY, eyeZ || this.eyeZ],
 						targetVector || [targetX || this.targetX, targetY || this.targetY, targetZ || this.targetZ], 
 						this.upArray);
 					
-					console.log("Target: " + this.targetX + " " + this.targetY + " " + this.targetZ);
-					console.log("Pos: " + this.currX + " " + this.currY + " " + this.currZ);
-					console.log("Last: " + this.lastXAngle + " " + this.lastYAngle + " " + this.lastZAngle);
+					//console.log("Target: " + this.targetX + " " + this.targetY + " " + this.targetZ);
+					//console.log("Pos: " + this.eyeX + " " + this.eyeY + " " + this.eyeZ);
+					//console.log("Last: " + this.lastXAngle + " " + this.lastYAngle + " " + this.lastZAngle);
 				},
 				
 				
 				// Camera Movement Methods
 				move: function(amount, direction) {
-					var posArray = [this.currX, this.currY, this.currZ];
+					var posArray = [this.eyeX, this.eyeY, this.eyeZ];
 					var targetArray = [this.targetX, this.targetY, this.targetZ];
 					
 					var diffVector = g_math.subVector(posArray, targetArray);
@@ -133,14 +133,13 @@
 						case "forward":
 							newPos = g_math.subVector(posArray, adjustmentVector);
 							newTarget = g_math.subVector(targetArray, adjustmentVector);
-							this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
 							break;
 						case "back":
 							newPos = g_math.addVector(posArray, adjustmentVector);
 							newTarget = g_math.addVector(targetArray, adjustmentVector);
-							this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
 							break;
 					}
+					this.update( {"eyeVector" : newPos, "targetVector" : newTarget});
 				},
 				
 				// Right-handed coordinate system.
@@ -148,10 +147,10 @@
 				// Y is forward (only because we're looking right.)
 				// Z is up.
 				strafe: function(amount, direction) {
-					var posArray = [this.currX, this.currY, this.currZ];
+					var posArray = [this.eyeX, this.eyeY, this.eyeZ];
 					
 					// We want the target point "normalised" to the same height level as our current position.
-					var normalisedTarget = [this.targetX, this.targetY, this.currZ];
+					var normalisedTarget = [this.targetX, this.targetY, this.eyeZ];
 					
 					// Get the vector from our current position to the normalised target.
 					var posVector = g_math.subVector(posArray, normalisedTarget);
@@ -183,19 +182,19 @@
 				
 				moveUp: function(amount) {
 					// Calculate the new position and target values.
-					this.currZ = this.currZ + amount;
+					this.eyeZ = this.eyeZ + amount;
 					this.targetZ = this.targetZ + amount;
 					
 					// Update the camera position.
-					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+					this.update({ "eyeZ" : this.eyeZ, "targetZ" : this.targetZ });
 				},
 				moveDown: function(amount) {
 					// Calculate the new position and target values.
-					this.currZ = this.currZ - amount;
+					this.eyeZ = this.eyeZ - amount;
 					this.targetZ = this.targetZ - amount;
 					
 					// Update the camera position.
-					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+					this.update({ "eyeZ" : this.eyeZ, "targetZ" : this.targetZ });
 				},
 				
 				// Camera Rotation Methods
@@ -214,47 +213,29 @@
 						this.lastYAngle = 180;
 					}
 					
-					// Restrict vertical camera angle to 60 degrees.
-					if(this.lastZAngle >= 60) {
-						this.lastZAngle = 60;
-					} else if(this.lastZAngle <= -60) {
-						this.lastZAngle = -60;
-					}
-					
 					var distance = 1;
-					var newAngle, cosAmount, sinAmount, newX, newY, newZ;
+					var newAngle, cosAmount, sinAmount, newX, newY;
 
 					switch(direction){
 						case "left": 
-						this.lastXAngle += amount;
-						this.lastYAngle += amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
-						newX = this.currX + cosAmount;
-						newY = this.currY + sinAmount;
-						break;
+							this.lastXAngle += amount;
+							this.lastYAngle += amount;
+							cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+							sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
+							newX = this.eyeX + cosAmount;
+							newY = this.eyeY + sinAmount;
+							break;
 						case "right": 
-						this.lastXAngle -= amount;
-						this.lastYAngle -= amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
-						newX = this.currX + cosAmount;
-						newY = this.currY + sinAmount;
-						break;
-						case "up": 
-						this.lastXAngle += amount;
-						this.lastZAngle += amount;
-						cosAmount = Math.cos(g_math.degToRad(this.lastZAngle));
-						sinAmount = Math.sin(g_math.degToRad(this.lastXAngle));
-						newZ = this.currZ + cosAmount;
-						newX = this.currX + sinAmount;
-						break;
-						case "down": this.targetY = this.currY - cosAmount;
-						newZ = this.currZ + sinAmount;
-						break;
+							this.lastXAngle -= amount;
+							this.lastYAngle -= amount;
+							cosAmount = Math.cos(g_math.degToRad(this.lastXAngle));
+							sinAmount = Math.sin(g_math.degToRad(this.lastYAngle));
+							newX = this.eyeX + cosAmount;
+							newY = this.eyeY + sinAmount;
+							break;
 					}
 					
-					this.update({ "targetVector" : [newX || this.targetX, newY || this.targetY, newZ || this.targetZ] });
+					this.update({ "targetVector" : [newX, newY, this.targetZ] });
 					//console.log("Amount: " + amount);
 					//console.log("Distance: " + distance);
 					//console.log("cosAmount: " + cosAmount);
@@ -264,40 +245,75 @@
 					//console.log("Target Z: " + this.targetZ);
 				},
 				
+				tilt: function(amount, direction) {
+					var cosAmount, sinAmount, newX, newY, newZ;
+					// Restrict vertical camera angle to 60 degrees.
+					switch(direction){
+						case "up":
+							if(this.lastZAngle >= 60) {
+								this.lastZAngle = 60;
+							} else {
+								this.lastZAngle += amount;
+								
+								cosAmount = Math.cos(g_math.degToRad(amount));
+								sinAmount = Math.sin(g_math.degToRad(this.lastZAngle));
+								newZ = this.eyeZ + sinAmount;
+								newX = this.targetX * cosAmount;
+								newY = this.targetY * cosAmount;
+							}
+							break;
+						case "down":
+							if(this.lastZAngle <= -60) {
+								this.lastZAngle = -60;
+							} else {
+								this.lastZAngle -= amount;
+							
+								cosAmount = Math.cos(g_math.degToRad(-amount));
+								sinAmount = Math.sin(g_math.degToRad(this.lastZAngle));
+								newZ = this.eyeZ + sinAmount;
+								newX = this.targetX * cosAmount;
+								newY = this.targetY * cosAmount;
+							}
+							break;
+					}
+					// Need to use the falsy-handling system to avoid Undefined being passed to the update method.
+					this.update( {"targetVector" : [newX || this.targetX, newY || this.targetY, newZ || this.targetZ]});
+				},
 				
-				// The following methods have been deprecated, and are kept here soley for reference.
+				
+				// The following methods have been deprecated, and are kept here solely for reference.
 				// They do not operate correctly and should not be used.
 				moveLeft: function(amount) {
 					// Calculate the new position and target values.
-					this.currX = this.currX + amount;
+					this.eyeX = this.eyeX + amount;
 					this.targetX = this.targetX + amount;
 					
 					// Update the camera position.
-					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
+					this.update({ "eyeX" : this.eyeX, "targetX" : this.targetX });
 				},
 				moveRight: function(amount) {
 					// Calculate the new position and target values.
-					this.currX = this.currX - amount;
+					this.eyeX = this.eyeX - amount;
 					this.targetX = this.targetX - amount;
 					
 					// Update the camera position.
-					this.update({ "eyeX" : this.currX, "targetX" : this.targetX });
+					this.update({ "eyeX" : this.eyeX, "targetX" : this.targetX });
 				},
 				moveForward: function(amount) {
 					// Calculate the new position and target values.
-					this.currZ = this.currZ - amount;
+					this.eyeZ = this.eyeZ - amount;
 					this.targetZ = this.targetZ - amount;
 					
 					// Update the camera position.
-					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+					this.update({ "eyeZ" : this.eyeZ, "targetZ" : this.targetZ });
 				},
 				moveBackward: function(amount) {
 					// Calculate the new position and target values.
-					this.currZ = this.currZ + amount;
+					this.eyeZ = this.eyeZ + amount;
 					this.targetZ = this.targetZ + amount;
 					
 					// Update the camera position.
-					this.update({ "eyeZ" : this.currZ, "targetZ" : this.targetZ });
+					this.update({ "eyeZ" : this.eyeZ, "targetZ" : this.targetZ });
 				},
 				rotateLeft: function(amount) {
 					// Calculate new target value.
@@ -372,10 +388,10 @@
 					case 'l' : Camera.rotate(keyRotateDelta, "right");
 					actionTaken = true;
 					break;
-					case 'i' : Camera.rotate(keyRotateDelta, "up");
+					case 'i' : Camera.tilt(keyRotateDelta, "up");
 					actionTaken = true;
 					break;
-					case 'k' : Camera.rotate(keyRotateDelta, "down");
+					case 'k' : Camera.tilt(keyRotateDelta, "down");
 					actionTaken = true;
 					break;
 				}  
