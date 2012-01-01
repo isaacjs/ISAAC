@@ -62,6 +62,9 @@
 				lastYAngle: 90,
 				lastZAngle: 0,
 				
+				// Vertical camera angle is restricted to this value (in degrees)
+				maxVerticalAngle: 60,
+				
 				// Camera Initialise Method
 				initialise: function() {
 					this.update({"eyeX" : this.eyeX, "eyeY" : this.eyeY, "eyeZ" : this.eyeZ,
@@ -247,12 +250,12 @@
 				
 				tilt: function(amount, direction) {
 					var cosAmount, sinAmount, newX, newY, newZ;
-					// Restrict vertical camera angle to 60 degrees.
+					
 					switch(direction){
 						case "up":
-							if(this.lastZAngle >= 60) {
-								this.lastZAngle = 60;
-							} else {
+							if(this.lastZAngle >= this.maxVerticalAngle) {
+								this.lastZAngle = this.maxVerticalAngle;
+								} else {
 								this.lastZAngle += amount;
 								
 								cosAmount = Math.cos(g_math.degToRad(amount));
@@ -263,11 +266,11 @@
 							}
 							break;
 						case "down":
-							if(this.lastZAngle <= -60) {
-								this.lastZAngle = -60;
-							} else {
+							if(this.lastZAngle <= -this.maxVerticalAngle) {
+								this.lastZAngle = -this.maxVerticalAngle;
+								} else {
 								this.lastZAngle -= amount;
-							
+								
 								cosAmount = Math.cos(g_math.degToRad(-amount));
 								sinAmount = Math.sin(g_math.degToRad(this.lastZAngle));
 								newZ = this.eyeZ + sinAmount;
@@ -277,6 +280,7 @@
 							break;
 					}
 					// Need to use the falsy-handling system to avoid Undefined being passed to the update method.
+					// Any of the new<axis> variables could be undefined if the camera angle is more than 60 up or down.
 					this.update( {"targetVector" : [newX || this.targetX, newY || this.targetY, newZ || this.targetZ]});
 				},
 				
