@@ -1,10 +1,10 @@
-displayProperties(MovableBall);
+displayProperties(MovableBall.motion);
 var movementResult1 = movementModule(MovableBall);
-displayProperties(MovableBall);
-Console.log("\n");
+displayProperties(MovableBall.motion);
+console.log("\n");
 
 
-displayProperties(FixedBall);
+displayProperties(FixedBall.motion);
 var movementResult2 = movementModule(FixedBall);
-displayProperties(FixedBall);
-Console.log("\n");
+displayProperties(FixedBall.motion);
+console.log("\n");

@@ -6,7 +6,7 @@ if (typeof Object.create !== 'function') {
 	};
 };
 
-var physicalObject = {
+var PhysicalObject = {
 	"motion": {
 		"position": [0,0,0], //Will vector be created as a new object that contains an array? or will it simply be an array, and the only new stuff will be vector manipulation methods that use arrays?
 		"velocity": [0,0,0],
@@ -15,7 +15,7 @@ var physicalObject = {
 		// J (12/01/12): Vectors right now are arrays, unless we want them to be otherwise.
 	},
 	"switches": {
-		"in_contact": false;
+		"in_contact": false,
 		"motion_enabled": false,
 		"acceleration_enabled": false,
 		"friction_enabled": this.in_contact //Correct syntax? Logically correct?

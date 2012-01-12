@@ -5,8 +5,8 @@ var timeStep = 1.0; // Time in seconds.
 
 function displayProperties (object) {
 	for(name in object) {
-		Console.log("Property: " + name + " Value: " + object[name]);
-		Console.log("\n");
+		console.log("Property: " + name + " Value: " + object[name]);
+		console.log("\n");
 	}
 }
 
@@ -33,7 +33,7 @@ function accelerationModule (object) {
 }
 
 function movementModule (object) {
-	if(object.Switches.motion_enabled) {
+	if(object.switches.motion_enabled) {
 		var velocityChanged = velocityModule(object);
 		//var accelerationChanged = accelerationModule(object);
 		if (velocityChanged || accelerationChanged) {
