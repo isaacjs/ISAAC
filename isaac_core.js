@@ -1,6 +1,8 @@
 // Move this to a configuration script file.
 var timeStep = 1.0; // Time in seconds.
 
+// Main logic module for ISAAC Physics.
+
 function displayProperties (object) {
 	for(name in object) {
 		Console.log("Property: " + name + " Value: " + object[name]);
