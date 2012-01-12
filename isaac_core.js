@@ -9,20 +9,22 @@ function displayProperties (object) {
 }
 
 function velocityModule (object) {
-	if (object.Switches.motion_enabled) {
-		object.Position.posX += (object.Position.velX * timeStep);
-		object.Position.posY += (object.Position.velY * timeStep);
-		object.Position.posZ += (object.Position.velZ * timeStep);
+	if (object.switches.motion_enabled) {
+//		object.Position.posX += (object.Position.velX * timeStep);
+//		object.Position.posY += (object.Position.velY * timeStep);
+//		object.Position.posZ += (object.Position.velZ * timeStep);
+		object.motion.position = addVector(object.motion.position, scaleVector(object.motion.velocity, timeStep));
 		return true;
 	}
 	return false;
 }
 
 function accelerationModule (object) {
-	if (object.Switches.motion_enabled) {
-		object.Position.velX += (object.Position.accelX * timeStep);
-		object.Position.velY += (object.Position.accelY * timeStep);
-		object.Position.velZ += (object.Position.accelZ * timeStep);
+	if (object.switches.acceleration_enabled) {
+//		object.Position.velX += (object.Position.accelX * timeStep);
+//		object.Position.velY += (object.Position.accelY * timeStep);
+//		object.Position.velZ += (object.Position.accelZ * timeStep);
+		object.motion.velocity = addVector(object.motion.velocity, scaleVector(object.motion.acceleration, timeStep));
 		return true;
 	}
 	return false;

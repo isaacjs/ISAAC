@@ -6,30 +6,33 @@ if (typeof Object.create !== 'function') {
 	};
 };
 
-var PhysicalObject = {
-	Position: {
-		posX: 0,
-		posY: 0,
-		posZ: 0,
-		velX: 0,
-		velY: 0,
-		velZ: 0,
-		accX: 0,
-		accY: 0,
-		accZ: 0
+var physicalObject = {
+	"motion": {
+		"position": [0,0,0], //Will vector be created as a new object that contains an array? or will it simply be an array, and the only new stuff will be vector manipulation methods that use arrays?
+		"velocity": [0,0,0],
+		"acceleration": [0,0,0]
 	},
-	Switches: {
-		motion_enabled: false
+	"switches": {
+		"in_contact": false;
+		"motion_enabled": false,
+		"acceleration_enabled": false,
+		"friction_enabled": this.in_contact //Correct syntax? Logically correct?
+		//in_contact and friction_enabled have been linked because MOST PROBABLY the (presence of friction)
+		//and (contact with another body) are equivalent, but it MAY NOT BE THE CASE
 	}
 };
 
+
+
+/////////////////////////
+//TEST OBJECTS
+/////////////////////////
+
 var MovableBall = Object.create(PhysicalObject);
-MovableBall.Position.velX = 1;
-MovableBall.Position.velY = 2;
-MovableBall.Position.velZ = 3;
-MovableBall.Position.motion_enabled = true;
+MovableBall.motion.position = [1,2,3];
+MovableBall.motion.acceleration = [1,2,3];
+MovableBall.switches.motion_enabled = true;
+MovableBall.switches.acceleration_enabled = true;
 
 var FixedBall = Object.create(PhysicalObject);
-FixedBall.Position.velX = 100;
-FixedBall.Position.velY = 2;
-FixedBall.Position.velZ = 3;
+FixedBall.motion.velocity = [100,2,3];
