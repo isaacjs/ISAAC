@@ -1,19 +1,20 @@
 var Queue = {
 	"internal":[],
 	"size":0,
-	"offset":0
+	"offset":-1
 };
 
-function Queue.add(item){
-	internal[size]=item;
+Queue.add = function (item) {
+	Queue.internal[Queue.size]=item;
+	Queue.size++;
 }
 
-function Queue.next(){
-	if (size>0){
-		offset++;
-		offset %= size;
-		return internal[offset - 1]
+Queue.next = function () {
+	if (Queue.size>0){
+		Queue.offset++;
+		Queue.offset %= Queue.size;
+		return Queue.internal[Queue.offset];
 	}
 	else
-		Console.log("Empty Queue!");
+		console.log("Empty Queue!");
 }
