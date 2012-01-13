@@ -6,6 +6,7 @@ console.log("\n");
 
 
 displayProperties(FixedBall.motion);
+displayProperties(FixedBall.switches);
 var movementResult2 = movementModule(FixedBall);
 displayProperties(FixedBall.motion);
 console.log(movementResult2);
