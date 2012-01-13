@@ -34,3 +34,18 @@ function scaleVector (vector, scalar) {
 function subtractVector (vectorA, vectorB) {
 	return addVector(vectorA, scaleVector(vectorB, -1));
 }
+
+// dotProduct function.
+// Takes in two vectors, returns the dot product of the two. If the two input vectors
+// don't have the same length, -1 will be returned.
+function dotProduct (vectorA, vectorB) {
+	if(vectorA.length === vectorB.length) {
+		var sum = 0;
+		for (position in vectorA) {
+			sum += vectorA[position] * vectorB[position];
+		}
+		return sum;
+	} else {
+		return -1;
+	}
+}
