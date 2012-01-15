@@ -11,15 +11,18 @@ function PhysicalObject () {
 		"motion": {
 			"position": [0,0,0], //Will vector be created as a new object that contains an array? or will it simply be an array, and the only new stuff will be vector manipulation methods that use arrays?
 			"velocity": [0,0,0],
+			
+			// The acceleration vector of the object, including gravity (if enabled).
 			"acceleration": [0,0,0]
 			
 			// J (12/01/12): Vectors right now are arrays, unless we want them to be otherwise.
 		},
 		"switches": {
-			"in_contact": false,
-			"motion_enabled": false,
-			"acceleration_enabled": false,
-			"friction_enabled": this.in_contact //Correct syntax? Logically correct?
+			"inContact": false,
+			"motionEnabled": false,
+			"accelerationEnabled": false,
+			"gravityEnabled" : false,
+			"frictionEnabled": this.inContact //Correct syntax? Logically correct?
 			//in_contact and friction_enabled have been linked because MOST PROBABLY the (presence of friction)
 			//and (contact with another body) are equivalent, but it MAY NOT BE THE CASE
 			
