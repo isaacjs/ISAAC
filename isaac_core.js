@@ -58,9 +58,10 @@ function accelerationModule (obj) {
 function gravityModule (obj) {
 	if(obj.switches.gravityEnabled) {
 		obj.forces.resultant = addVector(obj.forces.external, gravityVector);
-		return true;
+	} else {
+		obj.forces.resultant = obj.forces.external;
 	}
-	return false;
+	return true;
 }
 
 // Force Module.
