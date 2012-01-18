@@ -1,6 +1,6 @@
 // Move this to a configuration script file.
 var timeStep = 1.0; // Time in seconds.
-var gravityVector = [0, 0, -9.8]; // Vector for force of gravity within the environment, in Newtons per kilogram.
+var gravityForce = Force("Gravity", [0, 0, -9.8]); // Force of gravity within the environment, in Newtons per Kilogram.
 
 // Main logic module for ISAAC Physics.
 
@@ -57,9 +57,7 @@ function accelerationModule (obj) {
 // For the object to be affected by gravity, both gravityEnabled and accelerationEnabled must be true.
 function gravityModule (obj) {
 	if(obj.switches.gravityEnabled) {
-		obj.forces.resultant = addVector(obj.forces.external, gravityVector);
-	} else {
-		obj.forces.resultant = obj.forces.external;
+		gravityForce.act(obj);
 	}
 	return true;
 }
@@ -68,8 +66,20 @@ function gravityModule (obj) {
 // Calculates the acceleration of an object based on the resultant forces on it.
 function forceModule (obj) {
 	if (obj.switches.motionEnabled) {
-		for(var i = 0; i < obj.forces.resultant.length; i++) {
-			obj.motion.acceleration[i] = obj.forces.resultant[i] / obj.physical.mass;
+		// Reset the resultant force.
+		obj.resultantForce = [0, 0, 0];
+		
+		// Iterate through the forces acting on the object and add them
+		// to the resultant force.
+		for(force in obj.forceStore) {
+			for(var i = 0; i < 3; i++) {
+				obj.resultantForce[i] += obj.forceStore[force][i];
+			}
+		}
+		
+		// Adjust the object's acceleration based on the resultant force.
+		for(var i = 0; i < 3; i++) {
+			obj.motion.acceleration[i] = obj.resultantForce[i] / obj.physical.mass;
 		}
 		return true;
 	}

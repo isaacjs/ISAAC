@@ -12,12 +12,30 @@
 // console.log(movementResult2);
 // console.log("\n");
 
-displayProperties(MovableBall.motion);
-for(var i = 0; i < 10; i++){
+/////////////////////////
+//TEST OBJECTS
+/////////////////////////
+
+var MoveableBall = PhysicalObject();
+MoveableBall.motion.position = [0, 0, 0];
+MoveableBall.switches.motionEnabled = true;
+MoveableBall.switches.accelerationEnabled = true;
+MoveableBall.switches.gravityEnabled = true;
+
+var FixedBall = PhysicalObject();
+FixedBall.motion.velocity = [100, 2, 3];
+
+var externalForce1 = Force("External Thrust", [0, 0, 20]);
+externalForce1.act(MoveableBall);
+
+
+displayProperties(MoveableBall.motion);
+
+for(var i = 0; i < 20; i++){
 	if(i === 5) {
-		MovableBall.forces.external = [0, 0, 0];
+		externalForce1.stop(MoveableBall);
 	}
-	var movementResult = movementModule(MovableBall);
-	displayProperties(MovableBall.motion);
-	console.log(MovableBall.forces.resultant);
+	var movementResult = movementModule(MoveableBall);
+	displayProperties(MoveableBall.motion);
+	console.log(MoveableBall.resultantForce);
 }
