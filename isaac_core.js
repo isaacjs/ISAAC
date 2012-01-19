@@ -95,12 +95,20 @@ function forceModule (obj) {
 // Contact function
 // Given two objects, determines whether or not they are in contact
 function contactBetween (obj1, obj2) {
-	var distance = obj1.motion.position - obj2.motion.position;
+	//var distance = obj1.motion.position - obj2.motion.position;
 	// J (19/01/12): Is this what you mean instead?
-	// var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
+	// PS (Thu 19 Jan 2012 08:18:48 PM SGT) Oops!
+	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	var radiiSum = obj1.physical.maxRadius + obj2.physical.maxRadius;
-	if (distance > radiiSum) {
+	
+	
+	// PS (Thu 19 Jan 2012 08:19:49 PM SGT) I feel this may be a better approach
+	// var dSquare = sqrNormVector(distance);
+	// var rSumSquare = sqr(radiiSum);
+	// if (dSquare > rSumSquare) {
+	
+	if (distance > radiisum) {
 		return false;
 	}
 	if (obj1.physical.shape + obj2.physical.shape === 2) { // Both are spheres
@@ -112,8 +120,8 @@ function contactBetween (obj1, obj2) {
 			obj1.physical.containsPoint(obj2.physical.corners[i])) {
 				return true;
 			}
-			return false;
 		}
+		return false;
 	}
 }
 
@@ -123,6 +131,9 @@ function gravitationalAttraction (obj1, obj2) {
 	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	// Find r^2.
+	
+	// PS (Thu 19 Jan 2012 08:24:11 PM SGT) - See if the sqrNormVector approach is faster
+	
 	var rSquared = Math.pow(distance, 2);
 	
 	// Get the masses of the two objects.

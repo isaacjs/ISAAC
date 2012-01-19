@@ -1,5 +1,16 @@
 // Math Library for ISAAC Physics.
 
+
+function sqr (number) {
+	return number * number;
+}
+
+//PS (Thu 19 Jan 2012 08:34:21 PM SGT) - I'm not sure, but I think this MIGHT be a faster alternative to vectorLength
+//Also, I'm not sure if using sqrt is a good idea. Comparison between floats is inaccurate.
+function sqrNormVector (vector) { //ONLY for 3-dimensional vectors
+	return sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]);
+}
+
 // addVector function.
 // Takes in two vectors, returns a new vector made by adding
 // the inputs together. If the two input vectors don't have the same
@@ -54,6 +65,9 @@ function dotProduct (vectorA, vectorB) {
 // Given a 3D vector, returns the length of it based on the Euclidean norm.
 function vectorLength (vector) {
 	var squares = 0;
+	
+	// PS (Thu 19 Jan 2012 08:38:24 PM SGT) - Checked on the internet, apparently using for..in
+	// to iterate through arrays is a bad idea
 	for(position in vector) {
 		squares += Math.pow(vector[position], 2);
 	}
