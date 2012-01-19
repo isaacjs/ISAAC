@@ -12,11 +12,13 @@ function Force (name, vector) {
 		"act" : function (obj) {
 			if (typeof obj.forceStore[name] !== 'object') {
 				obj.forceStore[name] = vector;
+				obj.switches.forceChanged = true;
 			}
 		},
 		"stop" : function (obj) {
 			if (typeof obj.forceStore[name] === 'object') {
 				delete obj.forceStore[name];
+				obj.switches.forceChanged = true;
 			}
 		}
 	};
@@ -30,7 +32,6 @@ function PhysicalObject () {
 		},
 		"forceStore" : {
 			// External forces on the object will be kept here.
-			
 		},
 		
 		// The resultant force on the object. Calculated at runtime.
@@ -51,12 +52,8 @@ function PhysicalObject () {
 			"motionEnabled" : false,
 			"accelerationEnabled" : false,
 			"gravityEnabled" : false,
-			"frictionEnabled" : this.inContact //Correct syntax? Logically correct?
-			//in_contact and friction_enabled have been linked because MOST PROBABLY the (presence of friction)
-			//and (contact with another body) are equivalent, but it MAY NOT BE THE CASE
-			
-			// J: this.in_contact looks OK. My interpretation of the code is that the current scope is the "switches"
-			// object, so "this" should refer to it. Needs testing to be sure, though.
+			"frictionEnabled" : this.inContact,
+			"forceChanged" : false
 		}
 	};
 };

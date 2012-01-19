@@ -65,22 +65,28 @@ function gravityModule (obj) {
 // Force Module.
 // Calculates the acceleration of an object based on the resultant forces on it.
 function forceModule (obj) {
-	if (obj.switches.motionEnabled) {
-		// Reset the resultant force.
-		obj.resultantForce = [0, 0, 0];
+	if (obj.switches.motionEnabled && obj.switches.forceChanged) {
+		// Create a blank array for the resultant force.
+		var newResultant = [0, 0, 0];
 		
 		// Iterate through the forces acting on the object and add them
 		// to the resultant force.
 		for(force in obj.forceStore) {
 			for(var i = 0; i < 3; i++) {
-				obj.resultantForce[i] += obj.forceStore[force][i];
+				newResultant[i] += obj.forceStore[force][i];
 			}
 		}
+		
+		// Set the resultant force.
+		obj.resultantForce = newResultant;
 		
 		// Adjust the object's acceleration based on the resultant force.
 		for(var i = 0; i < 3; i++) {
 			obj.motion.acceleration[i] = obj.resultantForce[i] / obj.physical.mass;
 		}
+		
+		// Reset the forceChanged switch.
+		obj.switches.forceChanged = false;
 		return true;
 	}
 	return false;
