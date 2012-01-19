@@ -49,3 +49,13 @@ function dotProduct (vectorA, vectorB) {
 		return -1;
 	}
 }
+
+// vectorLength function.
+// Given a 3D vector, returns the length of it based on the Euclidean norm.
+function vectorLength (vector) {
+	var squares = 0;
+	for(position in vector) {
+		squares += Math.pow(vector[position], 2);
+	}
+	return Math.sqrt(squares);
+}
