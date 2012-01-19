@@ -28,8 +28,11 @@ function PhysicalObject () {
 	return {
 		// Physical properties relating to the object.
 		"physical" : {
-			"mass" : 1 // Mass of the object, in kilograms.
+			"mass" : 1, // Mass of the object, in kilograms.
+			"maxRadius" : 0, //Maximum distance between any point and the centre
+			"shape" : 1 // 1 is a sphere, 4 is a cuboid
 		},
+		
 		"forceStore" : {
 			// External forces on the object will be kept here.
 		},
@@ -56,4 +59,23 @@ function PhysicalObject () {
 			"forceChanged" : false
 		}
 	};
+};
+
+function Sphere () {
+	var thing = PhysicalObject();
+	// thing.physical.shape = 1; // Already default
+	
+	// implement containsPoint function here
+	
+	return thing;
+};
+
+function Cuboid () {
+	var thing = PhysicalObject();
+	thing.physical.shape = 4;
+	thing.physical.corners = [[0, 0, 0], [0, 0, 0],
+				[0, 0, 0], [0, 0, 0],
+				[0, 0, 0], [0, 0, 0]];
+	// implement containsPoint function here
+	return thing;
 };

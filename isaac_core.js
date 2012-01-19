@@ -91,3 +91,22 @@ function forceModule (obj) {
 	}
 	return false;
 }
+
+// Contact function
+// Given two objects, determines whether or not they are in contact
+function contactBetween (obj1, obj2) {
+	var distance = obj1.motion.position - obj2.motion.position;
+	var radiiSum = obj1.physical.maxRadius + obj2.physical.maxRadius;
+	if (distance > radiiSum)
+		return false;
+	if (obj1.physical.shape + obj2.physical.shape === 2) // Both are spheres
+		return true; // If the sum of radii is <= distance between spheres, they are in contact
+	if (obj1.physical.shape + obj2.physical.shape === 8) { // Both are cuboids
+		for (var i = 0; i < 6; i++) {
+			if(obj2.physical.containsPoint(obj1.physical.corners[i]) ||
+				obj1.physical.containsPoint(obj2.physical.corners[i])) {
+				return true;
+		}
+		return false;
+	}
+}
