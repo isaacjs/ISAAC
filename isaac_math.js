@@ -18,8 +18,8 @@ function sqrNormVector (vector) { //ONLY for 3-dimensional vectors
 function addVector (vectorA, vectorB) {
 	if(vectorA.length === vectorB.length) {
 		var newVector = new Array();
-		for(position in vectorA) {
-			newVector[position] = vectorA[position] + vectorB[position];
+		for(var i = 0; i < vectorA.length; i++) {
+			newVector[i] = vectorA[i] + vectorB[i];
 		}
 		return newVector;
 	} else {
@@ -32,8 +32,8 @@ function addVector (vectorA, vectorB) {
 // multiplying the scalar through the vector.
 function scaleVector (vector, scalar) {
 	var newVector = new Array();
-	for(position in vector) {
-		newVector[position] = vector[position] * scalar;
+	for(var i = 0; i < vector.length; i++) {
+		newVector[i] = vector[i] * scalar;
 	}
 	return newVector;
 }
@@ -52,8 +52,8 @@ function subtractVector (vectorA, vectorB) {
 function dotProduct (vectorA, vectorB) {
 	if(vectorA.length === vectorB.length) {
 		var sum = 0;
-		for (position in vectorA) {
-			sum += vectorA[position] * vectorB[position];
+		for (var i = 0; i < vectorA.length; i++) {
+			sum += vectorA[i] * vectorB[i];
 		}
 		return sum;
 	} else {
@@ -65,11 +65,33 @@ function dotProduct (vectorA, vectorB) {
 // Given a 3D vector, returns the length of it based on the Euclidean norm.
 function vectorLength (vector) {
 	var squares = 0;
-	
-	// PS (Thu 19 Jan 2012 08:38:24 PM SGT) - Checked on the internet, apparently using for..in
-	// to iterate through arrays is a bad idea
-	for(position in vector) {
-		squares += Math.pow(vector[position], 2);
+
+	for (var i = 0; i < vector.length; i++) {
+		squares += Math.pow(vector[i], 2);
 	}
 	return Math.sqrt(squares);
+}
+
+// vectorNormalise function.
+// Given a 3D vector, returns a unit vector in the same direction.
+function vectorNormalise (vector) {
+	var length = vectorLength(vector);
+	var normal = [];
+	
+	for (var i = 0; i < vector.length; i++) {
+		normal[i] = vector[i] / length;
+	}
+	return normal;
+}
+
+// vectorFitToLength function.
+// Given a 3D vector and a scalar, returns a vector in the same direction whose
+// length is the scalar.
+function vectorFitToLength (vector, scalar) {
+	var scaled = vectorNormalise(vector);
+	
+	for (var i = 0; i < normal.length; i++) {
+		scaled[i] *= scalar;
+	}
+	return scaled;
 }

@@ -95,9 +95,6 @@ function forceModule (obj) {
 // Contact function
 // Given two objects, determines whether or not they are in contact
 function contactBetween (obj1, obj2) {
-	//var distance = obj1.motion.position - obj2.motion.position;
-	// J (19/01/12): Is this what you mean instead?
-	// PS (Thu 19 Jan 2012 08:18:48 PM SGT) Oops!
 	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	var radiiSum = obj1.physical.maxRadius + obj2.physical.maxRadius;
