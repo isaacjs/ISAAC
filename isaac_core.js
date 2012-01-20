@@ -140,3 +140,19 @@ function gravitationalAttraction (obj1, obj2) {
 	// Return the force between them.
 	return bigG * ((mass1 * mass2) / rSquared);
 }
+
+// Gravitational Force Function.
+// Given two objects, returns the vector of gravitational force between them, from the first object
+// to the second.
+function gravitationalForce (obj1, obj2) {
+	// Get the force between the two objects.
+	var force = gravitationalAttraction(obj1, obj2);
+	
+	// Get the direction vector from the first object to the second.
+	var directionVector = subtractVector(obj1, obj2);
+	
+	// Scale the direction vector to be the same magnitude as the force.
+	directionVector = vectorFitToLength(directionVector, force);
+	
+	return directionVector;
+}
