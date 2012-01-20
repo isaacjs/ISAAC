@@ -31,11 +31,13 @@ externalForce1.act(MoveableBall);
 
 displayProperties(MoveableBall.motion);
 
-for(var i = 0; i < 20; i++){
-	if(i === 5) {
+for(var i = 0; i < 100; i++){
+	if(i === 25) {
 		externalForce1.stop(MoveableBall);
 	}
 	var movementResult = movementModule(MoveableBall);
-	displayProperties(MoveableBall.motion);
-	console.log(MoveableBall.resultantForce);
+	//displayProperties(MoveableBall.motion);
+	//console.log(MoveableBall.resultantForce);
+	document.writeln(i + ", " + MoveableBall.motion.position[0] + ", " + MoveableBall.motion.position[1] + ", "
+		+ MoveableBall.motion.position[2]);
 }
