@@ -24,3 +24,5 @@ function drawEarthOrbit(){
 		markPoint(x,y);
 	}
 };
+
+//For testing Purposes
