@@ -90,7 +90,7 @@ function vectorNormalise (vector) {
 function vectorFitToLength (vector, scalar) {
 	var scaled = vectorNormalise(vector);
 	
-	for (var i = 0; i < vector.length; i++) {
+	for (var i = 0; i < scaled.length; i++) {
 		scaled[i] *= scalar;
 	}
 	return scaled;
