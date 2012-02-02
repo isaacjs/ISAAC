@@ -11,7 +11,7 @@ Earth.physical.mass = 5.9721986e18;
 Earth.motion.position = [149.598261, 0, 0];
 Earth.motion.velocity = [0, 2.978e-5, 0];
 Earth.switches.motionEnabled = true;
-Earth.switches.accelerationEnabled = false;
+Earth.switches.accelerationEnabled = true;
 
 var Sun = PhysicalObject();
 Sun.motion.position = [0, 0, 0];
@@ -31,7 +31,7 @@ function gravitationalForce (earth, sun) {
 	
 	// Scale the direction vector to be the same magnitude as the force.
 	directionVector = vectorFitToLength(directionVector, force);
-	
+	earth.switches.forceChanged = true;
 	return directionVector;
 }
 
