@@ -70,8 +70,8 @@ function Sphere () {
 	// PS Mon 30 Jan 2012 04:44:34 PM SGT - Should we hide maxRadius,
 	// and create a new variable "radius", that applies only to spheres?
 	// Remove if found unnecessary
-	var thing.physical.radius = 1;
-	var thing.physical.maxradius = 1;//needs an "auto-update" feature,
+	thing.physical.radius = 1;
+	thing.physical.maxradius = 1;//needs an "auto-update" feature,
 	//so that maxRadius changes appropriately when radius is modified.
 	
 	return thing;

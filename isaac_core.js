@@ -1,7 +1,7 @@
 // Move this to a configuration script file.
-var timeStep = 1.0; // Time in seconds.
-var gravityForce = Force("Gravity", [0, 0, -9.8]); // Force of gravity within the environment, in Newtons per Kilogram.
-var bigG = 6.674e-11; // The Gravitational Constant.
+//var timeStep = 1.0; // Time in seconds.
+//var gravityForce = Force("Gravity", [0, 0, -9.8]); // Force of gravity within the environment, in Newtons per Kilogram.
+//var bigG = 6.674e-11; // The Gravitational Constant.
 
 // Main logic module for ISAAC Physics.
 
