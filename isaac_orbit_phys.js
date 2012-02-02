@@ -3,13 +3,17 @@
 // Units
 // Distance: gigameters
 // Mass: gigagrams
-var Gmm = 7.93e24 // in Gigagram Gigameters per second squared.
-var timeStep = 86400 // in seconds.
+var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
+//var Gmm = 
+var timeStep = 864 // in seconds.
 
 var Earth = PhysicalObject();
 Earth.physical.mass = 5.9721986e18;
 Earth.motion.position = [149.598261, 0, 0];
-Earth.motion.velocity = [0, 2.978e-5, 0];
+Earth.motion.velocity = [0, 2.929e-5, 0];
+//Earth.physical.mass = 
+//Earth.motion.position = [57.9091, 0 0];
+//Earth.motion.velocity = [0, 
 Earth.switches.motionEnabled = true;
 Earth.switches.accelerationEnabled = true;
 
@@ -35,7 +39,7 @@ function gravitationalForce (earth, sun) {
 	return directionVector;
 }
 
-for(var i = 0; i < 365; i++) {
+for(var i = 0; i < 36500; i++) {
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	var movementResult = movementModule(Earth);
 	document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
