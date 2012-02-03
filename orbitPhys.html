@@ -1,10 +1,15 @@
 <html>
-	<body>
-		<pre>
-			<script type = "text/javascript" src = "isaac_math.js"></script>
-			<script type = "text/javascript" src = "isaac_obj.js"></script>
-			<script type = "text/javascript" src = "isaac_core.js"></script>
-			<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
-		</pre>
+	<title>ISAAC Orbit</title>
+	<head>
+		<script type = "text/javascript" src = "isaac_math.js"></script>
+		<script type = "text/javascript" src = "isaac_obj.js"></script>
+		<script type = "text/javascript" src = "isaac_core.js"></script>
+		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
+		<style type = "text/css">
+			canvas { border: 1px solid black; }
+		</style>
+	</head>
+	<body onload = "draw();">
+		<canvas id = "orbitCanvas" width = 800 height = 600></canvas>
 	</body>
 </html>

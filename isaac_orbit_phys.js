@@ -39,10 +39,24 @@ function gravitationalForce (earth, sun) {
 	return directionVector;
 }
 
-for(var i = 0; i < 36500; i++) {
+//for(var i = 0; i < 36500; i++) {
+	//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+	// var movementResult = movementModule(Earth);
+	// document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
+		// + Earth.motion.position[2] + ", " + Earth.motion.acceleration[0] + ", " + Earth.motion.acceleration[1] + ", " +
+		// Earth.motion.acceleration[2]);
+// }
+
+// Function used to update the canvas.
+// Updates the position of the earth, and draws it.
+function update () {
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	var movementResult = movementModule(Earth);
-	document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
-		+ Earth.motion.position[2] + ", " + Earth.motion.acceleration[0] + ", " + Earth.motion.acceleration[1] + ", " +
-		Earth.motion.acceleration[2]);
+	drawPosition(Earth);
+}
+
+// Takes in an object, draws it on the canvas.
+function drawPosition (obj) {
+	var posArray = obj.motion.position;
+	
 }
