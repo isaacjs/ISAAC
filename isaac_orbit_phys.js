@@ -7,6 +7,7 @@ var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
 //var Gmm = 
 var timeStep = 864 // in seconds.
 
+
 var Earth = PhysicalObject();
 Earth.physical.mass = 5.9721986e18;
 Earth.motion.position = [149.598261, 0, 0];
@@ -51,15 +52,24 @@ function gravitationalForce (earth, sun) {
 Sun.motion.position = addVector([400,300,0], Sun.motion.position);
 Earth.motion.position = addVector([400, 300, 0], Earth.motion.position);
 
+// TEMPORARY HACK. MOVE THIS TO A SEPARATE, CANVAS-SPECIFIC FILE.
+var updateStep = 10;
+
 
 // Function used to update the canvas.
 // Updates the position of the earth, and draws it.
 function update () {
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	
-	// Update the position of the earth. We want each update to be an hour, so we
+	// Update the position of the earth. We want each update to be a day, so we
 	// update it ten times.
-	for(var i = 0; i < 10; i++) {
+	//for(var i = 0; i < 10; i++) {
+	//	var movementResult = movementModule(Earth);
+	// }
+	
+	// Update the position of the earth. Use the updateStep specified by the user
+	// (default is an hour).
+	for (var i = 0; i < updateStep; i++) {
 		var movementResult = movementModule(Earth);
 	}
 	
@@ -69,15 +79,7 @@ function update () {
 		var ctx = canvas.getContext('2d');
 		
 		// Clear the canvas.
-		// Store the current transformation matrix
-		ctx.save();
-		
-		// Use the identity matrix while clearing the canvas
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
-		// Restore the transform
-		ctx.restore();
 		
 		// Draw our objects.
 		drawPosition(Earth, ctx);
@@ -96,16 +98,25 @@ function drawPosition (obj, context) {
 function drawCircle (position, radius, ctx) {
 	// Begin the path.
 	ctx.beginPath();
-
-// Draw the arc.
-ctx.arc(position[0], position[1], radius, 0, 2*Math.PI, true);
-
-// Only draw the circumference.
-ctx.stroke();
-
+	
+	// Draw the arc.
+	ctx.arc(position[0], position[1], radius, 0, 2*Math.PI, true);
+	
+	// Only draw the circumference.
+	ctx.stroke();
 }
 
 // Canvas animation function.
 function init() {
 	setInterval(update, 16);
+}
+
+// Handles updating of settings based on user input.
+function settingsUpdate() {
+	// Get the slider.
+	var slider = document.getElementById('timescale');
+	if(slider) {
+		// Change the updateStep.
+		updateStep = slider.value;
+	}
 }

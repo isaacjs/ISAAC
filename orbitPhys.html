@@ -1,5 +1,5 @@
 <html>
-	<title>ISAAC Orbit</title>
+	<title>...eppur si muove.</title>
 	<head>
 		<script type = "text/javascript" src = "isaac_math.js"></script>
 		<script type = "text/javascript" src = "isaac_obj.js"></script>
@@ -10,6 +10,19 @@
 		</style>
 	</head>
 	<body onload = "init();">
-		<canvas id = "orbitCanvas" width = 800 height = 600></canvas>
+		<div id="title">
+			<h1>ISAAC Orbit</h1>
+		</div>
+		<div id="canvas" style="float:left;">
+			<canvas id = "orbitCanvas" width = 800 height = 600></canvas>
+		</div>
+		<div id="controls">
+			<h2>Simulation Controls</h2>
+			<form>
+				Speed <input type="range" id="timescale" min="10" max="240" step="10" value="10"/><br/>
+				<input type="button" value="Update" name="updateSettings" onclick="settingsUpdate()" />
+				<input type="button" value="Reset" name="resetAll" onclick="history.go()" />
+			</form>
+		</div>
 	</body>
 </html>
