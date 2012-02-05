@@ -40,23 +40,72 @@ function gravitationalForce (earth, sun) {
 }
 
 //for(var i = 0; i < 36500; i++) {
-	//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
-	// var movementResult = movementModule(Earth);
-	// document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
-		// + Earth.motion.position[2] + ", " + Earth.motion.acceleration[0] + ", " + Earth.motion.acceleration[1] + ", " +
-		// Earth.motion.acceleration[2]);
+//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+// var movementResult = movementModule(Earth);
+// document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
+// + Earth.motion.position[2] + ", " + Earth.motion.acceleration[0] + ", " + Earth.motion.acceleration[1] + ", " +
+// Earth.motion.acceleration[2]);
 // }
+
+// TEMPORARY HACK. ADD IN A WAY TO PROPERLY MOVE OBJECTS TO THE CENTRE OF THE CANVAS.
+Sun.motion.position = addVector([400,300,0], Sun.motion.position);
+Earth.motion.position = addVector([400, 300, 0], Earth.motion.position);
+
 
 // Function used to update the canvas.
 // Updates the position of the earth, and draws it.
 function update () {
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
-	var movementResult = movementModule(Earth);
-	drawPosition(Earth);
+	
+	// Update the position of the earth. We want each update to be an hour, so we
+	// update it ten times.
+	for(var i = 0; i < 10; i++) {
+		var movementResult = movementModule(Earth);
+	}
+	
+	// Get the canvas element and its context.
+	var canvas = document.getElementById('orbitCanvas');
+	if(canvas.getContext) {
+		var ctx = canvas.getContext('2d');
+		
+		// Clear the canvas.
+		// Store the current transformation matrix
+		ctx.save();
+		
+		// Use the identity matrix while clearing the canvas
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
+		// Restore the transform
+		ctx.restore();
+		
+		// Draw our objects.
+		drawPosition(Earth, ctx);
+		drawPosition(Sun, ctx);
+	}
 }
 
-// Takes in an object, draws it on the canvas.
-function drawPosition (obj) {
+// Takes in an object and a canvas context, draws it on the canvas.
+function drawPosition (obj, context) {
 	var posArray = obj.motion.position;
-	
+	drawCircle(posArray, 20, context);
+}
+
+// Takes in a position, a radius, and a canvas context, draws a circle of that radius
+// at the given position on the canvas.
+function drawCircle (position, radius, ctx) {
+	// Begin the path.
+	ctx.beginPath();
+
+// Draw the arc.
+ctx.arc(position[0], position[1], radius, 0, 2*Math.PI, true);
+
+// Only draw the circumference.
+ctx.stroke();
+
+}
+
+// Canvas animation function.
+function init() {
+	setInterval(update, 16);
 }
