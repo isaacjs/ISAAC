@@ -40,14 +40,6 @@ function gravitationalForce (earth, sun) {
 	return directionVector;
 }
 
-//for(var i = 0; i < 36500; i++) {
-//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
-// var movementResult = movementModule(Earth);
-// document.writeln(i + ", " + Earth.motion.position[0] + ", " + Earth.motion.position[1] + ", "
-// + Earth.motion.position[2] + ", " + Earth.motion.acceleration[0] + ", " + Earth.motion.acceleration[1] + ", " +
-// Earth.motion.acceleration[2]);
-// }
-
 // TEMPORARY HACK. ADD IN A WAY TO PROPERLY MOVE OBJECTS TO THE CENTRE OF THE CANVAS.
 Sun.motion.position = addVector([400,300,0], Sun.motion.position);
 Earth.motion.position = addVector([400, 300, 0], Earth.motion.position);
