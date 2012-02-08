@@ -53,16 +53,29 @@ var updateStep = 10;
 function update () {
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	
-	// Update the position of the earth. We want each update to be a day, so we
-	// update it ten times.
-	//for(var i = 0; i < 10; i++) {
-	//	var movementResult = movementModule(Earth);
-	// }
-	
 	// Update the position of the earth. Use the updateStep specified by the user
-	// (default is an hour).
+	// (default: 1 second is 6 days).
 	for (var i = 0; i < updateStep; i++) {
 		var movementResult = movementModule(Earth);
+	}
+	
+	// Hack to fix floating point issues. If the Earth's distance from the sun is greater than
+	// the furthest theoretical value or less than the nearest, set it to that value.
+	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
+	var distance = vectorLength(directionVector);
+	// if(distance > 152.097701) {
+	// directionVector = vectorFitToLength(directionVector, 152.097701);
+	// Earth.motion.position = addVector([400,300,0], directionVector);
+	// } else if(distance < 147.098074) {
+	// directionVector = vectorFitToLength(directionVector, 147.098074);
+	// Earth.motion.position = addVector([400,300,0], directionVector);
+	// }
+	
+	
+	// Display the current distance from the sun.
+	var distanceLabel = document.getElementById('distanceLabel');
+	if(distanceLabel) {
+		distanceLabel.innerHTML = distance;
 	}
 	
 	// Get the canvas element and its context.
@@ -73,9 +86,9 @@ function update () {
 		// Clear the canvas.
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
-		// Draw our objects.
-		drawPosition(Earth, ctx);
-		drawPosition(Sun, ctx);
+	// Draw our objects.
+	drawPosition(Earth, ctx);
+	drawPosition(Sun, ctx);
 	}
 }
 
