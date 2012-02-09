@@ -51,6 +51,10 @@ var updateStep = 10;
 // Function used to update the canvas.
 // Updates the position of the earth, and draws it.
 function update () {
+	// Update the timestep.
+	settingsUpdate();
+	
+	// Get the force of gravity and add it to the Earth.
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	
 	// Update the position of the earth. Use the updateStep specified by the user
@@ -86,9 +90,9 @@ function update () {
 		// Clear the canvas.
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
-	// Draw our objects.
-	drawPosition(Earth, ctx);
-	drawPosition(Sun, ctx);
+		// Draw our objects.
+		drawPosition(Earth, ctx);
+		drawPosition(Sun, ctx);
 	}
 }
 
