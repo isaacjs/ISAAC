@@ -27,7 +27,7 @@ var g_o3d;
 var g_math;
 var g_pack;
 var g_viewInfo;
-var g_eyePosition = [0, 0, 1000];
+var g_eyePosition = [0,0, 1000];
 
 /**
  * Creates the client area.
@@ -65,8 +65,10 @@ function main(clientElements) {
   // Add the shapes to the transforms.
  
   var transformTable = [
-    {shape: renderEarth, translation: [150, 0, 0]},
+	//{shape: renderSun, translation: [406.5,296.5,0]},
+	//For some weird reason the earth position ranges between x(256, 557) and y(148, 445)
 	{shape: renderSun, translation: [0,0,0]},
+    {shape: renderEarth, translation: [0, 0, 0]},
   ];
 
   for (var tt = 0; tt < transformTable.length; ++tt) {
@@ -78,6 +80,16 @@ function main(clientElements) {
   
   var thisCounter = 1;
   
+    Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+	
+	for (var i = 0; i < updateStep; i++) {
+		var movementResult = movementModule(Earth);
+	}
+
+  //var previous = Earth.motion.position;
+  console.log(Earth.motion.position);
+  var previous = [406.5,296.5,0];
+  
   function update(){
   	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	
@@ -85,17 +97,21 @@ function main(clientElements) {
 		var movementResult = movementModule(Earth);
 	}
 	
+  //console.log(Earth.motion.position);
   	transformTable = [
-		{shape: renderSun, translation: [0,1,0]},
-    	//{shape: renderEarth, translation: Earth.motion.position},
-		{shape: renderEarth, translation: [thisCounter, 0, 0]},
+		//{shape: renderSun, translation: [0,0,0]},
+    	{shape: renderEarth, translation: subtractVector(Earth.motion.position, previous)},
+		//{shape: renderEarth, translation: [thisCounter, 0, 0]},
   	];
 	//thisCounter++;
+	
+	previous = Earth.motion.position;
 	
   	for (var tt = 0; tt < transformTable.length; ++tt) {
 		//var transform = g_pack.createObject('Transform');
 		transform.addShape(transformTable[tt].shape);
 		transform.translate(transformTable[tt].translation);
+		//console.log(transformTable[tt].translation);
 		//transform.parent = g_client.root;
 	}
   }

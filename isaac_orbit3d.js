@@ -3,9 +3,9 @@
 // Units
 // Distance: gigameters
 // Mass: gigagrams
-var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
+var Gmm = 7.93e11; // in Gigagram Gigameters per second squared.
 //var Gmm = 
-var timeStep = 864 // in seconds.
+var timeStep = 864 * 5; // in seconds.
 
 
 var Earth = PhysicalObject();
