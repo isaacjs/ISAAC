@@ -35,7 +35,7 @@ function velocityModule (obj) {
 		//		obj.Position.posY += (obj.Position.velY * timeStep);
 		//		obj.Position.posZ += (obj.Position.velZ * timeStep);
 		var basic = addVector(obj.motion.position, scaleVector(obj.motion.velocity, timeStep));
-		obj.motion.position = addVector(basic, scaleVector(obj.motion.acceleration, Math.pow(timeStep, 2)));
+		obj.motion.position = addVector(basic, scaleVector(scaleVector(obj.motion.acceleration, Math.pow(timeStep, 2)), 0.5));
 		return true;
 	}
 	return false;
