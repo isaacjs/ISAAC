@@ -2,6 +2,7 @@
 <html>
 	<title>...eppur si muove.</title>
 	<head>
+		<script type = "text/javascript" src = "./threejs/Three.js"></script>
 		<script type = "text/javascript" src = "isaac_math.js"></script>
 		<script type = "text/javascript" src = "isaac_obj.js"></script>
 		<script type = "text/javascript" src = "isaac_core.js"></script>
@@ -10,24 +11,47 @@
 			canvas { border: 1px solid black; }
 		</style>
 	</head>
-	<body onload = "init();">
-		<div id="title">
-			<h1>ISAAC Orbit</h1>
-		</div>
-		<div id="canvas" style="float:left;">
-			<canvas id = "orbitCanvas" width = 800 height = 600></canvas>
-		</div>
-		<div id="controls">
-			<h2>Simulation Controls</h2>
-			<form>
-				Time Step<br/>
-				<input type="range" id="timescale" min="10" max="240" step="10" value="10"/><br/>
-				<input type="button" value="Reset" name="resetAll" onclick="history.go()" />
-			</form>
-			<h2>Statistics</h2>
-			<p>Current Distance from Sun, in Gigametres:
-				<label id="distanceLabel">Test</label>
-			</p>
-		</div>
+	<body>
+		<div id="renderArea"></div>
+		
+		<script type = "text/javascript">
+			var camera, scene, renderer;
+			
+			init();
+			
+			function init() {
+				// Get the renderArea.
+				var renderArea = document.getElementById('renderArea');
+				
+				// Setup the camera and scene.
+				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
+				camera.position.z = 300;
+				scene = new THREE.Scene();
+				scene.add(camera);
+				
+				// Setup the renderer.
+				renderer = new THREE.CanvasRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderArea.appendChild(renderer.domElement);
+				renderer.setClearColorHex(0xEEEEEE, 1.0);
+				renderer.clear();
+				
+				// Create the Sun.
+				var sunMaterial = new THREE.MeshLambertMaterial( { color: 0xCC0000 } );
+				var sunModel = new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16), sunMaterial);
+				
+				// Create the Earth.
+				var earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
+				var earthModel = new THREE.Mesh( new THREE.SphereGeometry(25, 16, 16), earthMaterial);
+				earthModel.position.z = 75;
+				
+				// Add everything to the scene.
+				scene.add(sunModel);
+				scene.add(earthModel);
+				
+				// Render.
+				renderer.render(scene, camera);
+			}
+		</script>
 	</body>
 </html>
