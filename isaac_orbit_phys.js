@@ -41,10 +41,6 @@ function gravitationalForce (earth, sun) {
 	return directionVector;
 }
 
-// TEMPORARY HACK. ADD IN A WAY TO PROPERLY MOVE OBJECTS TO THE CENTRE OF THE CANVAS.
-Sun.motion.position = addVector([400,300,0], Sun.motion.position);
-Earth.motion.position = addVector([400, 300, 0], Earth.motion.position);
-
 // TEMPORARY HACK. MOVE THIS TO A SEPARATE, CANVAS-SPECIFIC FILE.
 var updateStep = 10;
 
@@ -68,23 +64,23 @@ function update () {
 	var distance = vectorLength(directionVector);
 	
 	// Display the current distance from the sun.
-	var distanceLabel = document.getElementById('distanceLabel');
-	if(distanceLabel) {
-		distanceLabel.innerHTML = distance;
-	}
+	// var distanceLabel = document.getElementById('distanceLabel');
+	// if(distanceLabel) {
+		// distanceLabel.innerHTML = distance;
+	// }
 	
 	// Get the canvas element and its context.
-	var canvas = document.getElementById('orbitCanvas');
-	if(canvas.getContext) {
-		var ctx = canvas.getContext('2d');
+	// var canvas = document.getElementById('orbitCanvas');
+	// if(canvas.getContext) {
+		// var ctx = canvas.getContext('2d');
 		
-		// Clear the canvas.
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// // Clear the canvas.
+		// ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
-		// Draw our objects.
-		drawPosition(Earth, ctx);
-		drawPosition(Sun, ctx);
-	}
+		// // Draw our objects.
+		// drawPosition(Earth, ctx);
+		// drawPosition(Sun, ctx);
+	// }
 }
 
 // Takes in an object and a canvas context, draws it on the canvas.

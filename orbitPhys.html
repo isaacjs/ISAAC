@@ -8,14 +8,22 @@
 		<script type = "text/javascript" src = "isaac_core.js"></script>
 		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
 		<style type = "text/css">
-			canvas { border: 1px solid black; }
+			body { 
+				margin: 0px; 
+				overflow: hidden;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="renderArea"></div>
 		
 		<script type = "text/javascript">
+			// Three.js elements.
 			var camera, scene, renderer;
+			
+			// Planets and their materials.
+			var sunModel, earthModel;
+			var sunMaterial, earthMaterial;
 			
 			init();
 			
@@ -25,7 +33,7 @@
 				
 				// Setup the camera and scene.
 				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.z = 300;
+				camera.position.z = 600;
 				scene = new THREE.Scene();
 				scene.add(camera);
 				
@@ -37,13 +45,13 @@
 				renderer.clear();
 				
 				// Create the Sun.
-				var sunMaterial = new THREE.MeshLambertMaterial( { color: 0xCC0000 } );
-				var sunModel = new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16), sunMaterial);
+				sunMaterial = new THREE.MeshLambertMaterial( { color: 0xCC0000 } );
+				sunModel = new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16), sunMaterial);
 				
 				// Create the Earth.
-				var earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
-				var earthModel = new THREE.Mesh( new THREE.SphereGeometry(25, 16, 16), earthMaterial);
-				earthModel.position.z = 75;
+				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
+				earthModel = new THREE.Mesh( new THREE.SphereGeometry(25, 16, 16), earthMaterial);
+				earthModel.position.z = 149.598261;
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
@@ -52,6 +60,24 @@
 				// Render.
 				renderer.render(scene, camera);
 			}
+			
+			function animUpdate(time) {
+				// Update the objects in the physics layer.
+				update();
+				
+				// Update the graphical representations of the objects.
+				earthModel.position.x = Earth.motion.position[0];
+				earthModel.position.y = Earth.motion.position[1];
+				earthModel.position.z = Earth.motion.position[2];
+				
+				// Render!
+				renderer.render(scene, camera);
+					
+				window.requestAnimationFrame(animUpdate, renderer.domElement);
+			}
+			
+			animUpdate(new Date().getTime());
+			
 		</script>
 	</body>
 </html>
