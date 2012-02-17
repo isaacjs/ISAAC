@@ -22,6 +22,8 @@ Earth.switches.accelerationEnabled = true;
 var Sun = PhysicalObject();
 Sun.motion.position = [0, 0, 0];
 
+var config = Config();
+
 // Gravitational Force Function.
 // Given the Earth and the Sun, returns the vector of gravitational force between them, from the first Earth
 // to the Sun.
@@ -41,9 +43,11 @@ function gravitationalForce (earth, sun) {
 	return directionVector;
 }
 
-// TEMPORARY HACK. MOVE THIS TO A SEPARATE, CANVAS-SPECIFIC FILE.
-var updateStep = 10;
-
+function Config() {
+	return {
+		"Update Step" : 10
+	}
+}
 
 // Function used to update the canvas.
 // Updates the position of the earth, and draws it.
@@ -56,7 +60,7 @@ function update () {
 	
 	// Update the position of the earth. Use the updateStep specified by the user
 	// (default: 1 second is 6 days).
-	for (var i = 0; i < updateStep; i++) {
+	for (var i = 0; i < config["Update Step"]; i++) {
 		var movementResult = movementModule(Earth);
 	}
 	

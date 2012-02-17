@@ -3,6 +3,7 @@
 	<title>...eppur si muove.</title>
 	<head>
 		<script type = "text/javascript" src = "./threejs/Three.js"></script>
+		<script type = "text/javascript" src = "dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "isaac_math.js"></script>
 		<script type = "text/javascript" src = "isaac_obj.js"></script>
 		<script type = "text/javascript" src = "isaac_core.js"></script>
@@ -28,6 +29,11 @@
 			init();
 			
 			function init() {
+				// Setup the UI.
+				var gui = new dat.GUI();
+				gui.add(config, 'Update Step', 10, 100);
+				// TODO: use this to allow mass of planets to be changed.
+				
 				// Get the renderArea.
 				var renderArea = document.getElementById('renderArea');
 				
@@ -66,17 +72,22 @@
 				update();
 				
 				// Update the graphical representations of the objects.
-				earthModel.position.x = Earth.motion.position[0];
-				earthModel.position.y = Earth.motion.position[1];
-				earthModel.position.z = Earth.motion.position[2];
+				objUpdate(Earth, earthModel);
 				
 				// Render!
 				renderer.render(scene, camera);
 					
+				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 			}
 			
 			animUpdate(new Date().getTime());
+			
+			function objUpdate(object, model) {
+				model.position.x = object.motion.position[0];
+				model.position.y = object.motion.position[1];
+				model.position.z = object.motion.position[2];
+			}
 			
 		</script>
 	</body>
