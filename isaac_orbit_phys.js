@@ -4,8 +4,6 @@
 // Distance: gigameters
 // Mass: gigagrams
 var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
-//var Gmm = 
-//var timeStep = 864 // in seconds.
 var timeStep = 864 // in seconds.
 
 
@@ -13,9 +11,7 @@ var Earth = PhysicalObject();
 Earth.physical.mass = 5.9721986e18;
 Earth.motion.position = [149.598261, 0, 0];
 Earth.motion.velocity = [0, 2.929e-5, 0];
-//Earth.physical.mass = 
-//Earth.motion.position = [57.9091, 0 0];
-//Earth.motion.velocity = [0, 
+
 Earth.switches.motionEnabled = true;
 Earth.switches.accelerationEnabled = true;
 
@@ -23,6 +19,10 @@ var Sun = PhysicalObject();
 Sun.motion.position = [0, 0, 0];
 
 var config = Config();
+
+// ------ Debug Variables ------ //
+var distance;
+// ------ End of Debug Variables ------ //
 
 // Gravitational Force Function.
 // Given the Earth and the Sun, returns the vector of gravitational force between them, from the first Earth
@@ -32,7 +32,7 @@ function gravitationalForce (earth, sun) {
 	var directionVector = subtractVector(sun.motion.position, earth.motion.position);
 	
 	// Get the distance between the Earth and the Sun.
-	var distance = vectorLength(directionVector);
+	distance = vectorLength(directionVector);
 	
 	// Get the force between the two objects.
 	var force = Gmm / Math.pow(distance, 2);
@@ -65,27 +65,15 @@ function update () {
 	}
 	
 	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
-	var distance = vectorLength(directionVector);
 	
 	// Display the current distance from the sun.
 	// var distanceLabel = document.getElementById('distanceLabel');
 	// if(distanceLabel) {
 		// distanceLabel.innerHTML = distance;
 	// }
-	
-	// Get the canvas element and its context.
-	// var canvas = document.getElementById('orbitCanvas');
-	// if(canvas.getContext) {
-		// var ctx = canvas.getContext('2d');
-		
-		// // Clear the canvas.
-		// ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
-		// // Draw our objects.
-		// drawPosition(Earth, ctx);
-		// drawPosition(Sun, ctx);
-	// }
 }
+
+// ------ The following code has been deprecated. ------ //
 
 // Takes in an object and a canvas context, draws it on the canvas.
 function drawPosition (obj, context) {
@@ -120,3 +108,4 @@ function settingsUpdate() {
 		updateStep = slider.value;
 	}
 }
+// ------ End of deprecated code. ------ //

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type = "text/javascript" src="isaac_math.js"></script>
+		<script type = "text/javascript" src = "isaac_obj.js"></script>
+		<script type = "text/javascript" src = "isaac_core.js"></script>
+		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
+	</head>
+	
+	<pre>		
+		<script type = "text/javascript">
+			for(var i = 0; i < 36500; i++) {
+				update();
+				document.writeln(i + ", " + distance);
+			}
+		</script>
+	</pre>
+</html>
