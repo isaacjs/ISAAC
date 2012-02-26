@@ -3,6 +3,7 @@
 // Units
 // Distance: gigameters
 // Mass: gigagrams
+var G = 6.67e-32 // in Newton square Gigameters per Gigagram squared.
 var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
 var timeStep = 864 // in seconds.
 
@@ -11,12 +12,15 @@ var Earth = PhysicalObject();
 Earth.physical.mass = 5.9721986e18;
 Earth.motion.position = [149.598261, 0, 0];
 Earth.motion.velocity = [0, 2.929e-5, 0];
+Earth.config['Mass Multiplier'] = 1;
 
 Earth.switches.motionEnabled = true;
 Earth.switches.accelerationEnabled = true;
 
 var Sun = PhysicalObject();
 Sun.motion.position = [0, 0, 0];
+Sun.physical.mass = 1.988435e24;
+Sun.config['Mass Multiplier'] = 1;
 
 var config = Config();
 
@@ -25,27 +29,36 @@ var distance;
 // ------ End of Debug Variables ------ //
 
 // Gravitational Force Function.
-// Given the Earth and the Sun, returns the vector of gravitational force between them, from the first Earth
-// to the Sun.
-function gravitationalForce (earth, sun) {	
+// Given two objects, returns the vector of gravitational force between them, from the first object
+// to the second.
+function gravitationalForce (obj1, obj2) {	
 	// Get the direction vector from the first object to the second.
-	var directionVector = subtractVector(sun.motion.position, earth.motion.position);
+	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
 	
-	// Get the distance between the Earth and the Sun.
+	// Get the distance between the two objects.
 	distance = vectorLength(directionVector);
 	
+	// Get Gm1m2.
+	var numerator = G * obj1.physical.mass * obj2.physical.mass;
+	
+	// Modify Gm1m2 according to the relevant multipliers.
+	numerator *= config['Gravitational Constant Multiplier'];
+	numerator *= obj1.config['Mass Multiplier'];
+	numerator *= obj2.config['Mass Multiplier'];
+	
 	// Get the force between the two objects.
-	var force = Gmm / Math.pow(distance, 2);
+	var force = numerator / Math.pow(distance, 2);
 	
 	// Scale the direction vector to be the same magnitude as the force.
 	directionVector = vectorFitToLength(directionVector, force);
-	earth.switches.forceChanged = true;
+	obj1.switches.forceChanged = true;
 	return directionVector;
 }
 
 function Config() {
 	return {
-		"Update Step" : 10
+		"Update Step" : 10,
+		"Gravitational Constant Multiplier" : 1
 	}
 }
 

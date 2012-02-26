@@ -12,8 +12,8 @@
 		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
 		<style type = "text/css">
 			body { 
-				margin: 0px; 
-				overflow: hidden;
+			margin: 0px; 
+			overflow: hidden;
 			}
 		</style>
 	</head>
@@ -31,13 +31,33 @@
 			var sunModel, earthModel;
 			var sunMaterial, earthMaterial;
 			
+			// Camera movement-related variables.
+			var isMouseDown = false;
+			var mouseLastX, mouseLastY;
+			var cameraAngleX = 0;
+			var cameraAngleY = 0;
+			var cameraAngleZ = 0;
+			
 			init();
 			
 			function init() {
 				// ------ GUI Initialisation ------ //
-				var gui = new dat.GUI();
-				gui.add(config, 'Update Step', 10, 100);
-				// TODO: use this to allow mass of planets to be changed.
+				var gui = new dat.GUI(
+				{ width : 500 }
+				);
+				
+				// Create the Simulation Settings folder.
+				var simSettings = gui.addFolder("Simulation Settings");
+				simSettings.add(config, 'Update Step', 10, 100);
+				simSettings.add(config, 'Gravitational Constant Multiplier', 0.1, 10);
+				
+				// Create the Sun's folder.
+				var sunFolder = gui.addFolder("Sun");
+				sunFolder.add(Sun.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Earth's folder.
+				var earthFolder = gui.addFolder("Earth");
+				earthFolder.add(Earth.config, 'Mass Multiplier', 0.1, 100);
 				
 				// ------ End of GUI Initialisation ------ //
 				
@@ -46,9 +66,9 @@
 				stats.getDomElement().style.position = 'absolute';
 				stats.getDomElement().style.left = '0px';
 				stats.getDomElement().style.top = '0px';
-
+				
 				document.body.appendChild( stats.getDomElement() );
-
+				
 				setInterval( function () { stats.update(); }, 1000 / 60 );
 				// ------ End of FPS Counter ------ //
 				
@@ -57,7 +77,7 @@
 				
 				// Setup the camera and scene.
 				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.z = 600;
+				camera.position.z = 400;
 				scene = new THREE.Scene();
 				scene.add(camera);
 				
@@ -81,6 +101,11 @@
 				scene.add(sunModel);
 				scene.add(earthModel);
 				
+				// Add hooks for mouse events, to move the camera around.
+				document.addEventListener('mousedown', onDocumentMouseDown, false);
+				document.addEventListener('mouseup', onDocumentMouseUp, false);
+				document.addEventListener('mousemove', onDocumentMouseMove, false);
+				
 				// Render.
 				renderer.render(scene, camera);
 			}
@@ -91,7 +116,27 @@
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
+				
+				// Update the camera position.
+				if(isMouseDown) {
+					cameraAngleX += mouseLastX * 10;
 					
+					// Restrict the vertical camera axis to 90 degrees.
+					if(cameraAngleY > 90) {
+						cameraAngleY = 90;
+					} else if(cameraAngleY < -90) {
+						cameraAngleY = -90;
+					} else {
+						cameraAngleY += mouseLastY * 1;
+					}
+				}
+				
+				camera.position.x = 400 * Math.sin(cameraAngleX * Math.PI/360);
+				camera.position.z = 400 * Math.cos(cameraAngleX * Math.PI/360);
+				
+				camera.position.y = 1400 * Math.sin(cameraAngleY * Math.PI/360);
+				camera.lookAt(new THREE.Vector3(0, 0, 0));
+				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 				
@@ -103,10 +148,64 @@
 			
 			function objUpdate(object, model) {
 				model.position.x = object.motion.position[0];
-				model.position.y = object.motion.position[1];
-				model.position.z = object.motion.position[2];
+				model.position.y = object.motion.position[2];
+				model.position.z = object.motion.position[1];
 			}
 			
-		</script>
-	</body>
+			// Handles mousedown events.
+			function onDocumentMouseDown(event) {
+				var element;
+				// Check if the mouse is over the canvas.
+				if(event.srcElement) {
+					// IE-specific (though apparently Chrome too?)
+					element = event.srcElement.nodeName;
+				} else if(event.target) {
+					// Everyone else.
+					element = event.target.nodeName;
+				}
+				
+				if(element === 'CANVAS') {
+					isMouseDown = true;
+				}				
+			}
+			
+			// Handles mouseup events.
+			function onDocumentMouseUp(event) {
+				isMouseDown = false;
+			}
+			
+			// Handles mousemove events. Used to move the camera.
+//			function onDocumentMouseMove(event) {
+//				// Check if the mouse button is down.
+//				if(isMouseDown) {
+//					// Get the position of the mouse.
+//					var mouseX = event.clientX;
+//					var mouseY = event.clientY;
+//					
+//					// Get the delta of the mouse's position.
+//					var mouseXDelta = event.clientX - mouseLastX;
+//					var mouseYDelta = event.clientY - mouseLastY;
+					
+					// Add the corresponding rotation to the camera angle.
+//					cameraAngleX += mouseXDelta;
+//					cameraAngleY += mouseYDelta;
+					
+//					console.log(cameraAngleX);
+//					console.log(cameraAngleY);
+					
+					// Adjust the camera.
+//					camera.position.x = 200 * Math.sin(cameraAngleX * Math.PI / 360);
+//					camera.position.z = 200 * Math.cos(cameraAngleY * Math.PI / 360);
+//					camera.lookAt(new THREE.Vector3(0, 0, 0));
+//				} 
+//				mouseLastX = event.clientX;
+//				mouseLastY = event.clientY;
+//			}			
+
+			function onDocumentMouseMove(event) {
+				mouseLastX = (event.clientX/window.innerWidth) * 2 - 1;
+				mouseLastY = (event.clientY/window.innerHeight) * 2 - 1;
+			}
+	</script>
+</body>
 </html>

@@ -57,6 +57,9 @@ function PhysicalObject () {
 			"gravityEnabled" : false,
 			"frictionEnabled" : this.inContact,
 			"forceChanged" : false
+		},
+		"config" : {
+			"massModifier" : 1
 		}
 	};
 };
