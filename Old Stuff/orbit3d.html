@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>
+3D Orbit
+</title>
+<script type="text/javascript" src="./o3d-webgl/base.js"></script>
+<script type="text/javascript" src="./o3djs/base.js"></script>
+
+<script type = "text/javascript" src = "./isaac_math.js"></script>
+<script type = "text/javascript" src = "./isaac_obj.js"></script>
+<script type = "text/javascript" src = "./isaac_core.js"></script>
+<script type="text/javascript" src="./isaac_orbit3d.js"></script>
+
+<script type="text/javascript" id="o3dscript">
+o3djs.base.o3d = o3d;
+o3djs.require('o3djs.webgl');
+o3djs.require('o3djs.math');
+o3djs.require('o3djs.rendergraph');
+o3djs.require('o3djs.primitives');
+o3djs.require('o3djs.material');
+
+// global variables
+var g_o3dElement;
+var g_client;
+var g_o3d;
+var g_math;
+var g_pack;
+var g_viewInfo;
+var g_eyePosition = [0,0, 1000];
+
+/**
+ * Creates the client area.
+ */
+function initClient() {
+  window.g_finished = false;  // for selenium testing.
+  o3djs.webgl.makeClients(main);
+}
+
+/**
+ * Initializes global variables, positions camera, draws shapes.
+ * @param {Array} clientElements Array of o3d object elements.
+ */
+function main(clientElements) {
+  // Init global variables.
+  initGlobals(clientElements);
+
+  // Set up the view and projection transformations.
+  initContext();
+  
+  var renderEarth = o3djs.primitives.createSphere(
+      g_pack,
+      createMaterial([1,0,0,1]),
+      5,   // Radius of the sphere.
+      30,    // Number of meridians.
+      20);   // Number of parallels.
+	
+	var renderSun = o3djs.primitives.createSphere(
+		g_pack,
+		createMaterial([1,0,0,1]),
+		50,
+		30,
+		20);
+
+  // Add the shapes to the transforms.
+ 
+  var transformTable = [
+	//{shape: renderSun, translation: [406.5,296.5,0]},
+	//For some weird reason the earth position ranges between x(256, 557) and y(148, 445)
+	{shape: renderSun, translation: [0,0,0]},
+    {shape: renderEarth, translation: [0, 0, 0]},
+  ];
+
+  for (var tt = 0; tt < transformTable.length; ++tt) {
+    var transform = g_pack.createObject('Transform');
+    transform.addShape(transformTable[tt].shape);
+    transform.translate(transformTable[tt].translation);
+    transform.parent = g_client.root;
+  }
+  
+  var thisCounter = 1;
+  
+    Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+	
+	for (var i = 0; i < updateStep; i++) {
+		var movementResult = movementModule(Earth);
+	}
+
+  //var previous = Earth.motion.position;
+  console.log(Earth.motion.position);
+  var previous = [406.5,296.5,0];
+  
+  function update(){
+  	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+	
+	for (var i = 0; i < updateStep; i++) {
+		var movementResult = movementModule(Earth);
+	}
+	
+  //console.log(Earth.motion.position);
+  	transformTable = [
+		//{shape: renderSun, translation: [0,0,0]},
+    	{shape: renderEarth, translation: subtractVector(Earth.motion.position, previous)},
+		//{shape: renderEarth, translation: [thisCounter, 0, 0]},
+  	];
+	//thisCounter++;
+	
+	previous = Earth.motion.position;
+	
+  	for (var tt = 0; tt < transformTable.length; ++tt) {
+		//var transform = g_pack.createObject('Transform');
+		transform.addShape(transformTable[tt].shape);
+		transform.translate(transformTable[tt].translation);
+		//console.log(transformTable[tt].translation);
+		//transform.parent = g_client.root;
+	}
+  }
+  
+  setInterval(update, 16);
+  
+  window.g_finished = true;  // for selenium testing.
+}
+
+/**
+ * Initializes global variables and libraries.
+ */
+function initGlobals(clientElements) {
+  g_o3dElement = clientElements[0];
+  window.g_client = g_client = g_o3dElement.client;
+  g_o3d = g_o3dElement.o3d;
+  g_math = o3djs.math;
+
+  // Create a pack to manage the objects created.
+  g_pack = g_client.createPack();
+
+  // Create the render graph for a view.
+  g_viewInfo = o3djs.rendergraph.createBasicView(
+      g_pack,
+      g_client.root,
+      g_client.renderGraphRoot);
+}
+
+/**
+ * Sets up reasonable view and projection matrices.
+ */
+function initContext() {
+  // Set up a perspective transformation for the projection.
+  g_viewInfo.drawContext.projection = g_math.matrix4.perspective(
+      g_math.degToRad(30), // 30 degree frustum.
+      g_o3dElement.clientWidth / g_o3dElement.clientHeight, // Aspect ratio.
+      1,                  // Near plane.
+      5000);              // Far plane.
+
+  // Set up our view transformation to look towards the world origin where the
+  // primitives are located.
+  g_viewInfo.drawContext.view = g_math.matrix4.lookAt(
+      g_eyePosition,   // eye
+      [0, 0, 0],    // target
+      [0, 1, 0]);  // up
+}
+
+/**
+ * Creates a material based on the given single color.
+ * @param {!o3djs.math.Vector4} baseColor A 4-component vector with
+ *     the R,G,B, and A components of a color.
+ * @return {!o3d.Material} A phong material whose overall pigment is
+ *     baseColor.
+ */
+function createMaterial(baseColor) {
+  // Create a new, empty Material object.
+  return o3djs.material.createBasicMaterial(g_pack, g_viewInfo, baseColor);
+}
+
+
+
+</script>
+
+
+
+</head>
+<body onload="initClient()">
+<h1>Primitives</h1>
+This example shows how to use the primitives utility library to make various
+shapes.
+<br/>
+<!-- Start of O3D plugin -->
+<div id="o3d" style="width: 600px; height: 600px;"></div>
+<!-- End of O3D plugin -->
+</body>
+</html>
