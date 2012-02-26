@@ -36,7 +36,7 @@
 			var mouseLastX, mouseLastY;
 			var cameraAngleX = 0;
 			var cameraAngleY = 0;
-			var cameraAngleZ = 0;
+			var cameraDist = 400;
 			
 			init();
 			
@@ -117,26 +117,6 @@
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
 				
-				// Update the camera position.
-				if(isMouseDown) {
-					cameraAngleX += mouseLastX * 10;
-					
-					// Restrict the vertical camera axis to 90 degrees.
-					if(cameraAngleY > 90) {
-						cameraAngleY = 90;
-					} else if(cameraAngleY < -90) {
-						cameraAngleY = -90;
-					} else {
-						cameraAngleY += mouseLastY * 1;
-					}
-				}
-				
-				camera.position.x = 400 * Math.sin(cameraAngleX * Math.PI/360);
-				camera.position.z = 400 * Math.cos(cameraAngleX * Math.PI/360);
-				
-				camera.position.y = 1400 * Math.sin(cameraAngleY * Math.PI/360);
-				camera.lookAt(new THREE.Vector3(0, 0, 0));
-				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 				
@@ -159,7 +139,7 @@
 				if(event.srcElement) {
 					// IE-specific (though apparently Chrome too?)
 					element = event.srcElement.nodeName;
-				} else if(event.target) {
+					} else if(event.target) {
 					// Everyone else.
 					element = event.target.nodeName;
 				}
@@ -175,37 +155,35 @@
 			}
 			
 			// Handles mousemove events. Used to move the camera.
-//			function onDocumentMouseMove(event) {
-//				// Check if the mouse button is down.
-//				if(isMouseDown) {
-//					// Get the position of the mouse.
-//					var mouseX = event.clientX;
-//					var mouseY = event.clientY;
-//					
-//					// Get the delta of the mouse's position.
-//					var mouseXDelta = event.clientX - mouseLastX;
-//					var mouseYDelta = event.clientY - mouseLastY;
+			function onDocumentMouseMove(event) {
+				// Check if the mouse button is down.
+				if(isMouseDown) {
+					// Get the position of the mouse.
+					var mouseX = event.clientX;
+					var mouseY = event.clientY;
+					
+					// Get the delta of the mouse's position.
+					var mouseXDelta = event.clientX - mouseLastX;
+					var mouseYDelta = event.clientY - mouseLastY;
 					
 					// Add the corresponding rotation to the camera angle.
-//					cameraAngleX += mouseXDelta;
-//					cameraAngleY += mouseYDelta;
+					cameraAngleX += mouseXDelta;
+					cameraAngleY += mouseYDelta;
 					
-//					console.log(cameraAngleX);
-//					console.log(cameraAngleY);
+					// Adjust the camera (horizontal).
+					camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+					camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
 					
-					// Adjust the camera.
-//					camera.position.x = 200 * Math.sin(cameraAngleX * Math.PI / 360);
-//					camera.position.z = 200 * Math.cos(cameraAngleY * Math.PI / 360);
-//					camera.lookAt(new THREE.Vector3(0, 0, 0));
-//				} 
-//				mouseLastX = event.clientX;
-//				mouseLastY = event.clientY;
-//			}			
+					// Adjust the camera (vertical).
+					camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+					//camera.position.x = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
+				//	camera.position.z = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
+					camera.lookAt(new THREE.Vector3(0, 0, 0));
+				} 
+				mouseLastX = event.clientX;
+				mouseLastY = event.clientY;
+			}			
 
-			function onDocumentMouseMove(event) {
-				mouseLastX = (event.clientX/window.innerWidth) * 2 - 1;
-				mouseLastY = (event.clientY/window.innerHeight) * 2 - 1;
-			}
-	</script>
-</body>
+		</script>
+	</body>
 </html>
