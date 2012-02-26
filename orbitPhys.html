@@ -36,7 +36,7 @@
 			var mouseLastX, mouseLastY;
 			var cameraAngleX = 0;
 			var cameraAngleY = 0;
-			var cameraDist = 400;
+			var cameraDist = 200;
 			
 			init();
 			
@@ -77,7 +77,7 @@
 				
 				// Setup the camera and scene.
 				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.z = 400;
+				camera.position.z = cameraDist;
 				scene = new THREE.Scene();
 				scene.add(camera);
 				
@@ -90,11 +90,11 @@
 				
 				// Create the Sun.
 				sunMaterial = new THREE.MeshLambertMaterial( { color: 0xCC0000 } );
-				sunModel = new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16), sunMaterial);
+				sunModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 16), sunMaterial);
 				
 				// Create the Earth.
 				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
-				earthModel = new THREE.Mesh( new THREE.SphereGeometry(25, 16, 16), earthMaterial);
+				earthModel = new THREE.Mesh( new THREE.SphereGeometry(2, 16, 16), earthMaterial);
 				earthModel.position.z = 149.598261;
 				
 				// Add everything to the scene.
@@ -179,6 +179,8 @@
 					//camera.position.x = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
 				//	camera.position.z = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
 					camera.lookAt(new THREE.Vector3(0, 0, 0));
+					
+					console.log(cameraAngleX + " " + cameraAngleY);
 				} 
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
