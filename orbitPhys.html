@@ -28,8 +28,8 @@
 			var stats;
 			
 			// Planets and their materials.
-			var sunModel, earthModel;
-			var sunMaterial, earthMaterial;
+			var sunModel, earthModel, marsModel;
+			var sunMaterial, earthMaterial, marsMaterial;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -59,6 +59,10 @@
 				// Create Earth's folder.
 				var earthFolder = gui.addFolder("Earth");
 				earthFolder.add(Earth.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Mar's folder.
+				var marsFolder = gui.addFolder("Mars");
+				marsFolder.add(Mars.config, 'Mass Multiplier', 0.1, 100);
 				
 				// ------ End of GUI Initialisation ------ //
 				
@@ -91,17 +95,23 @@
 				renderer.clear();
 				
 				// Create the Sun.
-				sunMaterial = new THREE.MeshLambertMaterial( { color: 0xCC0000 } );
+				sunMaterial = new THREE.MeshLambertMaterial( { color: 0xFF8C00 } );
 				sunModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 16), sunMaterial);
 				
 				// Create the Earth.
 				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
-				earthModel = new THREE.Mesh( new THREE.SphereGeometry(2, 16, 16), earthMaterial);
-				earthModel.position.z = 149.598261;
+				earthModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), earthMaterial);
+				earthModel.position.z = Earth.motion.position[0];
+				
+				// Create Mars.
+				marsMaterial = new THREE.MeshLambertMaterial( { color: 0xFF0000 });
+				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
+				marsModel.position.z = Mars.motion.position[0];
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
 				scene.add(earthModel);
+				scene.add(marsModel);
 				
 				// Render.
 				renderer.render(scene, camera);
@@ -118,6 +128,7 @@
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
+				objUpdate(Mars, marsModel);
 				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);

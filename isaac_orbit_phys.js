@@ -22,6 +22,15 @@ Sun.motion.position = [0, 0, 0];
 Sun.physical.mass = 1.988435e24;
 Sun.config['Mass Multiplier'] = 1;
 
+var Mars = PhysicalObject();
+Mars.motion.position = [277.939100, 0, 0];
+Mars.physical.mass = 6.5185e17;
+Mars.motion.velocity = [0, 2.408e-5, 0];
+Mars.config['Mass Multiplier'] = 1;
+
+Mars.switches.motionEnabled = true;
+Mars.switches.accelerationEnabled = true;
+
 var config = Config();
 
 // ------ Debug Variables ------ //
@@ -71,10 +80,14 @@ function update () {
 	// Get the force of gravity and add it to the Earth.
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
 	
+	// Get the force of gravity and add it to Mars.
+	Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
+	
 	// Update the position of the earth. Use the updateStep specified by the user
 	// (default: 1 second is 6 days).
 	for (var i = 0; i < config["Update Step"]; i++) {
 		var movementResult = movementModule(Earth);
+		movementResult = movementModule(Mars);
 	}
 	
 	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
