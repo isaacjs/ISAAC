@@ -71,19 +71,20 @@ function Config() {
 	}
 }
 
-// Function used to update the canvas.
-// Updates the position of the earth, and draws it.
+// Updates the position of the planets.
 function update () {
 	// Update the timestep.
 	settingsUpdate();
 	
 	// Get the force of gravity and add it to the Earth.
 	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+	Earth.forceStore.gravityMars = gravitationalForce(Earth, Mars);
 	
 	// Get the force of gravity and add it to Mars.
 	Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
+	Mars.forceStore.gravityEarth = gravitationalForce(Mars, Earth);
 	
-	// Update the position of the earth. Use the updateStep specified by the user
+	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 6 days).
 	for (var i = 0; i < config["Update Step"]; i++) {
 		var movementResult = movementModule(Earth);
