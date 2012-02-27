@@ -76,17 +76,17 @@ function update () {
 	// Update the timestep.
 	settingsUpdate();
 	
-	// Get the force of gravity and add it to the Earth.
-	Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
-	Earth.forceStore.gravityMars = gravitationalForce(Earth, Mars);
-	
-	// Get the force of gravity and add it to Mars.
-	Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
-	Mars.forceStore.gravityEarth = gravitationalForce(Mars, Earth);
-	
 	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 6 days).
 	for (var i = 0; i < config["Update Step"]; i++) {
+		// Get the force of gravity and add it to the Earth.
+		Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
+		Earth.forceStore.gravityMars = gravitationalForce(Earth, Mars);
+		
+		// Get the force of gravity and add it to Mars.
+		Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
+		Mars.forceStore.gravityEarth = gravitationalForce(Mars, Earth);
+		
 		var movementResult = movementModule(Earth);
 		movementResult = movementModule(Mars);
 	}
@@ -96,7 +96,7 @@ function update () {
 	// Display the current distance from the sun.
 	// var distanceLabel = document.getElementById('distanceLabel');
 	// if(distanceLabel) {
-		// distanceLabel.innerHTML = distance;
+	// distanceLabel.innerHTML = distance;
 	// }
 }
 
