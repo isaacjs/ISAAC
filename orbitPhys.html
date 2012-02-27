@@ -37,6 +37,7 @@
 			var cameraAngleX = 0;
 			var cameraAngleY = 0;
 			var cameraDist = 200;
+			var origin = new THREE.Vector3(0, 0, 0);
 			
 			init();
 			
@@ -77,7 +78,8 @@
 				
 				// Setup the camera and scene.
 				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.z = cameraDist;
+				camera.position.x = cameraDist;
+				camera.lookAt(origin);
 				scene = new THREE.Scene();
 				scene.add(camera);
 				
@@ -101,13 +103,13 @@
 				scene.add(sunModel);
 				scene.add(earthModel);
 				
+				// Render.
+				renderer.render(scene, camera);
+				
 				// Add hooks for mouse events, to move the camera around.
 				document.addEventListener('mousedown', onDocumentMouseDown, false);
 				document.addEventListener('mouseup', onDocumentMouseUp, false);
 				document.addEventListener('mousemove', onDocumentMouseMove, false);
-				
-				// Render.
-				renderer.render(scene, camera);
 			}
 			
 			function animUpdate() {
@@ -168,7 +170,16 @@
 					
 					// Add the corresponding rotation to the camera angle.
 					cameraAngleX += mouseXDelta;
-					cameraAngleY += mouseYDelta;
+					
+					// Restrict camera panning to 90 degrees up or down.
+					if(cameraAngleY > 175) {
+						cameraAngleY = 175;
+					} else if(cameraAngleY < -175) {
+						cameraAngleY = -175;
+					} else {
+						cameraAngleY += mouseYDelta;
+					}
+					
 					
 					// Adjust the camera (horizontal).
 					camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
@@ -176,11 +187,11 @@
 					
 					// Adjust the camera (vertical).
 					camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
-					//camera.position.x = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
-				//	camera.position.z = cameraDist * Math.cos(cameraAngleY * Math.PI / 360);
-					camera.lookAt(new THREE.Vector3(0, 0, 0));
+					camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
+					camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
+					camera.lookAt(origin);
 					
-					console.log(cameraAngleX + " " + cameraAngleY);
+					//console.log(cameraAngleX + " " + cameraAngleY);
 				} 
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
