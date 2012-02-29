@@ -9,6 +9,7 @@
 		<script type = "text/javascript" src = "isaac_math.js"></script>
 		<script type = "text/javascript" src = "isaac_obj.js"></script>
 		<script type = "text/javascript" src = "isaac_core.js"></script>
+		<script type = "text/javascript" src = "isaac_planets.js"></script>
 		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
 		<style type = "text/css">
 			body { 
@@ -108,6 +109,9 @@
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
 				marsModel.position.z = Mars.motion.position[0];
 				
+				// Create Mercury.
+				
+				
 				// Add everything to the scene.
 				scene.add(sunModel);
 				scene.add(earthModel);
@@ -129,6 +133,7 @@
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
 				objUpdate(Mars, marsModel);
+				objUpdate(Sun, sunModel);
 				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
