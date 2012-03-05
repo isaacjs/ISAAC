@@ -29,8 +29,8 @@
 			var stats;
 			
 			// Planets and their materials.
-			var sunModel, earthModel, marsModel;
-			var sunMaterial, earthMaterial, marsMaterial;
+			var sunModel, earthModel, marsModel, mercuryModel, jupiterModel;
+			var sunMaterial, earthMaterial, marsMaterial, mercuryModel, jupiterMaterial;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -61,9 +61,17 @@
 				var earthFolder = gui.addFolder("Earth");
 				earthFolder.add(Earth.config, 'Mass Multiplier', 0.1, 100);
 				
-				// Create Mar's folder.
+				// Create Mars' folder.
 				var marsFolder = gui.addFolder("Mars");
 				marsFolder.add(Mars.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Mercury's folder.
+				var mercuryFolder = gui.addFolder("Mercury");
+				mercuryFolder.add(Mercury.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Jupiter's folder.
+				var jupiterFolder = gui.addFolder("Jupiter");
+				jupiterFolder.add(Jupiter.config, 'Mass Multiplier', 0.1, 100);
 				
 				// ------ End of GUI Initialisation ------ //
 				
@@ -102,20 +110,29 @@
 				// Create the Earth.
 				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
 				earthModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), earthMaterial);
-				earthModel.position.z = Earth.motion.position[0];
+	//			earthModel.position.z = Earth.motion.position[0];
 				
 				// Create Mars.
 				marsMaterial = new THREE.MeshLambertMaterial( { color: 0xFF0000 });
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
-				marsModel.position.z = Mars.motion.position[0];
+		//		marsModel.position.z = Mars.motion.position[0];
 				
 				// Create Mercury.
+				mercuryMaterial = new THREE.MeshLambertMaterial( { color: 0xFFD700 });
+				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), mercuryMaterial);
+		//		mercuryModel.position.z = Mercury.motion.position[0];
 				
+				// Create Jupiter.
+				jupiterMaterial = new THREE.MeshLambertMaterial( {color: 0xFF4500 });
+				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 16), jupiterMaterial);
+			//	jupiterModel.position.z = Jupiter.motion.position[0];
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
 				scene.add(earthModel);
 				scene.add(marsModel);
+				scene.add(mercuryModel);
+				scene.add(jupiterModel);
 				
 				// Render.
 				renderer.render(scene, camera);
@@ -134,6 +151,8 @@
 				objUpdate(Earth, earthModel);
 				objUpdate(Mars, marsModel);
 				objUpdate(Sun, sunModel);
+				objUpdate(Mercury, mercuryModel);
+				objUpdate(Jupiter, jupiterModel);
 				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);

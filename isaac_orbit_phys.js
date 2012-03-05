@@ -60,14 +60,25 @@ function update () {
 		//Earth.forceStore.gravityMars = gravitationalForce(Earth, Mars);
 		updateGravity(Earth, Sun);
 		updateGravity(Earth, Mars);
+		updateGravity(Earth, Mercury);
+		updateGravity(Earth, Jupiter);
 		
 		// Get the force of gravity and add it to Mars.
 		//Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
 		//Mars.forceStore.gravityEarth = gravitationalForce(Mars, Earth);
 		updateGravity(Mars, Sun);
+		updateGravity(Mars, Mercury);
+		updateGravity(Mars, Jupiter);
+		
+		updateGravity(Mercury, Sun);
+		updateGravity(Mercury, Jupiter);
+		
+		updateGravity(Jupiter, Sun);
 		
 		var movementResult = movementModule(Earth);
 		movementResult = movementModule(Mars);
+		movementResult = movementModule(Mercury);
+		movementResult = movementModule(Jupiter);
 	}
 	
 	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);

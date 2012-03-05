@@ -31,3 +31,23 @@ Mars.switches.motionEnabled = true;
 Mars.switches.accelerationEnabled = true;
 
 // Mercury.
+var Mercury = PhysicalObject();
+Mercury.motion.position = [-57.90918, 0, 0];
+Mercury.physical.mass = 3.3022e17;
+Mercury.motion.velocity = [0, -4.74e-5, 0];
+Mercury.Name = "Mercury";
+Mercury.config['Mass Multiplier'] = 1;
+
+Mercury.switches.motionEnabled = true;
+Mercury.switches.accelerationEnabled = true;
+
+// Jupiter.
+var Jupiter = PhysicalObject();
+Jupiter.motion.position = [-778.41203, 0, 0];
+Jupiter.physical.mass = 1.8988e21;
+Jupiter.motion.velocity = [0, -1.3e-5, 0];
+Jupiter.Name = "Jupiter";
+Jupiter.config['Mass Multiplier'] = 1;
+
+Jupiter.switches.motionEnabled = true;
+Jupiter.switches.accelerationEnabled = true;
