@@ -51,3 +51,14 @@ Jupiter.config['Mass Multiplier'] = 1;
 
 Jupiter.switches.motionEnabled = true;
 Jupiter.switches.accelerationEnabled = true;
+
+// Neptune.
+var Neptune = PhysicalObject();
+Neptune.motion.position = [4503.443661, 0, 0];
+Neptune.physical.mass = 1.0278e20;
+Neptune.motion.velocity = [0, 5.43e-6, 0];
+Neptune.Name = "Neptune";
+Neptune.config['Mass Multiplier'] = 1;
+
+Neptune.switches.motionEnabled = true;
+Neptune.switches.accelerationEnabled = true;

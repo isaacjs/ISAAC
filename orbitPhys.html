@@ -29,8 +29,8 @@
 			var stats;
 			
 			// Planets and their materials.
-			var sunModel, earthModel, marsModel, mercuryModel, jupiterModel;
-			var sunMaterial, earthMaterial, marsMaterial, mercuryModel, jupiterMaterial;
+			var sunModel, earthModel, marsModel, mercuryModel, jupiterModel, venusModel, neptuneModel, uranusModel, plutoModel;
+			var sunMaterial, earthMaterial, marsMaterial, mercuryModel, jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial, plutoMaterial;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -120,24 +120,40 @@
 				renderer.clear();
 				
 				// Create the Sun.
-				sunMaterial = new THREE.MeshLambertMaterial( { color: 0xFF8C00 } );
+				sunMaterial = new THREE.MeshBasicMaterial( { color: 0xFF8C00 } );
 				sunModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 16), sunMaterial);
 				
 				// Create the Earth.
-				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
+				earthMaterial = new THREE.MeshBasicMaterial( { color: 0x458B00 } );
 				earthModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), earthMaterial);
 				
 				// Create Mars.
-				marsMaterial = new THREE.MeshLambertMaterial( { color: 0xFF0000 });
+				marsMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000 });
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
 				
 				// Create Mercury.
-				mercuryMaterial = new THREE.MeshLambertMaterial( { color: 0xFFD700 });
-				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), mercuryMaterial);
+				mercuryMaterial = new THREE.MeshBasicMaterial( { color: 0xFFD700 });
+				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), mercuryMaterial);
 				
 				// Create Jupiter.
-				jupiterMaterial = new THREE.MeshLambertMaterial( {color: 0xFF4500 });
+				jupiterMaterial = new THREE.MeshBasicMaterial( {color: 0xFF4500 });
 				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 16), jupiterMaterial);
+				
+				// Create Venus.
+				venusMaterial = new THREE.MeshBasicMaterial( {color: 0xCFCC98 });
+				venusModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), venusMaterial);
+				
+				// Create Neptune.
+				neptuneMaterial = new THREE.MeshBasicMaterial( {color: 0x4A73BE });
+				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), venusMaterial);
+				
+				// Create Uranus.
+				uranusMaterial = new THREE.MeshBasicMaterial( {color: 0x97D5D9 });
+				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), venusMaterial);
+				
+				// Create Pluto.
+				plutoMaterial = new THREE.MeshBasicMaterial( {color: 0xD4D4D4 });
+				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), venusMaterial);
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
@@ -145,6 +161,7 @@
 				scene.add(marsModel);
 				scene.add(mercuryModel);
 				scene.add(jupiterModel);
+				scene.add(neptuneModel);
 				
 				// Render.
 				renderer.render(scene, camera);
@@ -165,6 +182,7 @@
 				objUpdate(Sun, sunModel);
 				objUpdate(Mercury, mercuryModel);
 				objUpdate(Jupiter, jupiterModel);
+				objUpdate(Neptune, neptuneModel);
 				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);

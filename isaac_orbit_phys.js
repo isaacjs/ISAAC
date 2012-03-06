@@ -52,30 +52,36 @@ function update () {
 	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 6.2 days).
 	for (var i = 0; i < config["Update Step"]; i++) {
-		// Get the force of gravity and add it to the Earth.
-		//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
-		//Earth.forceStore.gravityMars = gravitationalForce(Earth, Mars);
+		// Update Earth's gravity.
 		updateGravity(Earth, Sun);
 		updateGravity(Earth, Mars);
 		updateGravity(Earth, Mercury);
 		updateGravity(Earth, Jupiter);
+		updateGravity(Earth, Neptune);
 		
-		// Get the force of gravity and add it to Mars.
-		//Mars.forceStore.gravity = gravitationalForce(Mars, Sun);
-		//Mars.forceStore.gravityEarth = gravitationalForce(Mars, Earth);
+		// Update Mars' gravity.
 		updateGravity(Mars, Sun);
 		updateGravity(Mars, Mercury);
 		updateGravity(Mars, Jupiter);
+		updateGravity(Mars, Neptune);
 		
+		// Update Mercury's gravity.
 		updateGravity(Mercury, Sun);
 		updateGravity(Mercury, Jupiter);
+		updateGravity(Mercury, Neptune);
 		
+		// Update Jupiter's gravity.
 		updateGravity(Jupiter, Sun);
+		updateGravity(Jupiter, Neptune);
+		
+		// Update Neptune's gravity.
+		updateGravity(Neptune, Sun);
 		
 		var movementResult = movementModule(Earth);
 		movementResult = movementModule(Mars);
 		movementResult = movementModule(Mercury);
 		movementResult = movementModule(Jupiter);
+		movementResult = movementModule(Neptune);
 	}
 	
 	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
