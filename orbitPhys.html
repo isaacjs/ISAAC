@@ -53,12 +53,19 @@
 				simSettings.add(config, 'Update Step', 10, 100);
 				simSettings.add(config, 'Gravitational Constant Multiplier', 0.1, 10);
 				
-				// Create the Planets folder.
-				var planetsFolder = gui.addFolder("Planets");
+				// Create the Orbital Bodies folder.
+				var planetsFolder = gui.addFolder("Orbital Bodies");
 				
 				// Create the Sun's folder.
 				var sunFolder = planetsFolder.addFolder("Sun");
 				sunFolder.add(Sun.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Mercury's folder.
+				var mercuryFolder = planetsFolder.addFolder("Mercury");
+				mercuryFolder.add(Mercury.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Venus' folder.
+				var venusFolder = planetsFolder.addFolder("Venus");
 				
 				// Create Earth's folder.
 				var earthFolder = planetsFolder.addFolder("Earth");
@@ -68,13 +75,18 @@
 				var marsFolder = planetsFolder.addFolder("Mars");
 				marsFolder.add(Mars.config, 'Mass Multiplier', 0.1, 100);
 				
-				// Create Mercury's folder.
-				var mercuryFolder = planetsFolder.addFolder("Mercury");
-				mercuryFolder.add(Mercury.config, 'Mass Multiplier', 0.1, 100);
-				
 				// Create Jupiter's folder.
 				var jupiterFolder = planetsFolder.addFolder("Jupiter");
 				jupiterFolder.add(Jupiter.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Neptune's folder.
+				var neptuneFolder = planetsFolder.addFolder("Neptune");
+				
+				// Create Uranus' folder.
+				var uranusFolder = planetsFolder.addFolder("Uranus");
+				
+				// Create Pluto's folder. Yes, it's a "planet".
+				var plutoFolder = planetsFolder.addFolder("Pluto");
 				
 				// ------ End of GUI Initialisation ------ //
 				
