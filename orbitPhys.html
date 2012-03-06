@@ -53,24 +53,27 @@
 				simSettings.add(config, 'Update Step', 10, 100);
 				simSettings.add(config, 'Gravitational Constant Multiplier', 0.1, 10);
 				
+				// Create the Planets folder.
+				var planetsFolder = gui.addFolder("Planets");
+				
 				// Create the Sun's folder.
-				var sunFolder = gui.addFolder("Sun");
+				var sunFolder = planetsFolder.addFolder("Sun");
 				sunFolder.add(Sun.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Earth's folder.
-				var earthFolder = gui.addFolder("Earth");
+				var earthFolder = planetsFolder.addFolder("Earth");
 				earthFolder.add(Earth.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Mars' folder.
-				var marsFolder = gui.addFolder("Mars");
+				var marsFolder = planetsFolder.addFolder("Mars");
 				marsFolder.add(Mars.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Mercury's folder.
-				var mercuryFolder = gui.addFolder("Mercury");
+				var mercuryFolder = planetsFolder.addFolder("Mercury");
 				mercuryFolder.add(Mercury.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Jupiter's folder.
-				var jupiterFolder = gui.addFolder("Jupiter");
+				var jupiterFolder = planetsFolder.addFolder("Jupiter");
 				jupiterFolder.add(Jupiter.config, 'Mass Multiplier', 0.1, 100);
 				
 				// ------ End of GUI Initialisation ------ //
