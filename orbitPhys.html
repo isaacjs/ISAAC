@@ -50,7 +50,8 @@
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
-				simSettings.add(config, 'Update Step', 10, 100);
+				simSettings.add(config, 'Update Step', 
+					{ "One Day" : 0.62, "One Week" : 11.3, "One Month" : 48.387, "Three Months" : 145.161 });
 				simSettings.add(config, 'Gravitational Constant Multiplier', 0.1, 10);
 				
 				// Create the Orbital Bodies folder.
@@ -85,7 +86,7 @@
 				// Create Uranus' folder.
 				var uranusFolder = planetsFolder.addFolder("Uranus");
 				
-				// Create Pluto's folder. Yes, it's a "planet".
+				// Create Pluto's folder.
 				var plutoFolder = planetsFolder.addFolder("Pluto");
 				
 				// ------ End of GUI Initialisation ------ //

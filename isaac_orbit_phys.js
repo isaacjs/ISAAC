@@ -42,18 +42,15 @@ function gravitationalForce (obj1, obj2) {
 
 function Config() {
 	return {
-		"Update Step" : 10,
+		"Update Step" : 0.62,
 		"Gravitational Constant Multiplier" : 1
 	}
 }
 
 // Updates the position of the planets.
 function update () {
-	// Update the timestep.
-	settingsUpdate();
-	
 	// Update the position of the planets. Use the updateStep specified by the user
-	// (default: 1 second is 6 days).
+	// (default: 1 second is 6.2 days).
 	for (var i = 0; i < config["Update Step"]; i++) {
 		// Get the force of gravity and add it to the Earth.
 		//Earth.forceStore.gravity = gravitationalForce(Earth, Sun);
