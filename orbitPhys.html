@@ -126,22 +126,18 @@
 				// Create the Earth.
 				earthMaterial = new THREE.MeshLambertMaterial( { color: 0x458B00 } );
 				earthModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), earthMaterial);
-	//			earthModel.position.z = Earth.motion.position[0];
 				
 				// Create Mars.
 				marsMaterial = new THREE.MeshLambertMaterial( { color: 0xFF0000 });
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
-		//		marsModel.position.z = Mars.motion.position[0];
 				
 				// Create Mercury.
 				mercuryMaterial = new THREE.MeshLambertMaterial( { color: 0xFFD700 });
 				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), mercuryMaterial);
-		//		mercuryModel.position.z = Mercury.motion.position[0];
 				
 				// Create Jupiter.
 				jupiterMaterial = new THREE.MeshLambertMaterial( {color: 0xFF4500 });
 				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 16), jupiterMaterial);
-			//	jupiterModel.position.z = Jupiter.motion.position[0];
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
