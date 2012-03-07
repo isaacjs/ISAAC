@@ -62,3 +62,47 @@ Neptune.config['Mass Multiplier'] = 1;
 
 Neptune.switches.motionEnabled = true;
 Neptune.switches.accelerationEnabled = true;
+
+// Venus.
+var Venus = PhysicalObject();
+Venus.motion.position = [-108.20893, 0, 0];
+Venus.physical.mass = 4.869e18;
+Venus.motion.velocity = [0, -3.5e-5, 0];
+Venus.Name = "Venus";
+Venus.config['Mass Multiplier'] = 1;
+
+Venus.switches.motionEnabled = true;
+Venus.switches.accelerationEnabled = true;
+
+// Uranus.
+var Uranus = PhysicalObject();
+Uranus.motion.position = [-2870.97222, 0, 0];
+Uranus.physical.mass = 8.6625e19;
+Uranus.motion.velocity = [0, -6.8e-6, 0];
+Uranus.Name = "Uranus";
+Uranus.config['Mass Multiplier'] = 1;
+
+Uranus.switches.motionEnabled = true;
+Uranus.switches.accelerationEnabled = true;
+
+// Saturn.
+var Saturn = PhysicalObject();
+Saturn.motion.position = [1426.72541, 0, 0];
+Saturn.physical.mass = 5.685e20;
+Saturn.motion.velocity = [0, 9.64e-6, 0];
+Saturn.Name = "Saturn";
+Saturn.config['Mass Multiplier'] = 1;
+
+Saturn.switches.motionEnabled = true;
+Saturn.switches.accelerationEnabled = true;
+
+// Pluto.
+var Pluto = PhysicalObject();
+Pluto.motion.position = [5906.37627, 0, 0];
+Pluto.physical.mass = 1.314e16;
+Pluto.motion.velocity = [0, 4.67e-6, 0];
+Pluto.Name = "Pluto";
+Pluto.config['Mass Multiplier'] = 1;
+
+Pluto.switches.motionEnabled = true;
+Pluto.switches.accelerationEnabled = true;

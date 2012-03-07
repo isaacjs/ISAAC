@@ -29,8 +29,11 @@
 			var stats;
 			
 			// Planets and their materials.
-			var sunModel, earthModel, marsModel, mercuryModel, jupiterModel, venusModel, neptuneModel, uranusModel, plutoModel;
-			var sunMaterial, earthMaterial, marsMaterial, mercuryModel, jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial, plutoMaterial;
+			var sunModel, earthModel, marsModel, mercuryModel;
+			var jupiterModel, venusModel, neptuneModel, uranusModel, plutoModel, saturnModel;
+			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
+			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
+			var plutoMaterial, saturnMaterial;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -67,6 +70,7 @@
 				
 				// Create Venus' folder.
 				var venusFolder = planetsFolder.addFolder("Venus");
+				venusFolder.add(Venus.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Earth's folder.
 				var earthFolder = planetsFolder.addFolder("Earth");
@@ -80,14 +84,21 @@
 				var jupiterFolder = planetsFolder.addFolder("Jupiter");
 				jupiterFolder.add(Jupiter.config, 'Mass Multiplier', 0.1, 100);
 				
-				// Create Neptune's folder.
-				var neptuneFolder = planetsFolder.addFolder("Neptune");
+				// Create Saturn's folder.
+				var saturnFolder = planetsFolder.addFolder("Saturn");
+				saturnFolder.add(Saturn.config, 'Mass Multiplier', 0.1, 100);
 				
 				// Create Uranus' folder.
 				var uranusFolder = planetsFolder.addFolder("Uranus");
+				uranusFolder.add(Uranus.config, 'Mass Multiplier', 0.1, 100);
+				
+				// Create Neptune's folder.
+				var neptuneFolder = planetsFolder.addFolder("Neptune");
+				neptuneFolder.add(Neptune.config, 'Mass Multiplier', 0.1, 100);				
 				
 				// Create Pluto's folder.
 				var plutoFolder = planetsFolder.addFolder("Pluto");
+				plutoFolder.add(Pluto.config, 'Mass Multiplier', 0.1, 100);
 				
 				// ------ End of GUI Initialisation ------ //
 				
@@ -155,6 +166,10 @@
 				plutoMaterial = new THREE.MeshBasicMaterial( {color: 0xD4D4D4 });
 				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), venusMaterial);
 				
+				// Create Saturn.
+				saturnMaterial = new THREE.MeshBasicMaterial( {color: 0xCDC332 });
+				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 16), saturnMaterial);
+				
 				// Add everything to the scene.
 				scene.add(sunModel);
 				scene.add(earthModel);
@@ -162,6 +177,9 @@
 				scene.add(mercuryModel);
 				scene.add(jupiterModel);
 				scene.add(neptuneModel);
+				scene.add(venusModel);
+				scene.add(saturnModel);
+				scene.add(plutoModel);
 				
 				// Render.
 				renderer.render(scene, camera);
@@ -183,6 +201,10 @@
 				objUpdate(Mercury, mercuryModel);
 				objUpdate(Jupiter, jupiterModel);
 				objUpdate(Neptune, neptuneModel);
+				objUpdate(Venus, venusModel);
+				objUpdate(Uranus, uranusModel);
+				objUpdate(Saturn, saturnModel);
+				objUpdate(Pluto, plutoModel);
 				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);

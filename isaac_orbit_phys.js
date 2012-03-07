@@ -58,30 +58,71 @@ function update () {
 		updateGravity(Earth, Mercury);
 		updateGravity(Earth, Jupiter);
 		updateGravity(Earth, Neptune);
+		updateGravity(Earth, Venus);
+		updateGravity(Earth, Uranus);
+		updateGravity(Earth, Saturn);
+		updateGravity(Earth, Pluto);
 		
 		// Update Mars' gravity.
 		updateGravity(Mars, Sun);
 		updateGravity(Mars, Mercury);
 		updateGravity(Mars, Jupiter);
 		updateGravity(Mars, Neptune);
+		updateGravity(Mars, Venus);
+		updateGravity(Mars, Uranus);
+		updateGravity(Mars, Saturn);
+		updateGravity(Mars, Pluto);
 		
 		// Update Mercury's gravity.
 		updateGravity(Mercury, Sun);
 		updateGravity(Mercury, Jupiter);
 		updateGravity(Mercury, Neptune);
+		updateGravity(Mercury, Venus);
+		updateGravity(Mercury, Uranus);
+		updateGravity(Mercury, Saturn);
+		updateGravity(Mercury, Pluto);
 		
 		// Update Jupiter's gravity.
 		updateGravity(Jupiter, Sun);
 		updateGravity(Jupiter, Neptune);
+		updateGravity(Jupiter, Venus);
+		updateGravity(Jupiter, Uranus);
+		updateGravity(Jupiter, Saturn);
+		updateGravity(Jupiter, Pluto);
 		
 		// Update Neptune's gravity.
 		updateGravity(Neptune, Sun);
+		updateGravity(Neptune, Venus);
+		updateGravity(Neptune, Uranus);
+		updateGravity(Neptune, Saturn);
+		updateGravity(Neptune, Pluto);
+		
+		// Update Venus' gravity.
+		updateGravity(Venus, Sun);
+		updateGravity(Venus, Uranus);
+		updateGravity(Venus, Saturn);
+		updateGravity(Venus, Pluto);
+		
+		// Update Uranus' gravity.
+		updateGravity(Uranus, Sun);
+		updateGravity(Uranus, Saturn);
+		updateGravity(Uranus, Pluto);
+		
+		// Update Saturn's gravity.
+		updateGravity(Saturn, Sun);
+		updateGravity(Saturn, Pluto);
+		
+		// Update Pluto's gravity.
+		updateGravity(Pluto, Sun);
 		
 		var movementResult = movementModule(Earth);
 		movementResult = movementModule(Mars);
 		movementResult = movementModule(Mercury);
 		movementResult = movementModule(Jupiter);
 		movementResult = movementModule(Neptune);
+		movementResult = movementModule(Venus);
+		movementResult = movementModule(Uranus);
+		movementResult = movementModule(Saturn);
 	}
 	
 	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
