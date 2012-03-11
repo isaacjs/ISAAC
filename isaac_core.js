@@ -1,8 +1,3 @@
-// Move this to a configuration script file.
-//var timeStep = 1.0; // Time in seconds.
-//var gravityForce = Force("Gravity", [0, 0, -9.8]); // Force of gravity within the environment, in Newtons per Kilogram.
-//var bigG = 6.674e-11; // The Gravitational Constant.
-
 // Main logic module for ISAAC Physics.
 
 function displayProperties (obj) {
@@ -156,5 +151,32 @@ function gravitationalForce (obj1, obj2) {
 	// Scale the direction vector to be the same magnitude as the force.
 	directionVector = vectorFitToLength(directionVector, force);
 	
+	return directionVector;
+}
+
+// Gravitational Force Function.
+// Given two objects, returns the vector of gravitational force between them, from the first object
+// to the second.
+function gravitationalForce (obj1, obj2) {	
+	// Get the direction vector from the first object to the second.
+	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
+	
+	// Get the distance between the two objects.
+	distance = vectorLength(directionVector);
+	
+	// Get Gm1m2.
+	var numerator = G * obj1.physical.mass * obj2.physical.mass;
+	
+	// Modify Gm1m2 according to the relevant multipliers.
+	numerator *= config['Gravitational Constant Multiplier'];
+	numerator *= obj1.config['Mass Multiplier'];
+	numerator *= obj2.config['Mass Multiplier'];
+	
+	// Get the force between the two objects.
+	var force = numerator / Math.pow(distance, 2);
+	
+	// Scale the direction vector to be the same magnitude as the force.
+	directionVector = vectorFitToLength(directionVector, force);
+	obj1.switches.forceChanged = true;
 	return directionVector;
 }

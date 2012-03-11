@@ -44,6 +44,9 @@
 			var cameraDist = 200;
 			var origin = new THREE.Vector3(0, 0, 0);
 			
+			// Web Worker.
+			var worker = new Worker('isaac_worker.js');
+			
 			init();
 			
 			function init() {
@@ -189,11 +192,26 @@
 				document.addEventListener('mousedown', onDocumentMouseDown, false);
 				document.addEventListener('mouseup', onDocumentMouseUp, false);
 				document.addEventListener('mousemove', onDocumentMouseMove, false);
+				
+				// Start the worker.
+				worker.addEventListener('message', function(e) {
+					Earth = e['Earth'];
+					Mars = e['Mars'];
+					Sun = e['Sun'];
+					Mercury = e['Mercury'];
+					Jupiter = e['Jupiter'];
+					Neptune = e['Neptune'];
+					Venus = e['Venus'];
+					Uranus = e['Uranus'];
+					Saturn = e['Saturn'];
+					Pluto = e['Pluto'];
+				});
+				worker.postMessage();
 			}
 			
 			function animUpdate() {
-				// Update the objects in the physics layer.
-				update();
+				// Ping the worker to get our data.
+				worker.postMessage();
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
