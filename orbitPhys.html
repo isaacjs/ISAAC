@@ -7,11 +7,10 @@
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
-		<script type = "text/javascript" src = "isaac_math.js"></script>
-		<script type = "text/javascript" src = "isaac_obj.js"></script>
-		<script type = "text/javascript" src = "isaac_core.js"></script>
-		<script type = "text/javascript" src = "isaac_planets.js"></script>
-		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
+		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
+		<script type = "text/javascript" src = "./isaac_obj.js"></script>
+		<script type = "text/javascript" src = "./isaac_planets.js"></script>
+		
 		<style type = "text/css">
 			body { 
 			margin: 0px; 
@@ -35,6 +34,8 @@
 			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
+			
+			var Earth, Sun, Mars, Mercury, Neptune, Pluto, Jupiter, Uranus, Saturn, Venus;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -195,23 +196,33 @@
 				
 				// Start the worker.
 				worker.addEventListener('message', function(e) {
-					Earth = e['Earth'];
-					Mars = e['Mars'];
-					Sun = e['Sun'];
-					Mercury = e['Mercury'];
-					Jupiter = e['Jupiter'];
-					Neptune = e['Neptune'];
-					Venus = e['Venus'];
-					Uranus = e['Uranus'];
-					Saturn = e['Saturn'];
-					Pluto = e['Pluto'];
+					var data = e.data;
+					Earth = data['Earth'];
+					Mars = data['Mars'];
+					Sun = data['Sun'];
+					Mercury = data['Mercury'];
+					Jupiter = data['Jupiter'];
+					Neptune = data['Neptune'];
+					Venus = data['Venus'];
+					Uranus = data['Uranus'];
+					Saturn = data['Saturn'];
+					Pluto = data['Pluto'];
 				});
-				worker.postMessage();
 			}
 			
 			function animUpdate() {
 				// Ping the worker to get our data.
-				worker.postMessage();
+				worker.postMessage({'Config' : config, 
+					'Earth' : Earth, 
+					'Mars' : Mars, 
+					'Mercury' : Mercury, 
+					'Venus' : Venus,
+					'Neptune' : Neptune,
+					'Uranus' : Uranus,
+					'Sun' : Sun,
+					'Pluto' : Pluto,
+					'Jupiter' : Jupiter, 
+					'Saturn' : Saturn});
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
