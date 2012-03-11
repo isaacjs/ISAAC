@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-	<title>...eppur si muove.</title>
 	<head>
+		<meta charset="UTF-8">
+		<title>...eppur si muove.</title>
 		<script type = "text/javascript" src = "./external/threejs/Three.js"></script>
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
-		<script type = "text/javascript" src = "isaac_math.js"></script>
-		<script type = "text/javascript" src = "isaac_obj.js"></script>
-		<script type = "text/javascript" src = "isaac_core.js"></script>
-		<script type = "text/javascript" src = "isaac_planets.js"></script>
-		<script type = "text/javascript" src = "isaac_orbit_phys.js"></script>
+		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
+		<script type = "text/javascript" src = "./isaac_obj.js"></script>
+		<script type = "text/javascript" src = "./isaac_planets.js"></script>
+		
 		<style type = "text/css">
 			body { 
 			margin: 0px; 
@@ -35,6 +35,8 @@
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
 			
+			var Earth, Sun, Mars, Mercury, Neptune, Pluto, Jupiter, Uranus, Saturn, Venus;
+			
 			// Camera movement-related variables.
 			var isMouseDown = false;
 			var mouseLastX, mouseLastY;
@@ -42,6 +44,9 @@
 			var cameraAngleY = 0;
 			var cameraDist = 200;
 			var origin = new THREE.Vector3(0, 0, 0);
+			
+			// Web Worker.
+			var worker = new Worker('isaac_worker.js');
 			
 			init();
 			
@@ -188,11 +193,36 @@
 				document.addEventListener('mousedown', onDocumentMouseDown, false);
 				document.addEventListener('mouseup', onDocumentMouseUp, false);
 				document.addEventListener('mousemove', onDocumentMouseMove, false);
+				
+				// Start the worker.
+				worker.addEventListener('message', function(e) {
+					var data = e.data;
+					Earth = data['Earth'];
+					Mars = data['Mars'];
+					Sun = data['Sun'];
+					Mercury = data['Mercury'];
+					Jupiter = data['Jupiter'];
+					Neptune = data['Neptune'];
+					Venus = data['Venus'];
+					Uranus = data['Uranus'];
+					Saturn = data['Saturn'];
+					Pluto = data['Pluto'];
+				});
 			}
 			
 			function animUpdate() {
-				// Update the objects in the physics layer.
-				update();
+				// Ping the worker to get our data.
+				worker.postMessage({'Config' : config, 
+					'Earth' : Earth, 
+					'Mars' : Mars, 
+					'Mercury' : Mercury, 
+					'Venus' : Venus,
+					'Neptune' : Neptune,
+					'Uranus' : Uranus,
+					'Sun' : Sun,
+					'Pluto' : Pluto,
+					'Jupiter' : Jupiter, 
+					'Saturn' : Saturn});
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
