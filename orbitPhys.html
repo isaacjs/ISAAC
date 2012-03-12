@@ -211,18 +211,7 @@
 			}
 			
 			function animUpdate() {
-				// Ping the worker to get our data.
-				worker.postMessage({'Config' : config, 
-					'Earth' : Earth, 
-					'Mars' : Mars, 
-					'Mercury' : Mercury, 
-					'Venus' : Venus,
-					'Neptune' : Neptune,
-					'Uranus' : Uranus,
-					'Sun' : Sun,
-					'Pluto' : Pluto,
-					'Jupiter' : Jupiter, 
-					'Saturn' : Saturn});
+
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);

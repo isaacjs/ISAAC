@@ -1,20 +1,16 @@
-var Queue = {
-	"internal":[],
-	"size":0,
-	"offset":-1
-};
-
-Queue.add = function (item) {
-	Queue.internal[Queue.size]=item;
-	Queue.size++;
-}
-
-Queue.next = function () {
-	if (Queue.size>0){
-		Queue.offset++;
-		Queue.offset %= Queue.size;
-		return Queue.internal[Queue.offset];
+function Queue (size) {
+	return {
+		"size" : size,
+		"contents" : new Array(),
+		"enqueue" : function(element) {
+			if(this.contents.length === this.size) {
+				this.contents.shift();
+			}
+			this.contents.push(element);
+		},
+		"dequeue" : function() {
+			var first = this.contents.shift();
+			return first;
+		}
 	}
-	else
-		console.log("Empty Queue!");
 }
