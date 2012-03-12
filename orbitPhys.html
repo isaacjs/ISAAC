@@ -263,6 +263,9 @@
 			// Handles mouseup events.
 			function onDocumentMouseUp(event) {
 				isMouseDown = false;
+				
+				// Send updated settings to the worker.
+				worker.postMessage({ 'command' : 'set', 'config' : config });
 			}
 			
 			// Handles mousemove events. Used to move the camera.
