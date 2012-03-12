@@ -136,13 +136,7 @@ function update () {
 
 function updateGravity(planet1, planet2) {
 	planet1.forceStore["gravity" + planet2.Name] = gravitationalForce(planet1, planet2);
-	
-	var worker = new Worker("isaac_worker.js");
-	worker.addEventListener('message', function(e) {
-	planet2.forceStore["gravity" + planet1.Name] = e;
-	});
-	
-	worker.postMessage({'first' : planet2, 'second' : planet1});
+	planet2.forceStore["gravity" + planet1.Name] = gravitationalForce(planet2, planet1);
 }
 
 // ------ The following code has been deprecated. ------ //

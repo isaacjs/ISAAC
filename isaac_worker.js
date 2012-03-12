@@ -31,7 +31,7 @@ self.addEventListener('message', function(e) {
 
 function timeLoop() {
 	update();
-	setTimeout(timeLoop(), 500/3);
+	setTimeout(timeLoop(), 1/60);
 }
 
 timeLoop();
