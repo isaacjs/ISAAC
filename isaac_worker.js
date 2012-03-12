@@ -1,12 +1,13 @@
-importScripts('isaac_math.js', 'isaac_obj.js', 'isaac_core.js', 'isaac_planets.js', 'isaac_orbit_phys.js', 'isaac_queue');
+importScripts('isaac_math.js', 'isaac_obj.js', 'isaac_core.js', 'isaac_planets.js', 'isaac_orbit_phys.js', 'isaac_queue.js');
 
 self.addEventListener('message', function(e) {
-	var command = e.data['command'];
-	switch(command) {
-		case "get" :
-			self.postMessage(posQueue.dequeue());
+	var data = e.data;
+	switch(data.command) {
+		case 'get' :
+			var front = posQueue.dequeue();
+			self.postMessage({ 'response' : front, 'queueLength' : posQueue.contents.length });
 			break;
-		case "set" :
+		case 'set' :
 			clearTimeout(timer);
 			config = e.data['config'];
 			timeLoop();
@@ -16,11 +17,13 @@ self.addEventListener('message', function(e) {
 
 var posQueue = Queue(60);
 var config = Config();
+var count = 0;
 var timer;
 
 function timeLoop() {
-	update();
-	timer = setTimeout(timeLoop(), 1/60);
+	posQueue.enqueue(count);
+	count++;
+	timer = setTimeout(timeLoop, 50/3);
 }
 
 timeLoop();

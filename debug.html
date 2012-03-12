@@ -11,7 +11,16 @@
 	
 	<pre>		
 		<script type = "text/javascript">
-			
+			var worker = new Worker('isaac_worker.js');
+			worker.addEventListener('message', function(e) {
+				console.log('Worker said: ', e.data.response, ' Length: ', e.data.queueLength);
+			}, false);
+
+			function repeat () {
+				worker.postMessage({'command' : 'get'});
+				setTimeout(repeat, 100/3);
+			}
+			repeat();
 		</script>
 	</pre>
 </html>
