@@ -7,10 +7,6 @@
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
-		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
-		<script type = "text/javascript" src = "./isaac_obj.js"></script>
-		<script type = "text/javascript" src = "./isaac_planets.js"></script>
-		
 		<style type = "text/css">
 			body { 
 			margin: 0px; 
@@ -195,23 +191,11 @@
 				document.addEventListener('mousemove', onDocumentMouseMove, false);
 				
 				// Start the worker.
-				worker.addEventListener('message', function(e) {
-					var data = e.data;
-					Earth = data['Earth'];
-					Mars = data['Mars'];
-					Sun = data['Sun'];
-					Mercury = data['Mercury'];
-					Jupiter = data['Jupiter'];
-					Neptune = data['Neptune'];
-					Venus = data['Venus'];
-					Uranus = data['Uranus'];
-					Saturn = data['Saturn'];
-					Pluto = data['Pluto'];
-				});
+				
 			}
 			
 			function animUpdate() {
-
+			
 				
 				// Update the graphical representations of the objects.
 				objUpdate(Earth, earthModel);
