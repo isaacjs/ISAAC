@@ -5,7 +5,7 @@
 // Mass: gigagrams
 var G = 6.67e-32 // in Newton square Gigameters per Gigagram squared.
 var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
-var timeStep = 864 // in seconds.
+var timeStep = 2880 // in seconds.
 
 var config = Config();
 
@@ -42,7 +42,7 @@ function gravitationalForce (obj1, obj2) {
 
 function Config() {
 	return {
-		"Update Step" : 0.62,
+		"Update Step" : 1,
 		"Gravitational Constant Multiplier" : 1
 	}
 }
@@ -50,7 +50,7 @@ function Config() {
 // Updates the position of the planets.
 function update () {
 	// Update the position of the planets. Use the updateStep specified by the user
-	// (default: 1 second is 6.2 days).
+	// (default: 1 second is 1 day).
 	for (var i = 0; i < config["Update Step"]; i++) {
 		// Update Earth's gravity.
 		updateGravity(Earth, Sun);
@@ -124,14 +124,6 @@ function update () {
 		movementResult = movementModule(Uranus);
 		movementResult = movementModule(Saturn);
 	}
-	
-	var directionVector = subtractVector(Earth.motion.position, Sun.motion.position);
-	
-	// Display the current distance from the sun.
-	// var distanceLabel = document.getElementById('distanceLabel');
-	// if(distanceLabel) {
-	// distanceLabel.innerHTML = distance;
-	// }
 }
 
 function updateGravity(planet1, planet2) {

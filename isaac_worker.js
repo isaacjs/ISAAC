@@ -41,7 +41,9 @@ function timeLoop() {
 	});
 	
 	// Update positions 60 times a second.
-	timer = setTimeout(timeLoop, 50/3);
+	//timer = setTimeout(timeLoop, 50/3);
 }
 
-timeLoop();
+setInterval(function(){
+	timeLoop();
+}, 100/3);
