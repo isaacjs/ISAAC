@@ -59,7 +59,7 @@
 
 				// Create the Camera folder.
 				var cameraSettings = gui.addFolder("Camera");
-				cameraSettings.add(window, 'cameraDist', 30, 750);
+				cameraSettings.add(window, 'cameraDist', 5, 750);
 				cameraSettings.add(config, 'Camera Focus',
 					{ 
 						"Sun" : 0, 
@@ -200,6 +200,7 @@
 				scene.add(mercuryModel);
 				scene.add(jupiterModel);
 				scene.add(neptuneModel);
+				scene.add(uranusModel);
 				scene.add(venusModel);
 				scene.add(saturnModel);
 				scene.add(plutoModel);
@@ -325,7 +326,7 @@
 					'neptuneConfig' : Neptune.config,
 					'marsConfig' : Mars.config,
 					'jupiterConfig' : Jupiter.config,
-					'uranusConfig': Neptune.config,
+					'uranusConfig': Uranus.config,
 					'saturnConfig' : Saturn.config,
 					'plutoConfig' : Pluto.config});
 			}
@@ -353,7 +354,6 @@
 					} else {
 						cameraAngleY += mouseYDelta;
 					}
-					console.log("Camera Angle Y: " + cameraAngleY);
 				} 
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
