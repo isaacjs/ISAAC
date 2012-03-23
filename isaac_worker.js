@@ -8,9 +8,17 @@ self.addEventListener('message', function(e) {
 			self.postMessage({ 'response' : front, 'queueLength' : posQueue.contents.length });
 			break;
 		case 'set' :
-			clearTimeout(timer);
 			config = e.data['config'];
-			timeLoop();
+			Earth.config = e.data['earthConfig'];
+			Mars.config = e.data['marsConfig'];
+			Sun.config = e.data['sunConfig'];
+			Mars.config = e.data['marsConfig'];
+			Jupiter.config = e.data['jupiterConfig'];
+			Venus.config = e.data['venusConfig'];
+			Mercury.config = e.data['mercuryConfig'];
+			Uranus.config = e.data['uranusConfig'];
+			Pluto.config = e.data['plutoConfig'];
+			Saturn.config = e.data['saturnConfig'];
 			break;
 	}
 });

@@ -265,7 +265,19 @@
 				isMouseDown = false;
 				
 				// Send updated settings to the worker.
-				worker.postMessage({ 'command' : 'set', 'config' : config });
+				worker.postMessage({
+					'command' : 'set', 
+					'config' : config, 
+					'earthConfig' : Earth.config,
+					'sunConfig' : Sun.config,
+					'mercuryConfig' : Mercury.config,
+					'venusConfig' : Venus.config,
+					'neptuneConfig' : Neptune.config,
+					'marsConfig' : Mars.config,
+					'jupiterConfig' : Jupiter.config,
+					'uranusConfig': Neptune.config,
+					'saturnConfig' : Saturn.config,
+					'plutoConfig' : Pluto.config});
 			}
 			
 			// Handles mousemove events. Used to move the camera.
