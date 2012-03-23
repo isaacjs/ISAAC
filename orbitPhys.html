@@ -44,6 +44,7 @@
 			var cameraAngleY = 0;
 			var cameraDist = 200;
 			var origin = new THREE.Vector3(0, 0, 0);
+			var cameraFocus = Sun;
 			
 			// Web Worker.
 			var worker = new Worker('isaac_worker.js');
@@ -247,7 +248,7 @@
 
 				// Update the camera's position.
 				// Get the planet to centre the camera on.
-				var cameraFocus;
+
 				switch(config['Camera Focus']){
 					case "0": cameraFocus = Sun; break;
 					case "1": cameraFocus = Mercury; break;
@@ -261,14 +262,14 @@
 					case "9": cameraFocus = Pluto; break;					
 				}
 				// Adjust the camera (horizontal).
-				camera.position.x = Earth.motion.position[0] + cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
-				camera.position.z = Earth.motion.position[1] + cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
+				camera.position.x = cameraFocus.motion.position[0] + cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+				camera.position.z = cameraFocus.motion.position[1] + cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
 				
 				// Adjust the camera (vertical).
-				camera.position.y = Earth.motion.position[2] + cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+				camera.position.y = cameraFocus.motion.position[2] + cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
 				camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
-				camera.lookAt(Sun.motion.position);
+				camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 				
