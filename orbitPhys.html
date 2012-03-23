@@ -270,6 +270,7 @@
 				camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
 				camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
+				
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 				
@@ -345,7 +346,7 @@
 					} else {
 						cameraAngleY += mouseYDelta;
 					}
-					//console.log(cameraAngleX + " " + cameraAngleY);
+					console.log("Camera Angle Y: " + cameraAngleY);
 				} 
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
