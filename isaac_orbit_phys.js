@@ -43,7 +43,8 @@ function gravitationalForce (obj1, obj2) {
 function Config() {
 	return {
 		"Update Step" : 1,
-		"Gravitational Constant Multiplier" : 1
+		"Gravitational Constant Multiplier" : 1,
+		"Camera Focus" : 0
 	}
 }
 

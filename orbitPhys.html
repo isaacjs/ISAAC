@@ -7,9 +7,9 @@
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
-		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
 		<script type = "text/javascript" src = "./isaac_obj.js"></script>
 		<script type = "text/javascript" src = "./isaac_planets.js"></script>
+		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
 		
 		<style type = "text/css">
 			body { 
@@ -35,7 +35,7 @@
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
 			
-			var Earth, Sun, Mars, Mercury, Neptune, Pluto, Jupiter, Uranus, Saturn, Venus;
+		//	var Earth, Sun, Mars, Mercury, Neptune, Pluto, Jupiter, Uranus, Saturn, Venus;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -55,6 +55,23 @@
 				var gui = new dat.GUI(
 				{ width : 500 }
 				);
+
+				// Create the Camera folder.
+				var cameraSettings = gui.addFolder("Camera");
+				cameraSettings.add(window, 'cameraDist', 30, 750);
+				cameraSettings.add(config, 'Camera Focus',
+					{ 
+						"Sun" : 0, 
+						"Mercury" : 1, 
+						"Venus" : 2,
+						"Earth" : 3,
+						"Mars" : 4,
+						"Jupiter" : 5,
+						"Saturn" : 6,
+						"Uranus" : 7,
+						"Neptune" : 8,
+						"Pluto" : 9
+					});
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
@@ -227,7 +244,31 @@
 				objUpdate(Uranus, uranusModel);
 				objUpdate(Saturn, saturnModel);
 				objUpdate(Pluto, plutoModel);
+
+				// Update the camera's position.
+				// Get the planet to centre the camera on.
+				var cameraFocus;
+				switch(config['Camera Focus']){
+					case "0": cameraFocus = Sun; break;
+					case "1": cameraFocus = Mercury; break;
+					case "2": cameraFocus = Venus; break;
+					case "3": cameraFocus = Earth; break;
+					case "4": cameraFocus = Mars; break;
+					case "5": cameraFocus = Jupiter; break;
+					case "6": cameraFocus = Saturn; break;
+					case "7": cameraFocus = Uranus; break;
+					case "8": cameraFocus = Neptune; break;
+					case "9": cameraFocus = Pluto; break;					
+				}
+				// Adjust the camera (horizontal).
+				camera.position.x = Earth.motion.position[0] + cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+				camera.position.z = Earth.motion.position[1] + cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
 				
+				// Adjust the camera (vertical).
+				camera.position.y = Earth.motion.position[2] + cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+				camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
+				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
+				camera.lookAt(Sun.motion.position);
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, renderer.domElement);
 				
@@ -303,18 +344,6 @@
 					} else {
 						cameraAngleY += mouseYDelta;
 					}
-					
-					
-					// Adjust the camera (horizontal).
-					camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
-					camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
-					
-					// Adjust the camera (vertical).
-					camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
-					camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
-					camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
-					camera.lookAt(origin);
-					
 					//console.log(cameraAngleX + " " + cameraAngleY);
 				} 
 				mouseLastX = event.clientX;
