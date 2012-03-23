@@ -262,13 +262,20 @@
 					case "9": cameraFocus = Pluto; break;					
 				}
 				// Adjust the camera (horizontal).
-				camera.position.x = cameraFocus.motion.position[0] + cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
-				camera.position.z = cameraFocus.motion.position[1] + cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
+				camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+				camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
 				
 				// Adjust the camera (vertical).
-				camera.position.y = cameraFocus.motion.position[2] + cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+				camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
 				camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
+
+				// Translate the camera to the planet.
+				camera.position.x += cameraFocus.motion.position[0]
+				camera.position.z += cameraFocus.motion.position[1]
+				camera.position.y += cameraFocus.motion.position[2]
+
+				// Point the camera at the planet.
 				camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
 				
 				// Setup continuous updates.
