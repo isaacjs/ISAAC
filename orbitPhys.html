@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<!--Planet Textures courtesy of James Hastings-Trew, http://planetpixelemporium.com/planets.html -->
 	<head>
 		<meta charset="UTF-8">
 		<title>...eppur si muove.</title>
@@ -153,45 +154,57 @@
 				renderer.setClearColorHex(0x000000, 1.0);
 				renderer.clear();
 				
+				var meshDraw = false;
+
 				// Create the Sun.
-				sunMaterial = new THREE.MeshBasicMaterial( { color: 0xFF8C00 } );
-				sunModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 16), sunMaterial);
+				sunMaterial = new THREE.MeshBasicMaterial( { color: 0xFF8C00, 
+					map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshDraw } );
+				sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16, 16), sunMaterial);
 				
 				// Create the Earth.
-				earthMaterial = new THREE.MeshBasicMaterial( { color: 0x458B00 } );
-				earthModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), earthMaterial);
+				earthMaterial = new THREE.MeshBasicMaterial( { color: 0x458B00,
+					map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshDraw } );
+				earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 16), earthMaterial);
 				
 				// Create Mars.
-				marsMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000 });
-				marsModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), marsMaterial);
+				marsMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000,
+					map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshDraw });
+				marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16, 16), marsMaterial);
 				
 				// Create Mercury.
-				mercuryMaterial = new THREE.MeshBasicMaterial( { color: 0xFFD700 });
-				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), mercuryMaterial);
+				mercuryMaterial = new THREE.MeshBasicMaterial( { color: 0xFFD700,
+					map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshDraw });
+				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 8), mercuryMaterial);
 				
 				// Create Jupiter.
-				jupiterMaterial = new THREE.MeshBasicMaterial( {color: 0xFF4500 });
-				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(5, 16, 16), jupiterMaterial);
+				jupiterMaterial = new THREE.MeshBasicMaterial( {color: 0xFF4500,
+					map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshDraw });
+				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 16), jupiterMaterial);
 				
 				// Create Venus.
-				venusMaterial = new THREE.MeshBasicMaterial( {color: 0xCFCC98 });
-				venusModel = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), venusMaterial);
+				venusMaterial = new THREE.MeshBasicMaterial( {color: 0xCFCC98,
+					map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshDraw });
+				venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 16), venusMaterial);
 				
 				// Create Neptune.
-				neptuneMaterial = new THREE.MeshBasicMaterial( {color: 0x4A73BE });
-				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), venusMaterial);
+				neptuneMaterial = new THREE.MeshBasicMaterial( {color: 0x4A73BE,
+					map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshDraw });
+				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16, 16), neptuneMaterial);
 				
 				// Create Uranus.
-				uranusMaterial = new THREE.MeshBasicMaterial( {color: 0x97D5D9 });
-				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), venusMaterial);
+				uranusMaterial = new THREE.MeshBasicMaterial( {color: 0x97D5D9,
+					map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshDraw });
+				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16, 16), uranusMaterial);
 				
 				// Create Pluto.
-				plutoMaterial = new THREE.MeshBasicMaterial( {color: 0xD4D4D4 });
-				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 8), venusMaterial);
+				plutoMaterial = new THREE.MeshBasicMaterial( {color: 0xD4D4D4,
+					map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshDraw });
+				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 8), plutoMaterial);
 				
 				// Create Saturn.
-				saturnMaterial = new THREE.MeshBasicMaterial( {color: 0xCDC332 });
-				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16, 16), saturnMaterial);
+				saturnMaterial = new THREE.MeshBasicMaterial( {color: 0xCDC332,
+					map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshDraw });
+				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16, 16), saturnMaterial);
 				
 				// Add everything to the scene.
 				scene.add(sunModel);
