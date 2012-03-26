@@ -147,8 +147,13 @@
 				scene = new THREE.Scene();
 				scene.add(camera);
 				
+				// Check if we have WebGL support using a temporary canvas.
+				var tempCanvas = document.createElement('canvas');
+				var webGLSupport = window.WebGLRenderingContext && tempCanvas.getContext("webgl");
+				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
+
 				// Setup the renderer.
-				renderer = new THREE.CanvasRenderer();
+				renderer = webGLSupport ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
 				renderer.setSize(window.innerWidth, window.innerHeight);
 				renderArea.appendChild(renderer.domElement);
 				renderer.setClearColorHex(0x000000, 1.0);
