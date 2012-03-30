@@ -27,7 +27,7 @@ function gravitationalForce (obj1, obj2) {
 	var numerator = G * obj1.physical.mass * obj2.physical.mass;
 	
 	// Modify Gm1m2 according to the relevant multipliers.
-	numerator *= config['Gravitational Constant Multiplier'];
+	numerator *= config.gravConstMult;
 	numerator *= obj1.config.massMult;
 	numerator *= obj2.config.massMult;
 	
@@ -42,9 +42,9 @@ function gravitationalForce (obj1, obj2) {
 
 function Config() {
 	return {
-		"Update Step" : 1,
-		"Gravitational Constant Multiplier" : 1,
-		"Camera Focus" : 0
+		"updateStep" : 1,
+		"gravConstMult" : 1,
+		"cameraFocus" : 0
 	}
 }
 
@@ -52,7 +52,7 @@ function Config() {
 function update () {
 	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 1 day).
-	for (var i = 0; i < config["Update Step"]; i++) {
+	for (var i = 0; i < config.updateStep; i++) {
 		// Update Earth's gravity.
 		updateGravity(Earth, Sun);
 		updateGravity(Earth, Mars);

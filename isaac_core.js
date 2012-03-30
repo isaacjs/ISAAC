@@ -168,7 +168,7 @@ function gravitationalForce (obj1, obj2) {
 	var numerator = G * obj1.physical.mass * obj2.physical.mass;
 	
 	// Modify Gm1m2 according to the relevant multipliers.
-	numerator *= config['Gravitational Constant Multiplier'];
+	numerator *= config.gravConstMult;
 	numerator *= obj1.config.massMult;
 	numerator *= obj2.config.massMult;
 	

@@ -61,7 +61,7 @@
 				// Create the Camera folder.
 				var cameraSettings = gui.addFolder("Camera");
 				cameraSettings.add(window, 'cameraDist', 5, 750).name("Camera Distance");
-				cameraSettings.add(config, 'Camera Focus',
+				cameraSettings.add(config, 'cameraFocus',
 					{ 
 						"Sun" : 0, 
 						"Mercury" : 1, 
@@ -73,13 +73,13 @@
 						"Uranus" : 7,
 						"Neptune" : 8,
 						"Pluto" : 9
-					});
+					}).name("Camera Focus");
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
-				simSettings.add(config, 'Update Step', 
-					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 });
-				simSettings.add(config, 'Gravitational Constant Multiplier', 0.1, 10);
+				simSettings.add(config, 'updateStep', 
+					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step");
+				simSettings.add(config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier");
 				
 				// Create the Orbital Bodies folder.
 				var planetsFolder = gui.addFolder("Orbital Bodies");
