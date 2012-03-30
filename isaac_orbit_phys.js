@@ -28,8 +28,8 @@ function gravitationalForce (obj1, obj2) {
 	
 	// Modify Gm1m2 according to the relevant multipliers.
 	numerator *= config['Gravitational Constant Multiplier'];
-	numerator *= obj1.config['Mass Multiplier'];
-	numerator *= obj2.config['Mass Multiplier'];
+	numerator *= obj1.config.massMult;
+	numerator *= obj2.config.massMult;
 	
 	// Get the force between the two objects.
 	var force = numerator / Math.pow(distance, 2);

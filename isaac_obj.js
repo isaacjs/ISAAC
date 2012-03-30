@@ -59,7 +59,7 @@ function PhysicalObject () {
 			"forceChanged" : false
 		},
 		"config" : {
-			"massModifier" : 1
+			"massMult" : 1
 		}
 	};
 };

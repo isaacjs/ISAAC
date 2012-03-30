@@ -35,8 +35,8 @@
 			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
-			
-		//	var Earth, Sun, Mars, Mercury, Neptune, Pluto, Jupiter, Uranus, Saturn, Venus;
+
+			var test;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -60,7 +60,7 @@
 
 				// Create the Camera folder.
 				var cameraSettings = gui.addFolder("Camera");
-				cameraSettings.add(window, 'cameraDist', 5, 750);
+				cameraSettings.add(window, 'cameraDist', 5, 750).name("Camera Distance");
 				cameraSettings.add(config, 'Camera Focus',
 					{ 
 						"Sun" : 0, 
@@ -86,43 +86,44 @@
 				
 				// Create the Sun's folder.
 				var sunFolder = planetsFolder.addFolder("Sun");
-				sunFolder.add(Sun.config, 'Mass Multiplier', 0.1, 100);
+				sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				test = sunFolder;
 				
 				// Create Mercury's folder.
 				var mercuryFolder = planetsFolder.addFolder("Mercury");
-				mercuryFolder.add(Mercury.config, 'Mass Multiplier', 0.1, 100);
+				mercuryFolder.add(Mercury.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Venus' folder.
 				var venusFolder = planetsFolder.addFolder("Venus");
-				venusFolder.add(Venus.config, 'Mass Multiplier', 0.1, 100);
+				venusFolder.add(Venus.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Earth's folder.
 				var earthFolder = planetsFolder.addFolder("Earth");
-				earthFolder.add(Earth.config, 'Mass Multiplier', 0.1, 100);
+				earthFolder.add(Earth.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Mars' folder.
 				var marsFolder = planetsFolder.addFolder("Mars");
-				marsFolder.add(Mars.config, 'Mass Multiplier', 0.1, 100);
+				marsFolder.add(Mars.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Jupiter's folder.
 				var jupiterFolder = planetsFolder.addFolder("Jupiter");
-				jupiterFolder.add(Jupiter.config, 'Mass Multiplier', 0.1, 100);
+				jupiterFolder.add(Jupiter.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Saturn's folder.
 				var saturnFolder = planetsFolder.addFolder("Saturn");
-				saturnFolder.add(Saturn.config, 'Mass Multiplier', 0.1, 100);
+				saturnFolder.add(Saturn.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Uranus' folder.
 				var uranusFolder = planetsFolder.addFolder("Uranus");
-				uranusFolder.add(Uranus.config, 'Mass Multiplier', 0.1, 100);
+				uranusFolder.add(Uranus.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// Create Neptune's folder.
 				var neptuneFolder = planetsFolder.addFolder("Neptune");
-				neptuneFolder.add(Neptune.config, 'Mass Multiplier', 0.1, 100);				
+				neptuneFolder.add(Neptune.config, "massMult", 0.1, 100).name("Mass Multiplier");				
 				
 				// Create Pluto's folder.
 				var plutoFolder = planetsFolder.addFolder("Pluto");
-				plutoFolder.add(Pluto.config, 'Mass Multiplier', 0.1, 100);
+				plutoFolder.add(Pluto.config, "massMult", 0.1, 100).name("Mass Multiplier");
 				
 				// ------ End of GUI Initialisation ------ //
 				
