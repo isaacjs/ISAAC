@@ -18,26 +18,6 @@
 			overflow: hidden;
 			}
 
-/*			div#tooltip {
-				position: relative;
-			}
-			div#tooltipHover {
-				position: relative;
-			}
-
-			div#tooltip span {
-				display: none;
-			}
-
-			div#tooltipHover span {
-				display: block;
-				position: absolute;
-				left: -300px;
-				border: 1px solid black;
-				background-color:gray; color:white;
-				text-align: center;
-			}*/
-
 			.overlay {
 				position: fixed;
 				pointer-events: none;
@@ -52,15 +32,19 @@
 		</style>
 	</head>
 	<body>
-		<span class = "hidden" id="massMultTooltip">
-			This value is multiplied by the original mass of the body.
-		</span>
+		<span class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</span>
+		<span class = "hidden" id = "timestepTooltip">One second in real time is this amount in the simulation.</span>
+		<span class = "hidden" id = "gcmTooltip">Placeholder.</span>
 		<div id="renderArea"></div>
 		
 		<script type = "text/javascript">
-			// Mass Multiplier Tooltip Element. So, so hackish >.>
+			// Tooltips. So, so hackish >.>
 			var massMultShow = function() { document.getElementById("massMultTooltip").className = "overlay"; };
 			var massMultHide = function() { document.getElementById("massMultTooltip").className = "hidden"; };
+			var timestepShow = function() { document.getElementById("timestepTooltip").className = "overlay"; };
+			var timestepHide = function() { document.getElementById("timestepTooltip").className = "hidden"; };
+			var gcmShow = function() { document.getElementById("gcmTooltip").className = "overlay"; };
+			var gcmHide = function() { document.getElementById("gcmTooltip").className = "hidden"; };
 
 			// Three.js elements.
 			var camera, scene, renderer;
@@ -75,8 +59,6 @@
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
 
-			var sunFoldDOM;
-			
 			// Camera movement-related variables.
 			var isMouseDown = false;
 			var mouseLastX, mouseLastY;
@@ -116,55 +98,77 @@
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
-				simSettings.add(config, 'updateStep', 
-					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step");
-				simSettings.add(config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier");
+				var upstepDOM = simSettings.add(config, 'updateStep', 
+					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step").domElement;
+				upstepDOM.onmouseover = timestepShow;
+				upstepDOM.onmouseout = timestepHide;
+
+				var gcmDOM = simSettings.add(config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
+				gcmDOM.onmouseover = gcmShow;
+				gcmDOM.onmouseout = gcmHide;
 				
 				// Create the Orbital Bodies folder.
 				var planetsFolder = gui.addFolder("Orbital Bodies");
 				
 				// Create the Sun's folder.
 				var sunFolder = planetsFolder.addFolder("Sun");
-				sunFoldDOM = (sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
-				sunFoldDOM.id = "tooltip";
+				var sunFoldDOM = (sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
 				sunFoldDOM.onmouseover = massMultShow;
 				sunFoldDOM.onmouseout = massMultHide;
 				
 				// Create Mercury's folder.
 				var mercuryFolder = planetsFolder.addFolder("Mercury");
-				mercuryFolder.add(Mercury.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var merFoldDOM = mercuryFolder.add(Mercury.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				merFoldDOM.onmouseover = massMultShow;
+				merFoldDOM.onmouseout = massMultHide;
 				
 				// Create Venus' folder.
 				var venusFolder = planetsFolder.addFolder("Venus");
-				venusFolder.add(Venus.config, "massMult", 0.1, 100).name("Mass Multiplier");
-				
+				var venFoldDOM = venusFolder.add(Venus.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				venFoldDOM.onmouseover = massMultShow;
+				venFoldDOM.onmouseout = massMultHide;
+
 				// Create Earth's folder.
 				var earthFolder = planetsFolder.addFolder("Earth");
-				earthFolder.add(Earth.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var earthFoldDOM = earthFolder.add(Earth.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				earthFoldDOM.onmouseover = massMultShow;
+				earthFoldDOM.onmouseout = massMultHide;
 				
 				// Create Mars' folder.
 				var marsFolder = planetsFolder.addFolder("Mars");
-				marsFolder.add(Mars.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var marsFoldDOM = marsFolder.add(Mars.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				marsFoldDOM.onmouseover = massMultShow;
+				marsFoldDOM.onmouseout = massMultHide;
 				
 				// Create Jupiter's folder.
 				var jupiterFolder = planetsFolder.addFolder("Jupiter");
-				jupiterFolder.add(Jupiter.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var jupFoldDOM = jupiterFolder.add(Jupiter.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				jupFoldDOM.onmouseover = massMultShow;
+				jupFoldDOM.onmouseout = massMultHide;
 				
 				// Create Saturn's folder.
 				var saturnFolder = planetsFolder.addFolder("Saturn");
-				saturnFolder.add(Saturn.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var satFoldDOM = saturnFolder.add(Saturn.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				satFoldDOM.onmouseover = massMultShow;
+				satFoldDOM.onmouseout = massMultHide;
 				
 				// Create Uranus' folder.
 				var uranusFolder = planetsFolder.addFolder("Uranus");
-				uranusFolder.add(Uranus.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var uraFoldDOM = uranusFolder.add(Uranus.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				uraFoldDOM.onmouseover = massMultShow;
+				uraFoldDOM.onmouseout = massMultHide;
 				
 				// Create Neptune's folder.
 				var neptuneFolder = planetsFolder.addFolder("Neptune");
-				neptuneFolder.add(Neptune.config, "massMult", 0.1, 100).name("Mass Multiplier");				
+				var nepFoldDOM = neptuneFolder.add(Neptune.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;	
+				nepFoldDOM.onmouseover = massMultShow;
+				nepFoldDOM.onmouseout = massMultHide;
 				
 				// Create Pluto's folder.
 				var plutoFolder = planetsFolder.addFolder("Pluto");
-				plutoFolder.add(Pluto.config, "massMult", 0.1, 100).name("Mass Multiplier");
+				var pluFoldDOM = plutoFolder.add(Pluto.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
+				pluFoldDOM.onmouseover = massMultShow;
+				pluFoldDOM.onmouseout = massMultHide;
 				
 				// ------ End of GUI Initialisation ------ //
 				
