@@ -17,6 +17,26 @@
 			margin: 0px; 
 			overflow: hidden;
 			}
+
+			div#tooltip {
+				position: relative;
+			}
+			div#tooltipHover {
+				position: relative;
+			}
+
+			div#tooltip span {
+				display: none;
+			}
+
+			div#tooltipHover span {
+				display: block;
+				position: absolute;
+				left: -300px;
+				border: 1px solid black;
+				background-color:gray; color:white;
+				text-align: center;
+			}
 		</style>
 	</head>
 	<body>
@@ -36,7 +56,7 @@
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
 
-			var test;
+			var sunFoldDOM;
 			
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -74,6 +94,10 @@
 						"Neptune" : 8,
 						"Pluto" : 9
 					}).name("Camera Focus");
+
+				// Create the tooltip to be displayed for Mass Multipliers.
+				var massMultTip = document.createElement("span");
+				massMultTip.innerHTML = "The quick brown fox jumped over the lazy dog.";
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
@@ -86,8 +110,11 @@
 				
 				// Create the Sun's folder.
 				var sunFolder = planetsFolder.addFolder("Sun");
-				sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier");
-				test = sunFolder;
+				sunFoldDOM = (sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
+				sunFoldDOM.id = "tooltip";
+				sunFoldDOM.onmouseover = function() { sunFoldDOM.id = "tooltipHover"; };
+				sunFoldDOM.onmouseout = function() { sunFoldDOM.id = "tooltip"; };
+				sunFoldDOM.appendChild(massMultTip);
 				
 				// Create Mercury's folder.
 				var mercuryFolder = planetsFolder.addFolder("Mercury");
