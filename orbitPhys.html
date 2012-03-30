@@ -18,7 +18,7 @@
 			overflow: hidden;
 			}
 
-			div#tooltip {
+/*			div#tooltip {
 				position: relative;
 			}
 			div#tooltipHover {
@@ -36,13 +36,32 @@
 				border: 1px solid black;
 				background-color:gray; color:white;
 				text-align: center;
+			}*/
+
+			.overlay {
+				position: fixed;
+				pointer-events: none;
+				z-index: 50;
+				border: solid 1px white;
+				color: white;
+				left: 0;
+			}
+			.hidden {
+				display: none;
 			}
 		</style>
 	</head>
 	<body>
+		<span class = "hidden" id="massMultTooltip">
+			This value is multiplied by the original mass of the body.
+		</span>
 		<div id="renderArea"></div>
 		
 		<script type = "text/javascript">
+			// Mass Multiplier Tooltip Element. So, so hackish >.>
+			var massMultShow = function() { document.getElementById("massMultTooltip").className = "overlay"; };
+			var massMultHide = function() { document.getElementById("massMultTooltip").className = "hidden"; };
+
 			// Three.js elements.
 			var camera, scene, renderer;
 			
@@ -94,10 +113,6 @@
 						"Neptune" : 8,
 						"Pluto" : 9
 					}).name("Camera Focus");
-
-				// Create the tooltip to be displayed for Mass Multipliers.
-				var massMultTip = document.createElement("span");
-				massMultTip.innerHTML = "The quick brown fox jumped over the lazy dog.";
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
@@ -112,9 +127,8 @@
 				var sunFolder = planetsFolder.addFolder("Sun");
 				sunFoldDOM = (sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
 				sunFoldDOM.id = "tooltip";
-				sunFoldDOM.onmouseover = function() { sunFoldDOM.id = "tooltipHover"; };
-				sunFoldDOM.onmouseout = function() { sunFoldDOM.id = "tooltip"; };
-				sunFoldDOM.appendChild(massMultTip);
+				sunFoldDOM.onmouseover = massMultShow;
+				sunFoldDOM.onmouseout = massMultHide;
 				
 				// Create Mercury's folder.
 				var mercuryFolder = planetsFolder.addFolder("Mercury");
@@ -158,7 +172,7 @@
 				stats = new Stats();
 				stats.getDomElement().style.position = 'absolute';
 				stats.getDomElement().style.left = '0px';
-				stats.getDomElement().style.top = '0px';
+				stats.getDomElement().style.bottom = '0px';
 				
 				document.body.appendChild( stats.getDomElement() );
 				
