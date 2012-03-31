@@ -9,10 +9,6 @@ var timeStep = 2880 // in seconds.
 
 var config = Config();
 
-// ------ Debug Variables ------ //
-var distance;
-// ------ End of Debug Variables ------ //
-
 // Gravitational Force Function.
 // Given two objects, returns the vector of gravitational force between them, from the first object
 // to the second.
@@ -21,7 +17,7 @@ function gravitationalForce (obj1, obj2) {
 	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
 	
 	// Get the distance between the two objects.
-	distance = vectorLength(directionVector);
+	var distance = vectorLength(directionVector);
 	
 	// Get Gm1m2.
 	var numerator = G * obj1.physical.mass * obj2.physical.mass;

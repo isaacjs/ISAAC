@@ -14,17 +14,26 @@
 		
 		<style type = "text/css">
 			body { 
-			margin: 0px; 
-			overflow: hidden;
+				margin: 0px; 
+				overflow: hidden;
 			}
 
 			.overlay {
+				margin-left: auto;
+				margin-right: auto;
+				width: 25em;
 				position: fixed;
+				display: block
+
 				pointer-events: none;
 				z-index: 50;
+				padding: 0px 3px 0px 3px;
 				border: solid 1px white;
 				color: white;
-				left: 0;
+
+				font-family: Segoe UI, Arial, "MS Trebuchet", sans-serif;
+				font-size: 90%;
+				text-align: justify;
 			}
 			.hidden {
 				display: none;
@@ -32,9 +41,20 @@
 		</style>
 	</head>
 	<body>
-		<span class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</span>
-		<span class = "hidden" id = "timestepTooltip">One second in real time is this amount in the simulation.</span>
-		<span class = "hidden" id = "gcmTooltip">Placeholder.</span>
+		<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
+		<div class = "hidden" id = "timestepTooltip">One second in real time is this amount in the simulation.</div>
+		<div class = "hidden" id = "gcmTooltip">
+			This value is multiplied by the Gravitational Constant.
+			<p>
+				The force of gravity between two bodies is given by
+				multiplying	the Gravitational Constant by the masses
+				of the bodies, then dividing the result by the
+				square of the distance between them.
+			</p>
+
+			By adjusting the Gravitational Constant, gravitational force
+			is changed all throughout the solar system (and the universe!)
+		</div>
 		<div id="renderArea"></div>
 		
 		<script type = "text/javascript">
