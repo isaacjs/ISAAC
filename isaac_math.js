@@ -65,24 +65,26 @@ function dotProduct (vectorA, vectorB) {
 // vectorLength function.
 // Given a 3D vector, returns the length of it based on the Euclidean norm.
 function vectorLength (vector) {
-	var squares = 0;
+	// var squares = 0;
 
-	for (var i = 0; i < vector.length; i++) {
-		squares += sqr(vector[i]);
-	}
-	return Math.sqrt(squares);
+	// for (var i = 0; i < vector.length; i++) {
+	// 	squares += sqr(vector[i]);
+	// }
+	// return squares;
+	return Math.sqrt(sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]));
 }
 
 // vectorNormalise function.
 // Given a 3D vector, returns a unit vector in the same direction.
 function vectorNormalise (vector) {
 	var length = vectorLength(vector);
-	var normal = [];
+	// var normal = [];
 	
-	for (var i = 0; i < vector.length; i++) {
-		normal[i] = vector[i] / length;
-	}
-	return normal;
+	// for (var i = 0; i < vector.length; i++) {
+	// 	normal[i] = vector[i] / length;
+	// }
+	// return normal;
+	return [vector[0] / length, vector[1] / length, vector[2] / length];
 }
 
 // vectorFitToLength function.
@@ -95,4 +97,5 @@ function vectorFitToLength (vector, scalar) {
 		scaled[i] *= scalar;
 	}
 	return scaled;
+	// return scaleVector(vectorNormalise(vector), scalar);
 }
