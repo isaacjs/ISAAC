@@ -66,7 +66,7 @@ function vectorLength (vector) {
 	var squares = 0;
 
 	for (var i = 0; i < vector.length; i++) {
-		squares += Math.pow(vector[i], 2);
+		squares += sqr(vector[i]);
 	}
 	return Math.sqrt(squares);
 }
