@@ -1,4 +1,5 @@
 // Math Library for ISAAC Physics.
+// We assume 3D vectors in all cases.
 
 function sqr (number) {
 	return number * number;
@@ -12,37 +13,38 @@ function sqrNormVector (vector) { //ONLY for 3-dimensional vectors
 
 // addVector function.
 // Takes in two vectors, returns a new vector made by adding
-// the inputs together. If the two input vectors don't have the same
-// length, the first input vector will be returned.
+// the inputs together.
 function addVector (vectorA, vectorB) {
-	if(vectorA.length === vectorB.length) {
-		var newVector = new Array();
-		for(var i = 0; i < vectorA.length; i++) {
-			newVector[i] = vectorA[i] + vectorB[i];
-		}
-		return newVector;
-	} else {
-		return vectorA;
-	}
+	// if(vectorA.length === vectorB.length) {
+	// 	var newVector = new Array();
+	// 	for(var i = 0; i < vectorA.length; i++) {
+	// 		newVector[i] = vectorA[i] + vectorB[i];
+	// 	}
+	// 	return newVector;
+	// } else {
+	// 	return vectorA;
+	// }
+	return [vectorA[0] + vectorB[0], vectorA[1] + vectorB[1], vectorA[2] + vectorB[2]];
 }
 
 // scaleVector function.
 // Takes in a vector and a scalar, returns a new vector made by
 // multiplying the scalar through the vector.
 function scaleVector (vector, scalar) {
-	var newVector = new Array();
-	for(var i = 0; i < vector.length; i++) {
-		newVector[i] = vector[i] * scalar;
-	}
-	return newVector;
+	// var newVector = new Array();
+	// for(var i = 0; i < vector.length; i++) {
+	// 	newVector[i] = vector[i] * scalar;
+	// }
+	// return newVector;
+	return [vector[0] * scalar, vector[1] * scalar, vector[2] * scalar];
 }
 
 // subtractVector function.
 // Takes in two vectors, returns a new vector made by subtracting the
-// second vector from the first. If the two input vectors don't have the same
-// length, the first input vector will be returned.
+// second vector from the first.
 function subtractVector (vectorA, vectorB) {
-	return addVector(vectorA, scaleVector(vectorB, -1));
+	// return addVector(vectorA, scaleVector(vectorB, -1));
+	return [vectorA[0] - vectorB[0], vectorA[1] - vectorB[1], vectorA[2] - vectorB[2]];
 }
 
 // dotProduct function.
