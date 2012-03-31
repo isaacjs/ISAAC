@@ -122,13 +122,14 @@ function contactBetween (obj1, obj2) {
 // Gravitational Attraction Function.
 // Given two objects, calculate and return the magnitude of the force of gravitational attraction between them.
 function gravitationalAttraction (obj1, obj2) {
-	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
+	//var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	// Find r^2.
 	
 	// PS (Thu 19 Jan 2012 08:24:11 PM SGT) - See if the sqrNormVector approach is faster
 	
-	var rSquared = Math.pow(distance, 2);
+	//var rSquared = Math.pow(distance, 2);
+	var rSquared = sqrNormVector(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	// Get the masses of the two objects.
 	var mass1 = obj1.physical.mass;

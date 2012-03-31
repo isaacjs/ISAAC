@@ -47,11 +47,8 @@ function timeLoop() {
 		'mercuryPos' : Mercury.motion.position,
 		'venusPos' : Venus.motion.position
 	});
-	
-	// Update positions 60 times a second.
-	//timer = setTimeout(timeLoop, 50/3);
 }
 
 setInterval(function(){
 	timeLoop();
-}, 100/3);
+}, 50/3);

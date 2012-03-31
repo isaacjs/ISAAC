@@ -4,8 +4,7 @@
 // Distance: gigameters
 // Mass: gigagrams
 var G = 6.67e-32 // in Newton square Gigameters per Gigagram squared.
-var Gmm = 7.93e11 // in Gigagram Gigameters per second squared.
-var timeStep = 2880 // in seconds.
+var timeStep = 1440 // in seconds.
 
 var config = Config();
 
@@ -112,14 +111,14 @@ function update () {
 		// Update Pluto's gravity.
 		updateGravity(Pluto, Sun);
 		
-		var movementResult = movementModule(Earth);
-		movementResult = movementModule(Mars);
-		movementResult = movementModule(Mercury);
-		movementResult = movementModule(Jupiter);
-		movementResult = movementModule(Neptune);
-		movementResult = movementModule(Venus);
-		movementResult = movementModule(Uranus);
-		movementResult = movementModule(Saturn);
+		movementModule(Earth);
+		movementModule(Mars);
+		movementModule(Mercury);
+		movementModule(Jupiter);
+		movementModule(Neptune);
+		movementModule(Venus);
+		movementModule(Uranus);
+		movementModule(Saturn);
 	}
 }
 
@@ -127,40 +126,3 @@ function updateGravity(planet1, planet2) {
 	planet1.forceStore["gravity" + planet2.Name] = gravitationalForce(planet1, planet2);
 	planet2.forceStore["gravity" + planet1.Name] = gravitationalForce(planet2, planet1);
 }
-
-// ------ The following code has been deprecated. ------ //
-
-// Takes in an object and a canvas context, draws it on the canvas.
-function drawPosition (obj, context) {
-	var posArray = obj.motion.position;
-	drawCircle(posArray, 20, context);
-}
-
-// Takes in a position, a radius, and a canvas context, draws a circle of that radius
-// at the given position on the canvas.
-function drawCircle (position, radius, ctx) {
-	// Begin the path.
-	ctx.beginPath();
-	
-	// Draw the arc.
-	ctx.arc(position[0], position[1], radius, 0, 2*Math.PI, true);
-	
-	// Only draw the circumference.
-	ctx.stroke();
-}
-
-// Canvas animation function.
-function init() {
-	setInterval(update, 16);
-}
-
-// Handles updating of settings based on user input.
-function settingsUpdate() {
-	// Get the slider.
-	var slider = document.getElementById('timescale');
-	if(slider) {
-		// Change the updateStep.
-		updateStep = slider.value;
-	}
-}
-// ------ End of deprecated code. ------ //
