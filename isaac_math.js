@@ -93,9 +93,9 @@ function vectorNormalise (vector) {
 function vectorFitToLength (vector, scalar) {
 	var scaled = vectorNormalise(vector);
 	
-	for (var i = 0; i < scaled.length; i++) {
-		scaled[i] *= scalar;
-	}
-	return scaled;
-	// return scaleVector(vectorNormalise(vector), scalar);
+	// for (var i = 0; i < scaled.length; i++) {
+	// 	scaled[i] *= scalar;
+	// }
+	// return scaled;
+	return [scaled[0] * scalar, scaled[1] * scalar, scaled[2] * scalar];
 }

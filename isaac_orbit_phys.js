@@ -18,16 +18,19 @@ function gravitationalForce (obj1, obj2) {
 	// Get the distance between the two objects.
 	var distance = vectorLength(directionVector);
 	
-	// Get Gm1m2.
-	var numerator = G * obj1.physical.mass * obj2.physical.mass;
+	// // Get Gm1m2.
+	// var numerator = G * obj1.physical.mass * obj2.physical.mass;
 	
-	// Modify Gm1m2 according to the relevant multipliers.
-	numerator *= config.gravConstMult;
-	numerator *= obj1.config.massMult;
-	numerator *= obj2.config.massMult;
+	// // Modify Gm1m2 according to the relevant multipliers.
+	// numerator *= config.gravConstMult;
+	// numerator *= obj1.config.massMult;
+	// numerator *= obj2.config.massMult;
+
+	// Get Gm1m2 and modify it according to the relevant multipliers.
+	var numerator = G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
 	
 	// Get the force between the two objects.
-	var force = numerator / Math.pow(distance, 2);
+	var force = numerator / sqr(distance);
 	
 	// Scale the direction vector to be the same magnitude as the force.
 	directionVector = vectorFitToLength(directionVector, force);
