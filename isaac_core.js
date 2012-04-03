@@ -139,45 +139,45 @@ function gravitationalAttraction (obj1, obj2) {
 	return bigG * ((mass1 * mass2) / rSquared);
 }
 
-// Gravitational Force Function.
-// Given two objects, returns the vector of gravitational force between them, from the first object
-// to the second.
-function gravitationalForce (obj1, obj2) {
-	// Get the force between the two objects.
-	var force = gravitationalAttraction(obj1, obj2);
+// // Gravitational Force Function.
+// // Given two objects, returns the vector of gravitational force between them, from the first object
+// // to the second.
+// function gravitationalForce (obj1, obj2) {
+// 	// Get the force between the two objects.
+// 	var force = gravitationalAttraction(obj1, obj2);
 	
-	// Get the direction vector from the first object to the second.
-	var directionVector = subtractVector(obj1, obj2);
+// 	// Get the direction vector from the first object to the second.
+// 	var directionVector = subtractVector(obj1, obj2);
 	
-	// Scale the direction vector to be the same magnitude as the force.
-	directionVector = vectorFitToLength(directionVector, force);
+// 	// Scale the direction vector to be the same magnitude as the force.
+// 	directionVector = vectorFitToLength(directionVector, force);
 	
-	return directionVector;
-}
+// 	return directionVector;
+// }
 
-// Gravitational Force Function.
-// Given two objects, returns the vector of gravitational force between them, from the first object
-// to the second.
-function gravitationalForce (obj1, obj2) {	
-	// Get the direction vector from the first object to the second.
-	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
+// // Gravitational Force Function.
+// // Given two objects, returns the vector of gravitational force between them, from the first object
+// // to the second.
+// function gravitationalForce (obj1, obj2) {	
+// 	// Get the direction vector from the first object to the second.
+// 	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
 	
-	// Get the distance between the two objects.
-	distance = vectorLength(directionVector);
+// 	// Get the distance between the two objects.
+// 	distance = vectorLength(directionVector);
 	
-	// Get Gm1m2.
-	var numerator = G * obj1.physical.mass * obj2.physical.mass;
+// 	// Get Gm1m2.
+// 	var numerator = G * obj1.physical.mass * obj2.physical.mass;
 	
-	// Modify Gm1m2 according to the relevant multipliers.
-	numerator *= config.gravConstMult;
-	numerator *= obj1.config.massMult;
-	numerator *= obj2.config.massMult;
+// 	// Modify Gm1m2 according to the relevant multipliers.
+// 	numerator *= config.gravConstMult;
+// 	numerator *= obj1.config.massMult;
+// 	numerator *= obj2.config.massMult;
 	
-	// Get the force between the two objects.
-	var force = numerator / Math.pow(distance, 2);
+// 	// Get the force between the two objects.
+// 	var force = numerator / Math.pow(distance, 2);
 	
-	// Scale the direction vector to be the same magnitude as the force.
-	directionVector = vectorFitToLength(directionVector, force);
-	obj1.switches.forceChanged = true;
-	return directionVector;
-}
+// 	// Scale the direction vector to be the same magnitude as the force.
+// 	directionVector = vectorFitToLength(directionVector, force);
+// 	obj1.switches.forceChanged = true;
+// 	return directionVector;
+// }
