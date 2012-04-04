@@ -114,6 +114,7 @@ function update () {
 		// Update Pluto's gravity.
 		updateGravity(Pluto, Sun);
 		
+		movementModule(Sun);
 		movementModule(Earth);
 		movementModule(Mars);
 		movementModule(Mercury);
