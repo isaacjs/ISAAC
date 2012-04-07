@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>...eppur si muove.</title>
-		<script type = "text/javascript" src = "./external/threejs/Three.js"></script>
+		<script type = "text/javascript" src = "./external/Three.js"></script>
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
@@ -225,49 +225,49 @@
 				renderer.setClearColorHex(0x000000, 1.0);
 				renderer.clear();
 				
-				var meshShow = false;
+				var meshHide = true;
 
 				// If we have WebGL support, double the amount of segments.
 				var webGLMult = webGLSupport ? 2 : 1;
 
 				// Create the Sun.
-				sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), wireframe : meshShow } );
+				sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
 				sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
 				
 				// Create the Earth.
-				earthMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), wireframe : meshShow } );
+				earthMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
 				earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
 				
 				// Create Mars.
-				marsMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), wireframe : meshShow });
+				marsMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
 				
 				// Create Mercury.
-				mercuryMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), wireframe : meshShow });
+				mercuryMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
 				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
 				
 				// Create Jupiter.
-				jupiterMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), wireframe : meshShow });
+				jupiterMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
 				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
 				
 				// Create Venus.
-				venusMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), wireframe : meshShow });
+				venusMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
 				venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
 				
 				// Create Neptune.
-				neptuneMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), wireframe : meshShow });
+				neptuneMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
 				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
 				
 				// Create Uranus.
-				uranusMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), wireframe : meshShow });
+				uranusMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
 				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
 				
 				// Create Pluto.
-				plutoMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), wireframe : meshShow });
+				plutoMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
 				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
 				
 				// Create Saturn.
-				saturnMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), wireframe : meshShow });
+				saturnMaterial = new THREE.MeshLambertMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
 				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
 				
 				// Add everything to the scene.
