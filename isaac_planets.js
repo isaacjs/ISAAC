@@ -83,7 +83,7 @@ Uranus.switches.accelerationEnabled = true;
 var Saturn = PhysicalObject();
 Saturn.motion.position = [-1308.125257452327, -631.8980859148376, 63.06897677571023];
 Saturn.physical.mass = 5.685e20;
-Saturn.motion.velocity = [0, 9.64e-6, 0];
+Saturn.motion.velocity = [-1308.125257452327, -631.8980859148376, 63.06897677571023];
 Saturn.Name = "Saturn";
 
 Saturn.switches.motionEnabled = true;
