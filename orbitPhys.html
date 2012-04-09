@@ -79,6 +79,9 @@
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
 
+			// Point light.
+			var light;
+
 			// Camera movement-related variables.
 			var isMouseDown = false;
 			var mouseLastX, mouseLastY;
@@ -284,7 +287,7 @@
 
 				// If we have WebGL support, add a PointLight at the Sun.
 				if(webGLSupport) {
-					var light = new THREE.PointLight(0xFFFFFF);
+					light = new THREE.PointLight(0xFFFFFF);
 					light.position.x = 0;
 					light.position.y = 0;
 					light.position.z = 0;
@@ -333,9 +336,15 @@
 				objUpdate(Saturn, saturnModel);
 				objUpdate(Pluto, plutoModel);
 
+				// Update the position of the light to be that of the Sun.
+				if(light) {
+					light.position.x = Sun.motion.position[0];
+					light.position.y = Sun.motion.position[1];
+					light.position.z = Sun.motion.position[2];
+				}
+
 				// Update the camera's position.
 				// Get the planet to centre the camera on.
-
 				switch(config.cameraFocus){
 					case "0": cameraFocus = Sun; break;
 					case "1": cameraFocus = Mercury; break;
