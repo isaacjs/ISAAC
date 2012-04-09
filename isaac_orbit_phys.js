@@ -123,6 +123,7 @@ function update () {
 		movementModule(Venus);
 		movementModule(Uranus);
 		movementModule(Saturn);
+		movementModule(Pluto);
 	}
 }
 
