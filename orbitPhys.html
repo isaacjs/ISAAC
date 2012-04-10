@@ -23,7 +23,7 @@
 				margin-right: auto;
 				width: 25em;
 				position: fixed;
-				display: block
+				display: block;
 
 				pointer-events: none;
 				z-index: 50;
@@ -34,6 +34,11 @@
 				font-family: Segoe UI, Arial, "MS Trebuchet", sans-serif;
 				font-size: 90%;
 				text-align: justify;
+			}
+			.blur {
+				font-family: Segoe UI, Arial, "MS Trebuchet", sans-serif;
+				font-size: 100%;
+				display: block;
 			}
 			.hidden {
 				display: none;
@@ -452,6 +457,52 @@
 				} 
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
+			}
+
+			// Pause when we aren't visible.
+			function pageHidden() {
+				worker.postMessage( {'command' : 'pause'} );
+			}
+			function pageVisible() {
+				worker.postMessage( {'command' : 'resume'} );
+			}
+			// Figure out which Page Visibility handler to use.
+			if(typeof document.hidden != "undefined") {
+				document.addEventListener("visibilitychange", visibilityHandler);
+			} else if (typeof document.webkitHidden != "undefined") {
+				document.addEventListener("webkitvisibilitychange", visibilityHandler);
+			} else if (typeof document.msHidden != "undefined") {
+				document.addEventListener("msvisibilitychange", visibilityHandler);
+			} else if (typeof document.mozHidden != "undefined") {
+				document.addEventListener("mozvisibilitychange", visibilityHandler);
+			}
+			// Define the visibility handler.
+			function visibilityHandler() {
+				if(typeof document.hidden != "undefined") {
+					if(document.hidden) {
+						pageHidden();
+					} else {
+						pageVisible();
+					}
+				} else if (typeof document.webkitHidden != "undefined") {
+					if(document.webkitHidden) {
+						pageHidden();
+					} else {
+						pageVisible();
+					}
+				} else if (typeof document.msHidden != "undefined") {
+					if(document.msHidden) {
+						pageHidden();
+					} else {
+						pageVisible();
+					}
+				} else if (typeof document.mozHidden != "undefined") {
+					if(document.mozHidden) {
+						pageHidden();
+					} else {
+						pageVisible();
+					}
+				}
 			}
 		</script>
 	</body>

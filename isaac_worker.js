@@ -6,7 +6,7 @@ self.addEventListener('message', function(e) {
 		case 'get' :
 			var front = posQueue.dequeue();
 			self.postMessage({ 'response' : front, 'queueLength' : posQueue.contents.length });
-			break;
+		break;
 		case 'set' :
 			config = e.data['config'];
 			Earth.config = e.data['earthConfig'];
@@ -19,7 +19,15 @@ self.addEventListener('message', function(e) {
 			Uranus.config = e.data['uranusConfig'];
 			Pluto.config = e.data['plutoConfig'];
 			Saturn.config = e.data['saturnConfig'];
-			break;
+		break;
+		case 'pause' :
+			clearInterval(interval);
+		break;
+		case 'resume' :
+			interval = setInterval(function() {
+				timeLoop();
+			}, time);
+		break;
 	}
 });
 
@@ -31,7 +39,7 @@ self.addEventListener('message', function(e) {
 var posQueue = Queue(1);
 var config = Config();
 var count = 0;
-var timer;
+var time = 50/3;
 
 function timeLoop() {
 	update();
@@ -49,6 +57,7 @@ function timeLoop() {
 	});
 }
 
-setInterval(function(){
+
+var interval = setInterval(function() {
 	timeLoop();
-}, 50/3);
+}, time);
