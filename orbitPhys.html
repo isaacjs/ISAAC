@@ -223,7 +223,12 @@
 				
 				// Check if we have WebGL support using a temporary canvas.
 				var tempCanvas = document.createElement('canvas');
-				var webGLSupport = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));
+				var webGLSupport;
+				try {
+					webGLSupport = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));	
+				} catch (x) {
+					webGLSupport = false;
+				}
 				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
 
 				// Setup the renderer.
