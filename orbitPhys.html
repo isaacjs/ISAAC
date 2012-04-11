@@ -78,12 +78,14 @@
 			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
+			var planetModels;
 
 			// Point light.
 			var light;
 
 			// Camera movement-related variables.
 			var isMouseDown = false;
+			var middleMouseDown = false;
 			var mouseLastX, mouseLastY;
 			var cameraAngleX = 0;
 			var cameraAngleY = 0;
@@ -104,7 +106,7 @@
 
 				// Create the Camera folder.
 				var cameraSettings = gui.addFolder("Camera");
-				cameraSettings.add(window, 'cameraDist', 5, 750).name("Camera Distance");
+				cameraSettings.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
 				cameraSettings.add(config, 'cameraFocus',
 					{ 
 						"Sun" : 0, 
@@ -117,7 +119,7 @@
 						"Uranus" : 7,
 						"Neptune" : 8,
 						"Pluto" : 9
-					}).name("Camera Focus");
+					}).name("Camera Focus").listen();
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
@@ -244,43 +246,56 @@
 				// Create the Sun.
 				sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
 				sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
+				sunModel.name = "Sun";
 				
 				// Create the Earth.
 				earthMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
 				earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
+				earthModel.name = "Earth";
 				
 				// Create Mars.
 				marsMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
 				marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
+				marsModel.name = "Mars";
 				
 				// Create Mercury.
 				mercuryMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
 				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
+				mercuryModel.name = "Mercury";
 				
 				// Create Jupiter.
 				jupiterMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
 				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
+				jupiterModel.name = "Jupiter";
 				
 				// Create Venus.
 				venusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
 				venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
+				venusModel.name = "Venus";
 				
 				// Create Neptune.
 				neptuneMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
 				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
+				neptuneModel.name = "Neptune";
 				
 				// Create Uranus.
 				uranusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
 				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
+				uranusModel.name = "Uranus";
 				
 				// Create Pluto.
 				plutoMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
 				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
+				plutoModel.name = "Pluto";
 				
 				// Create Saturn.
 				saturnMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
 				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
+				saturnModel.name = "Saturn";
 				
+				// Add all the models to an array.
+				planetModels = [earthModel, marsModel, sunModel, mercuryModel, jupiterModel, neptuneModel, uranusModel, venusModel, plutoModel, saturnModel];
+
 				// Add everything to the scene.
 				scene.add(sunModel);
 				scene.add(earthModel);
@@ -396,27 +411,58 @@
 				model.position.y = object.motion.position[2];
 				model.position.z = object.motion.position[1];
 			}
+
+			// Projector to detect which planet is being clicked.
+			var projector = new THREE.Projector();
 			
 			// Handles mousedown events.
 			function onDocumentMouseDown(event) {
 				var element;
 				// Check if the mouse is over the canvas.
-				if(event.srcElement) {
-					// IE-specific (though apparently Chrome too?)
-					element = event.srcElement.nodeName;
-				} else if(event.target) {
-					// Everyone else.
+				if(event.target) {
 					element = event.target.nodeName;
 				}
 				
 				if(element === 'CANVAS') {
-					isMouseDown = true;
-				}				
+					// Only adjust the camera's position if the mouse was over the canvas and the left-mouse button was clicked.
+					if(event.button === 0) {
+						isMouseDown = true;
+
+						// Figure out if the mouse clicked any planet.
+						var x = event.clientX;
+						var y = event.clientY;
+						var vector = new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
+						projector.unprojectVector(vector, camera);
+						var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+						var intersects = ray.intersectObjects(planetModels);
+						if(intersects.length > 0) {
+							// Move the camera to the planet.
+							switch(intersects[0].object.name) {
+								case "Sun": config.cameraFocus = "0"; break;
+								case "Mercury" : config.cameraFocus = "1"; break;
+								case "Venus" : config.cameraFocus = "2"; break;
+								case "Earth" : config.cameraFocus = "3"; break;
+								case "Mars" : config.cameraFocus = "4"; break;
+								case "Jupiter" : config.cameraFocus = "5"; break;
+								case "Saturn" : config.cameraFocus = "6"; break;
+								case "Uranus" : config.cameraFocus = "7"; break;
+								case "Neptune" : config.cameraFocus = "8"; break;
+								case "Pluto" : config.cameraFocus = "9"; break;
+							}
+						}
+					}
+
+					// If the middle mouse button is held, flag it.
+					if(event.button === 1) {
+						middleMouseDown = true;
+					}
+				}
 			}
 			
 			// Handles mouseup events.
 			function onDocumentMouseUp(event) {
 				isMouseDown = false;
+				middleMouseDown = false;
 				
 				// Send updated settings to the worker.
 				worker.postMessage({
@@ -436,16 +482,16 @@
 			
 			// Handles mousemove events. Used to move the camera.
 			function onDocumentMouseMove(event) {
-				// Check if the mouse button is down.
+				// Get the position of the mouse.
+				var mouseX = event.clientX;
+				var mouseY = event.clientY;
+
+				// Get the delta of the mouse's position.
+				var mouseXDelta = event.clientX - mouseLastX;
+				var mouseYDelta = event.clientY - mouseLastY;
+
+				// Check if the left mouse button is down.
 				if(isMouseDown) {
-					// Get the position of the mouse.
-					var mouseX = event.clientX;
-					var mouseY = event.clientY;
-					
-					// Get the delta of the mouse's position.
-					var mouseXDelta = event.clientX - mouseLastX;
-					var mouseYDelta = event.clientY - mouseLastY;
-					
 					// Add the corresponding rotation to the camera angle.
 					cameraAngleX += mouseXDelta;
 					
@@ -458,6 +504,18 @@
 						cameraAngleY += mouseYDelta;
 					}
 				} 
+
+				// If middle mouse is down, zoom in or out.
+				if(middleMouseDown) {
+					// Restrict camera zooming to the same range as the UI allows.
+					if(cameraDist > 750) {
+						cameraDist = 750;
+					} else if(cameraDist < 5) {
+						cameraDist = 5;
+					} else {
+						cameraDist += mouseYDelta;
+					}
+				}
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
 			}
