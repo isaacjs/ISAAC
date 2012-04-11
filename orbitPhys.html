@@ -16,6 +16,7 @@
 			body { 
 				margin: 0px; 
 				overflow: hidden;
+				background-color: black;
 			}
 			.overlay {
 				margin-left: auto;
@@ -506,6 +507,17 @@
 					}
 				}
 			}
+
+			// Handle page resizing.
+			function pageResize() {
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				
+				renderer.setSize(width, height);
+				camera.aspect = width/height;
+				camera.updateProjectionMatrix();
+			}
+			window.addEventListener('resize', pageResize, false);
 		</script>
 	</body>
 </html>
