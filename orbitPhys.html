@@ -390,9 +390,9 @@
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
 
 				// Translate the camera to the planet.
-				camera.position.x += cameraFocus.motion.position[0]
-				camera.position.z += cameraFocus.motion.position[1]
-				camera.position.y += cameraFocus.motion.position[2]
+				camera.position.x += cameraFocus.motion.position[0];
+				camera.position.z += cameraFocus.motion.position[1];
+				camera.position.y += cameraFocus.motion.position[2];
 
 				// Point the camera at the planet.
 				camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
@@ -528,36 +528,36 @@
 				worker.postMessage( {'command' : 'resume'} );
 			}
 			// Figure out which Page Visibility handler to use.
-			if(typeof document.hidden != "undefined") {
+			if(typeof document.hidden !== "undefined") {
 				document.addEventListener("visibilitychange", visibilityHandler);
-			} else if (typeof document.webkitHidden != "undefined") {
+			} else if (typeof document.webkitHidden !== "undefined") {
 				document.addEventListener("webkitvisibilitychange", visibilityHandler);
-			} else if (typeof document.msHidden != "undefined") {
+			} else if (typeof document.msHidden !== "undefined") {
 				document.addEventListener("msvisibilitychange", visibilityHandler);
-			} else if (typeof document.mozHidden != "undefined") {
+			} else if (typeof document.mozHidden !== "undefined") {
 				document.addEventListener("mozvisibilitychange", visibilityHandler);
 			}
 			// Define the visibility handler.
 			function visibilityHandler() {
-				if(typeof document.hidden != "undefined") {
+				if(typeof document.hidden !== "undefined") {
 					if(document.hidden) {
 						pageHidden();
 					} else {
 						pageVisible();
 					}
-				} else if (typeof document.webkitHidden != "undefined") {
+				} else if (typeof document.webkitHidden !== "undefined") {
 					if(document.webkitHidden) {
 						pageHidden();
 					} else {
 						pageVisible();
 					}
-				} else if (typeof document.msHidden != "undefined") {
+				} else if (typeof document.msHidden !== "undefined") {
 					if(document.msHidden) {
 						pageHidden();
 					} else {
 						pageVisible();
 					}
-				} else if (typeof document.mozHidden != "undefined") {
+				} else if (typeof document.mozHidden !== "undefined") {
 					if(document.mozHidden) {
 						pageHidden();
 					} else {

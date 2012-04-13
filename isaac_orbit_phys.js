@@ -3,8 +3,8 @@
 // Units
 // Distance: gigameters
 // Mass: gigagrams
-var G = 6.67e-32 // in Newton square Gigameters per Gigagram squared.
-var timeStep = 1440 // in seconds.
+var G = 6.67e-32; // in Newton square Gigameters per Gigagram squared.
+var timeStep = 1440; // in seconds.
 
 var config = Config();
 
@@ -43,7 +43,7 @@ function Config() {
 		"updateStep" : 1,
 		"gravConstMult" : 1,
 		"cameraFocus" : 0
-	}
+	};
 }
 
 // Updates the position of the planets.

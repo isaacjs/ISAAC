@@ -1,7 +1,7 @@
 // Main logic module for ISAAC Physics.
 
 function displayProperties (obj) {
-	for(name in obj) {
+	for(var name in obj) {
 		console.log("Property: " + name + " Value: " + obj[name]);
 	}
 	console.log("\n");
@@ -68,7 +68,7 @@ function forceModule (obj) {
 		
 		// Iterate through the forces acting on the object and add them
 		// to the resultant force.
-		for(force in obj.forceStore) {
+		for(var force in obj.forceStore) {
 			for(var i = 0; i < 3; i++) {
 				newResultant[i] += obj.forceStore[force][i];
 			}
@@ -102,7 +102,7 @@ function contactBetween (obj1, obj2) {
 	// var rSumSquare = sqr(radiiSum);
 	// if (dSquare > rSumSquare) {
 	
-	if (distance > radiisum) {
+	if (distance > radiiSum) {
 		return false;
 	}
 	if (obj1.physical.shape + obj2.physical.shape === 2) { // Both are spheres
