@@ -296,16 +296,9 @@
 				planetModels = [earthModel, marsModel, sunModel, mercuryModel, jupiterModel, neptuneModel, uranusModel, venusModel, plutoModel, saturnModel];
 
 				// Add everything to the scene.
-				scene.add(sunModel);
-				scene.add(earthModel);
-				scene.add(marsModel);
-				scene.add(mercuryModel);
-				scene.add(jupiterModel);
-				scene.add(neptuneModel);
-				scene.add(uranusModel);
-				scene.add(venusModel);
-				scene.add(saturnModel);
-				scene.add(plutoModel);
+				for(var i = 0; i < planetModels.length; i++) {
+					scene.add(planetModels[i]);
+				}
 
 				// If we have WebGL support, add a PointLight at the Sun.
 				if(webGLSupport) {
@@ -318,11 +311,6 @@
 				
 				// Render.
 				renderer.render(scene, camera);
-				
-				// Add hooks for mouse events, to move the camera around.
-				document.addEventListener('mousedown', onDocumentMouseDown, false);
-				document.addEventListener('mouseup', onDocumentMouseUp, false);
-				document.addEventListener('mousemove', onDocumentMouseMove, false);
 				
 				// Start the worker.
 				worker.addEventListener('message', function (e) {
@@ -413,6 +401,24 @@
 
 			// Projector to detect which planet is being clicked.
 			var projector = new THREE.Projector();
+
+			// Add hooks for mouse events, to move the camera around.
+			document.addEventListener('mousedown', onDocumentMouseDown, false);
+			document.addEventListener('mouseup', onDocumentMouseUp, false);
+			document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+			// Add hook for resize events.
+			window.addEventListener('resize', pageResize, false);
+			
+			// Handles page resizing.
+			function pageResize() {
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				
+				renderer.setSize(width, height);
+				camera.aspect = width/height;
+				camera.updateProjectionMatrix();
+			}
 			
 			// Handles mousedown events.
 			function onDocumentMouseDown(event) {
@@ -564,17 +570,6 @@
 					}
 				}
 			}
-
-			// Handle page resizing.
-			function pageResize() {
-				var width = window.innerWidth;
-				var height = window.innerHeight;
-				
-				renderer.setSize(width, height);
-				camera.aspect = width/height;
-				camera.updateProjectionMatrix();
-			}
-			window.addEventListener('resize', pageResize, false);
 		</script>
 	</body>
 </html>
