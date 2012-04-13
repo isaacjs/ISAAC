@@ -104,10 +104,9 @@
 				{ width : 500 }
 				);
 
-				// Create the Camera folder.
-				var cameraSettings = gui.addFolder("Camera");
-				cameraSettings.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
-				cameraSettings.add(config, 'cameraFocus',
+				// Create the Camera settings.
+				gui.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
+				gui.add(config, 'cameraFocus',
 					{ 
 						"Sun" : 0, 
 						"Mercury" : 1, 
