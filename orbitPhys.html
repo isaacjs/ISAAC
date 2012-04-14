@@ -92,6 +92,7 @@
 			var cameraDist = 200;
 			var origin = new THREE.Vector3(0, 0, 0);
 			var cameraFocus = Sun;
+			var camFocusGUI;
 			
 			// Web Worker.
 			var worker = new Worker('isaac_worker.js');
@@ -106,7 +107,7 @@
 
 				// Create the Camera settings.
 				gui.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
-				gui.add(config, 'cameraFocus',
+				camFocusGUI = gui.add(config, 'cameraFocus',
 					{ 
 						"Sun" : 0, 
 						"Mercury" : 1, 
@@ -118,7 +119,7 @@
 						"Uranus" : 7,
 						"Neptune" : 8,
 						"Pluto" : 9
-					}).name("Camera Focus").listen();
+					}).name("Camera Focus");
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
@@ -454,6 +455,7 @@
 								case "Neptune" : config.cameraFocus = "8"; break;
 								case "Pluto" : config.cameraFocus = "9"; break;
 							}
+							camFocusGUI.updateDisplay();
 						}
 					}
 
