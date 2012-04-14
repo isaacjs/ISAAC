@@ -20,8 +20,8 @@ function update (orbitalBodies) {
 				updateGravity(orbitalBodies[j], orbitalBodies[k]);
 			}
 		}
-		for(j = 0; j < orbitalBodies.length; j++) {
-			ISAAC.Core.movementModule(orbitalBodies[j]);
+		for(var l = 0; l < orbitalBodies.length; l++) {
+			ISAAC.Core.movementModule(orbitalBodies[l]);
 		}
 	}
 }

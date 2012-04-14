@@ -38,14 +38,14 @@ ISAAC.OrbitalBody = function (parameters) {
 	// The resultant force on the object. Calculated at runtime.
 	this.resultantForce = [0, 0, 0];
 	
-	this.motion.position = parameters.position !== undefined ? parameters.position : [0, 0, 0];
-	this.motion.velocity = parameters.velocity !== undefined ? parameters.velocity : [0, 0, 0];
+	this.motion.position = parameters.position !== undefined ? [parameters.position[1], parameters.position[0], parameters.position[2]] : [0, 0, 0];
+	this.motion.velocity = parameters.velocity !== undefined ? [parameters.velocity[1], parameters.position[0], parameters.position[2]] : [0, 0, 0];
 		
 	// The acceleration vector of the object, including gravity (if enabled). Calculated at runtime.
 	this.motion.acceleration = [0, 0, 0];
 
-	this.switches.motionEnabled = parameters.motionEnabled !== undefined ? parameters.motionEnabled : false;
-	this.switches.accelerationEnabled = parameters.accelerationEnabled !== undefined ? parameters.accelerationEnabled : false;
+	this.switches.motionEnabled = parameters.motionEnabled !== undefined ? parameters.motionEnabled : true;
+	this.switches.accelerationEnabled = parameters.accelerationEnabled !== undefined ? parameters.accelerationEnabled : true;
 	this.switches.forceChanged = false;
 
 	this.config.massMult = 1;
