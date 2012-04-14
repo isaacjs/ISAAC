@@ -1,4 +1,4 @@
-importScripts('isaac_core.js', 'isaac_math.js', 'isaac_obj.js', 'isaac_planets.js', 'isaac_orbit_phys.js', 'isaac_queue.js');
+importScripts('isaac_core.js', 'isaac_math.js', 'isaac_obj.js', 'isaac_orbit_phys.js', 'isaac_queue.js');
 
 self.addEventListener('message', function(e) {
 	var data = e.data;
@@ -9,15 +9,7 @@ self.addEventListener('message', function(e) {
 		break;
 		case 'set' :
 			config = e.data['config'];
-			Earth.config = e.data['earthConfig'];
-			Sun.config = e.data['sunConfig'];
-			Mars.config = e.data['marsConfig'];
-			Jupiter.config = e.data['jupiterConfig'];
-			Venus.config = e.data['venusConfig'];
-			Mercury.config = e.data['mercuryConfig'];
-			Uranus.config = e.data['uranusConfig'];
-			Pluto.config = e.data['plutoConfig'];
-			Saturn.config = e.data['saturnConfig'];
+			bodyArray = e.data['bodyArray'];
 		break;
 		case 'pause' :
 			clearInterval(interval);
@@ -36,25 +28,13 @@ self.addEventListener('message', function(e) {
 
 // Frame rate should always be less than or equal to update rate.
 var posQueue = Queue(1);
-var config = Config();
+var config;
+var bodyArray;
 var count = 0;
 var time = 50/3;
-var planetArray = [Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto];
-
 function timeLoop() {
-	update(planetArray);
-	posQueue.enqueue({
-		'earthPos' : Earth.motion.position,
-		'sunPos' : Sun.motion.position,
-		'marsPos' : Mars.motion.position,
-		'saturnPos' : Saturn.motion.position,
-		'jupiterPos' : Jupiter.motion.position,
-		'plutoPos' : Pluto.motion.position,
-		'uranusPos' : Uranus.motion.position,
-		'neptunePos' : Neptune.motion.position,
-		'mercuryPos' : Mercury.motion.position,
-		'venusPos' : Venus.motion.position
-	});
+	update(bodyArray);
+	posQueue.enqueue(bodyArray);
 }
 
 
