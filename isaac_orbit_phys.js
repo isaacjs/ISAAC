@@ -1,11 +1,4 @@
 // Module to handle simulation of Earth's orbit using physics.
-
-// Units
-// Distance: gigameters
-// Mass: gigagrams
-var G = 6.67e-32; // in Newton square Gigameters per Gigagram squared.
-var timeStep = 1440; // in seconds.
-
 var config = Config();
 
 function Config() {

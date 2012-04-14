@@ -15,13 +15,17 @@ ISAAC.Force = function (name, vector) {
 };
 
 
-ISAAC.PhysicalObject = function () {
-	// Physical properties relating to the object.
-	this.physical = {
-		"mass" : 1, // Mass of the object, in kilograms.
-		"maxRadius" : 0, //Maximum distance between any point and the centre
-		"shape" : 1 // 1 is a sphere, 4 is a cuboid
-	};
+ISAAC.OrbitalBody = function (parameters) {
+	parameters = parameters || {};
+
+	// Name of the object.
+	this.Name = parameters.name !== undefined ? parameters.name : "";
+
+	// Is this object a Star?
+	this.isStar = parameters.isStar !== undefined ? parameters.isStar : false;
+
+	// Mass of the object, in gigagrams.
+	this.physical.mass = parameters.mass !== undefined ? parameters.mass : 1;
 	
 	this.forceStore = {
 		// External forces on the object will be kept here.
@@ -30,24 +34,17 @@ ISAAC.PhysicalObject = function () {
 	// The resultant force on the object. Calculated at runtime.
 	this.resultantForce = [0, 0, 0];
 	
-	this.motion = {
-		"position" : [0, 0, 0],
-		"velocity" : [0, 0, 0],
+	this.motion.position = parameters.position !== undefined ? parameters.position : [0, 0, 0];
+	this.motion.velocity = parameters.velocity !== undefined ? parameters.velocity : [0, 0, 0];
 		
-		// The acceleration vector of the object, including gravity (if enabled).
-		"acceleration": [0, 0, 0]
-	};
-	this.switches =  {
-		"inContact" : false,
-		"motionEnabled" : false,
-		"accelerationEnabled" : false,
-		"gravityEnabled" : false,
-		"frictionEnabled" : this.inContact,
-		"forceChanged" : false
-	};
-	this.config = {
-		"massMult" : 1
-	};
+	// The acceleration vector of the object, including gravity (if enabled). Calculated at runtime.
+	this.motion.acceleration = [0, 0, 0];
+
+	this.switches.motionEnabled = parameters.motionEnabled !== undefined ? parameters.motionEnabled : false;
+	this.switches.accelerationEnabled = parameters.accelerationEnabled !== undefined ? parameters.accelerationEnabled : false;
+	this.switches.forceChanged = false;
+
+	this.config.massMult = 1;
 };
 
 // These objects are currently unused, and have not been tested.

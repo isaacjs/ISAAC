@@ -335,16 +335,16 @@
 				worker.postMessage({'command' : 'get'});
 				
 				// Update the graphical representations of the objects.
-				objUpdate(Earth, earthModel);
-				objUpdate(Mars, marsModel);
-				objUpdate(Sun, sunModel);
-				objUpdate(Mercury, mercuryModel);
-				objUpdate(Jupiter, jupiterModel);
-				objUpdate(Neptune, neptuneModel);
-				objUpdate(Venus, venusModel);
-				objUpdate(Uranus, uranusModel);
-				objUpdate(Saturn, saturnModel);
-				objUpdate(Pluto, plutoModel);
+				ISAAC.graphics.objUpdate(Earth, earthModel);
+				ISAAC.graphics.objUpdate(Mars, marsModel);
+				ISAAC.graphics.objUpdate(Sun, sunModel);
+				ISAAC.graphics.objUpdate(Mercury, mercuryModel);
+				ISAAC.graphics.objUpdate(Jupiter, jupiterModel);
+				ISAAC.graphics.objUpdate(Neptune, neptuneModel);
+				ISAAC.graphics.objUpdate(Venus, venusModel);
+				ISAAC.graphics.objUpdate(Uranus, uranusModel);
+				ISAAC.graphics.objUpdate(Saturn, saturnModel);
+				ISAAC.graphics.objUpdate(Pluto, plutoModel);
 
 				// Update the position of the light to be that of the Sun.
 				if(light) {
@@ -392,12 +392,6 @@
 			}
 			
 			animUpdate();
-			
-			function objUpdate(object, model) {
-				model.position.x = object.motion.position[0];
-				model.position.y = object.motion.position[2];
-				model.position.z = object.motion.position[1];
-			}
 
 			// Projector to detect which planet is being clicked.
 			var projector = new THREE.Projector();

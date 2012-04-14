@@ -2,6 +2,12 @@
 
 var ISAAC = ISAAC || { version: "0.1" };
 
+// Units
+// Distance: gigameters
+// Mass: gigagrams
+ISAAC.Constants.G = 6.67e-32; // in Newton square gigameters per gigagram squared.
+ISAAC.Constants.timeStep = 1440; // in seconds.
+
 ISAAC.displayProperties = function (obj) {
 	for(var name in obj) {
 		console.log("Property: " + name + " Value: " + obj[name]);
@@ -13,11 +19,10 @@ ISAAC.displayProperties = function (obj) {
 // Calls all other modules to modify an object's properties with regard to motion.
 ISAAC.core.movementModule = function (obj) {
 	if(obj.switches.motionEnabled) {
-		var gravityChanged = gravityModule(obj);
 		var forceChanged = forceModule(obj);
 		var accelerationChanged = accelerationModule(obj);
 		var velocityChanged = velocityModule(obj);
-		if (velocityChanged || accelerationChanged || gravityChanged || forceChanged) {
+		if (velocityChanged || accelerationChanged || forceChanged) {
 			return true;
 		}
 	}
@@ -28,12 +33,7 @@ ISAAC.core.movementModule = function (obj) {
 // Adjusts the position of the object, based on the velocity vector.
 ISAAC.core.velocityModule = function (obj) {
 	if (obj.switches.motionEnabled) {
-		//		obj.Position.posX += (obj.Position.velX * timeStep);
-		//		obj.Position.posY += (obj.Position.velY * timeStep);
-		//		obj.Position.posZ += (obj.Position.velZ * timeStep);
-		var basic = addVector(obj.motion.position, scaleVector(obj.motion.velocity, timeStep));
-		//obj.motion.position = addVector(basic, scaleVector(scaleVector(obj.motion.acceleration, Math.pow(timeStep, 2)), 0.5));
-		obj.motion.position = basic;
+		obj.motion.position = addVector(obj.motion.position, scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep));
 		return true;
 	}
 	return false;
@@ -43,24 +43,15 @@ ISAAC.core.velocityModule = function (obj) {
 // Adjusts the velocity of the object, based on the acceleration vector.
 ISAAC.core.accelerationModule = function (obj) {
 	if (obj.switches.accelerationEnabled) {
-		//		obj.Position.velX += (obj.Position.accelX * timeStep);
-		//		obj.Position.velY += (obj.Position.accelY * timeStep);
-		//		obj.Position.velZ += (obj.Position.accelZ * timeStep);
-		obj.motion.velocity = addVector(obj.motion.velocity, scaleVector(obj.motion.acceleration, timeStep));
+		//		obj.Position.velX += (obj.Position.accelX * ISAAC.Constants.timeStep);
+		//		obj.Position.velY += (obj.Position.accelY * ISAAC.Constants.timeStep);
+		//		obj.Position.velZ += (obj.Position.accelZ * ISAAC.Constants.timeStep);
+		obj.motion.velocity = addVector(obj.motion.velocity, scaleVector(obj.motion.acceleration, ISAAC.Constants.timeStep));
 		return true;
 	}
 	return false;
 }
 
-// Gravity Module.
-// Adjusts the acceleration vector of the object to reflect the force of gravity.
-// For the object to be affected by gravity, both gravityEnabled and accelerationEnabled must be true.
-ISAAC.core.gravityModule = function (obj) {
-	if(obj.switches.gravityEnabled) {
-		gravityForce.act(obj);
-	}
-	return true;
-}
 // Force Module.
 // Calculates the acceleration of an object based on the resultant forces on it.
 ISAAC.core.forceModule = function(obj) {
@@ -131,14 +122,6 @@ ISAAC.core.gravitationalForce = function (obj1, obj2) {
 	
 	// Get the distance between the two objects.
 	var distance = vectorLength(directionVector);
-	
-	// // Get Gm1m2.
-	// var numerator = G * obj1.physical.mass * obj2.physical.mass;
-	
-	// // Modify Gm1m2 according to the relevant multipliers.
-	// numerator *= config.gravConstMult;
-	// numerator *= obj1.config.massMult;
-	// numerator *= obj2.config.massMult;
 
 	// Get Gm1m2 and modify it according to the relevant multipliers.
 	var numerator = G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
