@@ -103,7 +103,8 @@
 			
 			function init() {
 				// ------ GUI Initialisation ------ //
-				var gui = new dat.GUI(
+			//	var gui = new dat.GUI(
+				gui = new dat.GUI(
 				{ width : 500 }
 				);
 
@@ -144,7 +145,6 @@
 					bodyDOM.onmouseover = massMultShow;
 					bodyDOM.onmouseout = massMultHide;
 				}
-				
 				// ------ End of GUI Initialisation ------ //
 				
 				// ------ FPS Counter (for debug only) ------ //
@@ -244,7 +244,7 @@
 				saturnModel.name = "Saturn";
 				
 				// Add all the models to an array.
-				planetModels = [sunModel, mercuryModel, earthModel, venusModel, marsModel, jupiterModel, saturnModel, uranusModel, neptuneModel, plutoModel];
+				planetModels = [sunModel, mercuryModel, venusModel, earthModel, marsModel, jupiterModel, saturnModel, uranusModel, neptuneModel, plutoModel];
 
 				// Add everything to the scene.
 				for(var i = 0; i < planetModels.length; i++) {
