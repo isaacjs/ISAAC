@@ -10,7 +10,6 @@ self.addEventListener('message', function(e) {
 		case 'set' :
 			config = e.data['config'];
 			Earth.config = e.data['earthConfig'];
-			Mars.config = e.data['marsConfig'];
 			Sun.config = e.data['sunConfig'];
 			Mars.config = e.data['marsConfig'];
 			Jupiter.config = e.data['jupiterConfig'];
@@ -40,9 +39,10 @@ var posQueue = Queue(1);
 var config = Config();
 var count = 0;
 var time = 50/3;
+var planetArray = [Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto];
 
 function timeLoop() {
-	update();
+	update(planetArray);
 	posQueue.enqueue({
 		'earthPos' : Earth.motion.position,
 		'sunPos' : Sun.motion.position,

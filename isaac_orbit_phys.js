@@ -9,84 +9,20 @@ function Config() {
 	};
 }
 
-// Updates the position of the planets.
-function update () {
+// Given an array of Orbital Bodies, updates their positions.
+// This is where n-body calculation occurs.
+function update (orbitalBodies) {
 	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 1 day).
 	for (var i = 0; i < config.updateStep; i++) {
-		// Update Earth's gravity.
-		updateGravity(Earth, Sun);
-		updateGravity(Earth, Mars);
-		updateGravity(Earth, Mercury);
-		updateGravity(Earth, Jupiter);
-		updateGravity(Earth, Neptune);
-		updateGravity(Earth, Venus);
-		updateGravity(Earth, Uranus);
-		updateGravity(Earth, Saturn);
-		updateGravity(Earth, Pluto);
-		
-		// Update Mars' gravity.
-		updateGravity(Mars, Sun);
-		updateGravity(Mars, Mercury);
-		updateGravity(Mars, Jupiter);
-		updateGravity(Mars, Neptune);
-		updateGravity(Mars, Venus);
-		updateGravity(Mars, Uranus);
-		updateGravity(Mars, Saturn);
-		updateGravity(Mars, Pluto);
-		
-		// Update Mercury's gravity.
-		updateGravity(Mercury, Sun);
-		updateGravity(Mercury, Jupiter);
-		updateGravity(Mercury, Neptune);
-		updateGravity(Mercury, Venus);
-		updateGravity(Mercury, Uranus);
-		updateGravity(Mercury, Saturn);
-		updateGravity(Mercury, Pluto);
-		
-		// Update Jupiter's gravity.
-		updateGravity(Jupiter, Sun);
-		updateGravity(Jupiter, Neptune);
-		updateGravity(Jupiter, Venus);
-		updateGravity(Jupiter, Uranus);
-		updateGravity(Jupiter, Saturn);
-		updateGravity(Jupiter, Pluto);
-		
-		// Update Neptune's gravity.
-		updateGravity(Neptune, Sun);
-		updateGravity(Neptune, Venus);
-		updateGravity(Neptune, Uranus);
-		updateGravity(Neptune, Saturn);
-		updateGravity(Neptune, Pluto);
-		
-		// Update Venus' gravity.
-		updateGravity(Venus, Sun);
-		updateGravity(Venus, Uranus);
-		updateGravity(Venus, Saturn);
-		updateGravity(Venus, Pluto);
-		
-		// Update Uranus' gravity.
-		updateGravity(Uranus, Sun);
-		updateGravity(Uranus, Saturn);
-		updateGravity(Uranus, Pluto);
-		
-		// Update Saturn's gravity.
-		updateGravity(Saturn, Sun);
-		updateGravity(Saturn, Pluto);
-		
-		// Update Pluto's gravity.
-		updateGravity(Pluto, Sun);
-		
-		ISAAC.Core.movementModule(Sun);
-		ISAAC.Core.movementModule(Earth);
-		ISAAC.Core.movementModule(Mars);
-		ISAAC.Core.movementModule(Mercury);
-		ISAAC.Core.movementModule(Jupiter);
-		ISAAC.Core.movementModule(Neptune);
-		ISAAC.Core.movementModule(Venus);
-		ISAAC.Core.movementModule(Uranus);
-		ISAAC.Core.movementModule(Saturn);
-		ISAAC.Core.movementModule(Pluto);
+		for(var j = 0; j < orbitalBodies.length - 1; j++) {
+			for(var k = j + 1; k < orbitalBodies.length; k++) {
+				updateGravity(orbitalBodies[j], orbitalBodies[k]);
+			}
+		}
+		for(j = 0; j < orbitalBodies.length; j++) {
+			ISAAC.Core.movementModule(orbitalBodies[j]);
+		}
 	}
 }
 
