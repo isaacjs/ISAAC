@@ -96,7 +96,7 @@ var Saturn = new ISAAC.OrbitalBody(
 	{
 		name : "Saturn",
 		position : [-631.8980859148376, -1308.125257452327, 63.06897677571023],
-		mass : 5.685e20;,
+		mass : 5.685e20,
 		velocity : [-8.711916465865464e-6, 3.671844960056266e-6, 4.785296340228841e-9],
 		motionEnabled : true,
 		accelerationEnabled : true

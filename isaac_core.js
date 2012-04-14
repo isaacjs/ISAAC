@@ -1,6 +1,8 @@
 // Main logic module for ISAAC.
 
 var ISAAC = ISAAC || { version: "0.1" };
+ISAAC.Constants = ISAAC.Constants || {};
+ISAAC.Core = ISAAC.Core || {};
 
 // Units
 // Distance: gigameters
@@ -17,11 +19,11 @@ ISAAC.displayProperties = function (obj) {
 
 // Movement Module.
 // Calls all other modules to modify an object's properties with regard to motion.
-ISAAC.core.movementModule = function (obj) {
+ISAAC.Core.movementModule = function (obj) {
 	if(obj.switches.motionEnabled) {
-		var forceChanged = forceModule(obj);
-		var accelerationChanged = accelerationModule(obj);
-		var velocityChanged = velocityModule(obj);
+		var forceChanged = ISAAC.Core.forceModule(obj);
+		var accelerationChanged = ISAAC.Core.accelerationModule(obj);
+		var velocityChanged = ISAAC.Core.velocityModule(obj);
 		if (velocityChanged || accelerationChanged || forceChanged) {
 			return true;
 		}
@@ -31,9 +33,9 @@ ISAAC.core.movementModule = function (obj) {
 
 // Velocity Module.
 // Adjusts the position of the object, based on the velocity vector.
-ISAAC.core.velocityModule = function (obj) {
+ISAAC.Core.velocityModule = function (obj) {
 	if (obj.switches.motionEnabled) {
-		obj.motion.position = addVector(obj.motion.position, scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep));
+		obj.motion.position = ISAAC.Math.addVector(obj.motion.position, ISAAC.Math.scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep));
 		return true;
 	}
 	return false;
@@ -41,12 +43,12 @@ ISAAC.core.velocityModule = function (obj) {
 
 // Acceleration Module.
 // Adjusts the velocity of the object, based on the acceleration vector.
-ISAAC.core.accelerationModule = function (obj) {
+ISAAC.Core.accelerationModule = function (obj) {
 	if (obj.switches.accelerationEnabled) {
 		//		obj.Position.velX += (obj.Position.accelX * ISAAC.Constants.timeStep);
 		//		obj.Position.velY += (obj.Position.accelY * ISAAC.Constants.timeStep);
 		//		obj.Position.velZ += (obj.Position.accelZ * ISAAC.Constants.timeStep);
-		obj.motion.velocity = addVector(obj.motion.velocity, scaleVector(obj.motion.acceleration, ISAAC.Constants.timeStep));
+		obj.motion.velocity = ISAAC.Math.addVector(obj.motion.velocity, ISAAC.Math.scaleVector(obj.motion.acceleration, ISAAC.Constants.timeStep));
 		return true;
 	}
 	return false;
@@ -54,7 +56,7 @@ ISAAC.core.accelerationModule = function (obj) {
 
 // Force Module.
 // Calculates the acceleration of an object based on the resultant forces on it.
-ISAAC.core.forceModule = function(obj) {
+ISAAC.Core.forceModule = function(obj) {
 	if (obj.switches.motionEnabled && obj.switches.forceChanged) {
 		// Create a blank array for the resultant force.
 		var newResultant = [0, 0, 0];
@@ -85,8 +87,8 @@ ISAAC.core.forceModule = function(obj) {
 // Contact function.
 // Given two objects, determines whether or not they are in contact.
 // IMPORTANT: This is not fully implemented, and is not currently used.
-ISAAC.core.contactBetween = function (obj1, obj2) {
-	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
+ISAAC.Core.contactBetween = function (obj1, obj2) {
+	var distance = ISAAC.Math.vectorLength(ISAAC.Math.subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	var radiiSum = obj1.physical.maxRadius + obj2.physical.maxRadius;
 	
@@ -116,21 +118,21 @@ ISAAC.core.contactBetween = function (obj1, obj2) {
 // Gravitational Force Function.
 // Given two objects, returns the vector of gravitational force between them, from the first object
 // to the second.
-ISAAC.core.gravitationalForce = function (obj1, obj2) {	
+ISAAC.Core.gravitationalForce = function (obj1, obj2) {	
 	// Get the direction vector from the first object to the second.
-	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
+	var directionVector = ISAAC.Math.subtractVector(obj2.motion.position, obj1.motion.position);
 	
 	// Get the distance between the two objects.
-	var distance = vectorLength(directionVector);
+	var distance = ISAAC.Math.vectorLength(directionVector);
 
 	// Get Gm1m2 and modify it according to the relevant multipliers.
-	var numerator = G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
+	var numerator = ISAAC.Constants.G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
 	
 	// Get the force between the two objects.
-	var force = numerator / sqr(distance);
+	var force = numerator / ISAAC.Math.sqr(distance);
 	
 	// Scale the direction vector to be the same magnitude as the force.
-	directionVector = vectorFitToLength(directionVector, force);
+	directionVector = ISAAC.Math.vectorFitToLength(directionVector, force);
 	obj1.switches.forceChanged = true;
 	return directionVector;
 }

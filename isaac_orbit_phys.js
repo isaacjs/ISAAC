@@ -77,20 +77,20 @@ function update () {
 		// Update Pluto's gravity.
 		updateGravity(Pluto, Sun);
 		
-		movementModule(Sun);
-		movementModule(Earth);
-		movementModule(Mars);
-		movementModule(Mercury);
-		movementModule(Jupiter);
-		movementModule(Neptune);
-		movementModule(Venus);
-		movementModule(Uranus);
-		movementModule(Saturn);
-		movementModule(Pluto);
+		ISAAC.Core.movementModule(Sun);
+		ISAAC.Core.movementModule(Earth);
+		ISAAC.Core.movementModule(Mars);
+		ISAAC.Core.movementModule(Mercury);
+		ISAAC.Core.movementModule(Jupiter);
+		ISAAC.Core.movementModule(Neptune);
+		ISAAC.Core.movementModule(Venus);
+		ISAAC.Core.movementModule(Uranus);
+		ISAAC.Core.movementModule(Saturn);
+		ISAAC.Core.movementModule(Pluto);
 	}
 }
 
 function updateGravity(planet1, planet2) {
-	planet1.forceStore["gravity" + planet2.Name] = gravitationalForce(planet1, planet2);
-	planet2.forceStore["gravity" + planet1.Name] = gravitationalForce(planet2, planet1);
+	planet1.forceStore["gravity" + planet2.Name] = ISAAC.Core.gravitationalForce(planet1, planet2);
+	planet2.forceStore["gravity" + planet1.Name] = ISAAC.Core.gravitationalForce(planet2, planet1);
 }

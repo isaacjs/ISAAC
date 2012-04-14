@@ -8,6 +8,7 @@
 		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
+		<script type = "text/javascript" src = "./isaac_core.js"></script>
 		<script type = "text/javascript" src = "./isaac_obj.js"></script>
 		<script type = "text/javascript" src = "./isaac_planets.js"></script>
 		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
@@ -337,16 +338,16 @@
 				worker.postMessage({'command' : 'get'});
 				
 				// Update the graphical representations of the objects.
-				ISAAC.graphics.objUpdate(Earth, earthModel);
-				ISAAC.graphics.objUpdate(Mars, marsModel);
-				ISAAC.graphics.objUpdate(Sun, sunModel);
-				ISAAC.graphics.objUpdate(Mercury, mercuryModel);
-				ISAAC.graphics.objUpdate(Jupiter, jupiterModel);
-				ISAAC.graphics.objUpdate(Neptune, neptuneModel);
-				ISAAC.graphics.objUpdate(Venus, venusModel);
-				ISAAC.graphics.objUpdate(Uranus, uranusModel);
-				ISAAC.graphics.objUpdate(Saturn, saturnModel);
-				ISAAC.graphics.objUpdate(Pluto, plutoModel);
+				ISAAC.Graphics.objUpdate(Earth, earthModel);
+				ISAAC.Graphics.objUpdate(Mars, marsModel);
+				ISAAC.Graphics.objUpdate(Sun, sunModel);
+				ISAAC.Graphics.objUpdate(Mercury, mercuryModel);
+				ISAAC.Graphics.objUpdate(Jupiter, jupiterModel);
+				ISAAC.Graphics.objUpdate(Neptune, neptuneModel);
+				ISAAC.Graphics.objUpdate(Venus, venusModel);
+				ISAAC.Graphics.objUpdate(Uranus, uranusModel);
+				ISAAC.Graphics.objUpdate(Saturn, saturnModel);
+				ISAAC.Graphics.objUpdate(Pluto, plutoModel);
 
 				// Update the position of the light to be that of the Sun.
 				if(light) {

@@ -17,6 +17,10 @@ ISAAC.Force = function (name, vector) {
 
 ISAAC.OrbitalBody = function (parameters) {
 	parameters = parameters || {};
+	this.physical = {};
+	this.motion = {};
+	this.switches = {};
+	this.config = {};
 
 	// Name of the object.
 	this.Name = parameters.name !== undefined ? parameters.name : "";
