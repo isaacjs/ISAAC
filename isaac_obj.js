@@ -30,6 +30,9 @@ ISAAC.OrbitalBody = function (parameters) {
 
 	// Mass of the object, in gigagrams.
 	this.physical.mass = parameters.mass !== undefined ? parameters.mass : 1;
+
+	// Radius of the object, in kilometres.
+	this.physical.radius = parameters.radius !== undefined ? parameters.radius : 1000;
 	
 	this.forceStore = {
 		// External forces on the object will be kept here.
