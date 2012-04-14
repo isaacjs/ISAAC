@@ -1,6 +1,8 @@
-// Main logic module for ISAAC Physics.
+// Main logic module for ISAAC.
 
-function displayProperties (obj) {
+var ISAAC = ISAAC || { version: "0.1" };
+
+ISAAC.displayProperties = function (obj) {
 	for(var name in obj) {
 		console.log("Property: " + name + " Value: " + obj[name]);
 	}
@@ -9,7 +11,7 @@ function displayProperties (obj) {
 
 // Movement Module.
 // Calls all other modules to modify an object's properties with regard to motion.
-function movementModule (obj) {
+ISAAC.core.movementModule = function (obj) {
 	if(obj.switches.motionEnabled) {
 		var gravityChanged = gravityModule(obj);
 		var forceChanged = forceModule(obj);
@@ -24,7 +26,7 @@ function movementModule (obj) {
 
 // Velocity Module.
 // Adjusts the position of the object, based on the velocity vector.
-function velocityModule (obj) {
+ISAAC.core.velocityModule = function (obj) {
 	if (obj.switches.motionEnabled) {
 		//		obj.Position.posX += (obj.Position.velX * timeStep);
 		//		obj.Position.posY += (obj.Position.velY * timeStep);
@@ -39,7 +41,7 @@ function velocityModule (obj) {
 
 // Acceleration Module.
 // Adjusts the velocity of the object, based on the acceleration vector.
-function accelerationModule (obj) {
+ISAAC.core.accelerationModule = function (obj) {
 	if (obj.switches.accelerationEnabled) {
 		//		obj.Position.velX += (obj.Position.accelX * timeStep);
 		//		obj.Position.velY += (obj.Position.accelY * timeStep);
@@ -53,7 +55,7 @@ function accelerationModule (obj) {
 // Gravity Module.
 // Adjusts the acceleration vector of the object to reflect the force of gravity.
 // For the object to be affected by gravity, both gravityEnabled and accelerationEnabled must be true.
-function gravityModule (obj) {
+ISAAC.core.gravityModule = function (obj) {
 	if(obj.switches.gravityEnabled) {
 		gravityForce.act(obj);
 	}
@@ -61,7 +63,7 @@ function gravityModule (obj) {
 }
 // Force Module.
 // Calculates the acceleration of an object based on the resultant forces on it.
-function forceModule (obj) {
+ISAAC.core.forceModule = function(obj) {
 	if (obj.switches.motionEnabled && obj.switches.forceChanged) {
 		// Create a blank array for the resultant force.
 		var newResultant = [0, 0, 0];
@@ -89,9 +91,10 @@ function forceModule (obj) {
 	return false;
 }
 
-// Contact function
-// Given two objects, determines whether or not they are in contact
-function contactBetween (obj1, obj2) {
+// Contact function.
+// Given two objects, determines whether or not they are in contact.
+// IMPORTANT: This is not fully implemented, and is not currently used.
+ISAAC.core.contactBetween = function (obj1, obj2) {
 	var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
 	
 	var radiiSum = obj1.physical.maxRadius + obj2.physical.maxRadius;
@@ -119,65 +122,32 @@ function contactBetween (obj1, obj2) {
 	}
 }
 
-// Gravitational Attraction Function.
-// Given two objects, calculate and return the magnitude of the force of gravitational attraction between them.
-function gravitationalAttraction (obj1, obj2) {
-	//var distance = vectorLength(subtractVector(obj1.motion.position, obj2.motion.position));
+// Gravitational Force Function.
+// Given two objects, returns the vector of gravitational force between them, from the first object
+// to the second.
+ISAAC.core.gravitationalForce = function (obj1, obj2) {	
+	// Get the direction vector from the first object to the second.
+	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
 	
-	// Find r^2.
+	// Get the distance between the two objects.
+	var distance = vectorLength(directionVector);
 	
-	// PS (Thu 19 Jan 2012 08:24:11 PM SGT) - See if the sqrNormVector approach is faster
+	// // Get Gm1m2.
+	// var numerator = G * obj1.physical.mass * obj2.physical.mass;
 	
-	//var rSquared = Math.pow(distance, 2);
-	var rSquared = sqrNormVector(subtractVector(obj1.motion.position, obj2.motion.position));
+	// // Modify Gm1m2 according to the relevant multipliers.
+	// numerator *= config.gravConstMult;
+	// numerator *= obj1.config.massMult;
+	// numerator *= obj2.config.massMult;
+
+	// Get Gm1m2 and modify it according to the relevant multipliers.
+	var numerator = G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
 	
-	// Get the masses of the two objects.
-	var mass1 = obj1.physical.mass;
-	var mass2 = obj2.physical.mass;
+	// Get the force between the two objects.
+	var force = numerator / sqr(distance);
 	
-	// Return the force between them.
-	return bigG * ((mass1 * mass2) / rSquared);
+	// Scale the direction vector to be the same magnitude as the force.
+	directionVector = vectorFitToLength(directionVector, force);
+	obj1.switches.forceChanged = true;
+	return directionVector;
 }
-
-// // Gravitational Force Function.
-// // Given two objects, returns the vector of gravitational force between them, from the first object
-// // to the second.
-// function gravitationalForce (obj1, obj2) {
-// 	// Get the force between the two objects.
-// 	var force = gravitationalAttraction(obj1, obj2);
-	
-// 	// Get the direction vector from the first object to the second.
-// 	var directionVector = subtractVector(obj1, obj2);
-	
-// 	// Scale the direction vector to be the same magnitude as the force.
-// 	directionVector = vectorFitToLength(directionVector, force);
-	
-// 	return directionVector;
-// }
-
-// // Gravitational Force Function.
-// // Given two objects, returns the vector of gravitational force between them, from the first object
-// // to the second.
-// function gravitationalForce (obj1, obj2) {	
-// 	// Get the direction vector from the first object to the second.
-// 	var directionVector = subtractVector(obj2.motion.position, obj1.motion.position);
-	
-// 	// Get the distance between the two objects.
-// 	distance = vectorLength(directionVector);
-	
-// 	// Get Gm1m2.
-// 	var numerator = G * obj1.physical.mass * obj2.physical.mass;
-	
-// 	// Modify Gm1m2 according to the relevant multipliers.
-// 	numerator *= config.gravConstMult;
-// 	numerator *= obj1.config.massMult;
-// 	numerator *= obj2.config.massMult;
-	
-// 	// Get the force between the two objects.
-// 	var force = numerator / Math.pow(distance, 2);
-	
-// 	// Scale the direction vector to be the same magnitude as the force.
-// 	directionVector = vectorFitToLength(directionVector, force);
-// 	obj1.switches.forceChanged = true;
-// 	return directionVector;
-// }
