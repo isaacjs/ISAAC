@@ -140,8 +140,10 @@
 
 				// Create folders for each body.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
-					var folder = planetsFolder.addFolder(ISAAC.Simulation.bodies[i].Name);
-					var bodyDOM = (folder.add(ISAAC.Simulation.bodies[i].config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
+					var curr = ISAAC.Simulation.bodies[i];
+					var folder = planetsFolder.addFolder(curr.Name);
+					var controller = folder.add(curr.config, "massMult", 0.1, 100).name("Mass Multiplier");
+					var bodyDOM = controller.domElement;
 					bodyDOM.onmouseover = massMultShow;
 					bodyDOM.onmouseout = massMultHide;
 				}
@@ -263,11 +265,16 @@
 				// Render.
 				renderer.render(scene, camera);
 				
-				// Start the worker.
+				// Define what to do when we receive a message from the worker.
 				worker.addEventListener('message', function (e) {
 					var data = e.data.response;
 					if(typeof data !== 'undefined') {
-						ISAAC.Simulation.bodies = data;
+						for(var i = 0; i < data.length; i++) {
+							// Update our simulation state.
+							// We don't just copy the data array to avoid
+							// overwriting each object's config.
+							ISAAC.Simulation.bodies[i].motion = data[i].motion;
+						}
 					}
 				}, false);
 
