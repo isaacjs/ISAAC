@@ -36,16 +36,12 @@ ISAAC.Simulation.init(
 		position : [-34.34126304594736, -59.83881592398617, -1.738227286314569],
 		mass : 3.3022e17,
 		velocity : [3.242607697980190e-5, -2.190935367320673e-5, -4.765349365538239e-6],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Venus" : {
 		name : "Venus",
 		position : [-102.3178380016565, 32.62303974857563, 6.352081275507866],
 		mass : 4.869e18,
 		velocity : [-1.080589728829473e-5, -3.352572735644723e-5, 1.643058486842552e-7],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Earth" : {
 		name : "Earth",
@@ -64,39 +60,29 @@ ISAAC.Simulation.init(
 		position : [480.9176848793924, 571.0765569421500, -13.13349118484296],
 		mass : 1.8988e21,
 		velocity : [-1.016103900367553e-5, 9.045517267735690e-6, 1.897925792649849e-7],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Saturn" : {
 		name : "Saturn",
 		position : [-1308.125257452327, -631.8980859148376, 63.06897677571023],
 		mass : 5.685e20,
 		velocity : [3.671844960056266e-6, -8.711916465865464e-6, 4.785296340228841e-9],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Uranus" : {
 		name : "Uranus",
 		position : [2993.163750777438, 235.9479785280531, -37.89556426125482],
 		mass : 8.6625e19,
 		velocity : [-5.930129454709614e-7, 6.477979332815045e-6, 3.178365529507968e-8],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Neptune" : {
 		name : "Neptune",
 		position : [3914.732947116928, -2193.945531342488, -45.02107870865629],
 		mass : 1.0278e20,
 		velocity : [2.613881670696835e-6, 4.780319271610741e-6, -1.586835000701678e-7],
-		motionEnabled : true,
-		accelerationEnabled : true
 	},
 	"Pluto" : {
 		name : "Pluto",
 		position : [638.1080671989861, -4764.888577948751, 325.4419510356392],
 		mass : 1.314e16,
 		velocity : [5.476987352349563e-6, -3.403729996552767e-7, -1.528481974366561e-6],
-		motionEnabled : true,
-		accelerationEnabled : true
 	}
 });
