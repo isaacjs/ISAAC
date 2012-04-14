@@ -1,4 +1,4 @@
-importScripts('isaac_core.js', 'isaac_math.js', 'isaac_obj.js', 'isaac_core.js', 'isaac_planets.js', 'isaac_orbit_phys.js', 'isaac_queue.js');
+importScripts('isaac_core.js', 'isaac_math.js', 'isaac_obj.js', 'isaac_planets.js', 'isaac_orbit_phys.js', 'isaac_queue.js');
 
 self.addEventListener('message', function(e) {
 	var data = e.data;

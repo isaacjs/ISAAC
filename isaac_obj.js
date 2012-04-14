@@ -39,7 +39,7 @@ ISAAC.OrbitalBody = function (parameters) {
 	this.resultantForce = [0, 0, 0];
 	
 	this.motion.position = parameters.position !== undefined ? [parameters.position[1], parameters.position[0], parameters.position[2]] : [0, 0, 0];
-	this.motion.velocity = parameters.velocity !== undefined ? [parameters.velocity[1], parameters.position[0], parameters.position[2]] : [0, 0, 0];
+	this.motion.velocity = parameters.velocity !== undefined ? [parameters.velocity[1], parameters.velocity[0], parameters.velocity[2]] : [0, 0, 0];
 		
 	// The acceleration vector of the object, including gravity (if enabled). Calculated at runtime.
 	this.motion.acceleration = [0, 0, 0];

@@ -1,7 +1,7 @@
 // Math Library for ISAAC Physics.
 // We assume 3D vectors in all cases.
 
-ISAAC.Math = {};
+ISAAC.Math = ISAAC.Math || {};
 
 ISAAC.Math.sqr = function (number) {
 	return number * number;
