@@ -3,6 +3,7 @@
 var ISAAC = ISAAC || { release: "1" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
+ISAAC.Config = ISAAC.Config || {"updateStep" : 1, "gravConstMult" : 1, "cameraFocus" : 0};
 
 // Units
 // Distance: gigameters
@@ -118,7 +119,7 @@ ISAAC.Core.contactBetween = function (obj1, obj2) {
 // Gravitational Force Function.
 // Given two objects, returns the vector of gravitational force between them, from the first object
 // to the second.
-ISAAC.Core.gravitationalForce = function (obj1, obj2) {	
+ISAAC.Core.gravitationalForce = function (obj1, obj2, gravConstMult) {	
 	// Get the direction vector from the first object to the second.
 	var directionVector = ISAAC.Math.subtractVector(obj2.motion.position, obj1.motion.position);
 	
@@ -126,7 +127,7 @@ ISAAC.Core.gravitationalForce = function (obj1, obj2) {
 	var distance = ISAAC.Math.vectorLength(directionVector);
 
 	// Get Gm1m2 and modify it according to the relevant multipliers.
-	var numerator = ISAAC.Constants.G * ISAAC.Config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
+	var numerator = ISAAC.Constants.G * gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
 	
 	// Get the force between the two objects.
 	var force = numerator / ISAAC.Math.sqr(distance);
