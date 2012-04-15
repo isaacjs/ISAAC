@@ -101,9 +101,41 @@
 			init();
 			
 			function init() {
+				// Get the renderArea.
+				var renderArea = document.getElementById('renderArea');
+				
+				// Setup the camera and scene.
+				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
+				camera.position.x = cameraDist;
+				camera.lookAt(origin);
+				scene = new THREE.Scene();
+				scene.add(camera);
+				
+				// Check if we have WebGL support using a temporary canvas.
+				var tempCanvas = document.createElement('canvas');
+				var webGLSupport;
+				try {
+					webGLSupport = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));	
+				} catch (x) {
+					webGLSupport = false;
+				}
+				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
+				ISAAC.Graphics.webGLEnabled = webGLSupport;
+
+				// Setup the renderer.
+				renderer = webGLSupport ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderArea.appendChild(renderer.domElement);
+				renderer.setClearColorHex(0x000000, 1.0);
+				renderer.clear();
+
+				// -------------
+				// Startup code is found in isaac_simulation.js
+				// -------------
+				startISAAC();
+
 				// ------ GUI Initialisation ------ //
-			//	var gui = new dat.GUI(
-				gui = new dat.GUI(
+				var gui = new dat.GUI(
 				{ width : 500 }
 				);
 
@@ -152,45 +184,6 @@
 				
 				setInterval( function () { stats.update(); }, 1000 / 60 );
 				// ------ End of FPS Counter ------ //
-				
-				// Get the renderArea.
-				var renderArea = document.getElementById('renderArea');
-				
-				// Setup the camera and scene.
-				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.x = cameraDist;
-				camera.lookAt(origin);
-				scene = new THREE.Scene();
-				scene.add(camera);
-				
-				// Check if we have WebGL support using a temporary canvas.
-				var tempCanvas = document.createElement('canvas');
-				var webGLSupport;
-				try {
-					webGLSupport = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));	
-				} catch (x) {
-					webGLSupport = false;
-				}
-				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
-
-				// Setup the renderer.
-				renderer = webGLSupport ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
-				renderer.setSize(window.innerWidth, window.innerHeight);
-				renderArea.appendChild(renderer.domElement);
-				renderer.setClearColorHex(0x000000, 1.0);
-				renderer.clear();
-				
-				var meshHide = true;
-
-				// If we have WebGL support, double the amount of segments.
-				var webGLMult = webGLSupport ? 2 : 1;
-
-				// If we have WebGL support, use MeshLambertMaterial for everything except the Sun. If not, use MeshBasicMaterial.
-				var material = webGLSupport ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
-
-				// -------------
-				// Startup code is found in isaac_simulation.js
-				// -------------
 
 				// Add everything to the scene.
 				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {

@@ -2,6 +2,7 @@
 
 ISAAC.Graphics = ISAAC.Graphics || {};
 ISAAC.Graphics.models = [];
+ISAAC.Graphics.webGLEnabled = false;
 
 ISAAC.Graphics.objUpdate = function (object, model) {
 	model.position.x = object.motion.position[0];
@@ -19,8 +20,8 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 			default : radius = ISAAC.Math.sqr(Math.log(orbitalBody.physical.radius) / Math.log(10))/2;
 		}
 
-		// If this planet is a star, use MeshBasicMaterial. If not, use MeshLambertMaterial.
-		var materialType = orbitalBody.isStar ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
+		// If this planet is a star, use MeshBasicMaterial. If not, use MeshLambertMaterial (provided we have WebGL support).
+		var materialType = (orbitalBody.isStar && ISAAC.Graphics.webGLEnabled) ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
 		material = new materialType( { map : THREE.ImageUtils.loadTexture(orbitalBody.texture), overdraw : true } );
 
 		// Create the model.
