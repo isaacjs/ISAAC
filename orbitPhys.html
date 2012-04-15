@@ -140,7 +140,7 @@
 				);
 
 				// Create the Camera settings.
-				gui.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
+				gui.add(window, 'cameraDist', 5, 2000).name("Camera Distance").listen();
 				
 				// Camera Focus drop-down.
 				var camFocusObject = {};
@@ -355,8 +355,8 @@
 				// If middle mouse is down, zoom in or out.
 				if(middleMouseDown) {
 					// Restrict camera zooming to the same range as the UI allows.
-					if(cameraDist > 750) {
-						cameraDist = 750;
+					if(cameraDist > 2000) {
+						cameraDist = 2000;
 					} else if(cameraDist < 5) {
 						cameraDist = 5;
 					} else {

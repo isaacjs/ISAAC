@@ -8,7 +8,7 @@ self.addEventListener('message', function(e) {
 			self.postMessage({ 'response' : front, 'queueLength' : posQueue.contents.length });
 		break;
 		case 'set' :
-			config = e.data['config'];
+			ISAAC.Config = e.data['config'];
 			bodyArray = e.data['bodyArray'];
 		break;
 		case 'pause' :
@@ -28,7 +28,6 @@ self.addEventListener('message', function(e) {
 
 // Frame rate should always be less than or equal to update rate.
 var posQueue = Queue(1);
-var config;
 var bodyArray;
 var count = 0;
 var time = 50/3;

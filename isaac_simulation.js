@@ -38,6 +38,8 @@ ISAAC.Simulation.init = function (JSON) {
 	}
 }
 
+// Change the JSON in this function to simulate a different star system.
+
 // Planet positions and velocities taken from JPL's HORIZONS system,
 // for April 09, 2012, 00:00:00.0000CT.
 function startISAAC() {
