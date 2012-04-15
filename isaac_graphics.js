@@ -25,10 +25,12 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 
 		// Create the model.
 		model = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), material);
+		model.name = orbitalBody.name;
+		model.number = ISAAC.Graphics.models.length; // Used for shifting camera focus.
 
 		// Add the model to our collection.
 		ISAAC.Graphics.models.push(model);
 	} else {
-		console.log("Unable to create model for " + orbitalBody.Name);
+		console.log("Unable to create model for " + orbitalBody.name);
 	}
 }

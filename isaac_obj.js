@@ -36,7 +36,7 @@ ISAAC.OrbitalBody = function (parameters) {
 	this.texture = parameters.texture;
 
 	// Name of the object.
-	this.Name = parameters.name !== undefined ? parameters.name : "Default Orbital Body Name";
+	this.name = parameters.name !== undefined ? parameters.name : "Default Orbital Body Name";
 
 	// Is this object a Star?
 	this.isStar = parameters.isStar !== undefined ? parameters.isStar : false;

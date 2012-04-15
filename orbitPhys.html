@@ -109,28 +109,22 @@
 
 				// Create the Camera settings.
 				gui.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
-				camFocusGUI = gui.add(config, 'cameraFocus',
-					{ 
-						"Sun" : 0, 
-						"Mercury" : 1, 
-						"Venus" : 2,
-						"Earth" : 3,
-						"Mars" : 4,
-						"Jupiter" : 5,
-						"Saturn" : 6,
-						"Uranus" : 7,
-						"Neptune" : 8,
-						"Pluto" : 9
-					}).name("Camera Focus");
+				
+				// Camera Focus drop-down.
+				var camFocusObject = {};
+				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
+					camFocusObject[ISAAC.Graphics.models[i].name] = ISAAC.Graphics.models[i].number;
+				}
+				camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
-				var upstepDOM = simSettings.add(config, 'updateStep', 
+				var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 
 					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step").domElement;
 				upstepDOM.onmouseover = timestepShow;
 				upstepDOM.onmouseout = timestepHide;
 
-				var gcmDOM = simSettings.add(config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
+				var gcmDOM = simSettings.add(ISAAC.Config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
 				gcmDOM.onmouseover = gcmShow;
 				gcmDOM.onmouseout = gcmHide;
 				
@@ -140,7 +134,7 @@
 				// Create folders for each body.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
 					var curr = ISAAC.Simulation.bodies[i];
-					var folder = planetsFolder.addFolder(curr.Name);
+					var folder = planetsFolder.addFolder(curr.name);
 					var controller = folder.add(curr.config, "massMult", 0.1, 100).name("Mass Multiplier");
 					var bodyDOM = controller.domElement;
 					bodyDOM.onmouseover = massMultShow;
@@ -194,58 +188,9 @@
 				// If we have WebGL support, use MeshLambertMaterial for everything except the Sun. If not, use MeshBasicMaterial.
 				var material = webGLSupport ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
 
-				// // Create the Sun.
-				// sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
-				// sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
-				// sunModel.name = "Sun";
-				
-				// // Create the Earth.
-				// earthMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
-				// earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
-				// earthModel.name = "Earth";
-				
-				// // Create Mars.
-				// marsMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
-				// marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
-				// marsModel.name = "Mars";
-				
-				// // Create Mercury.
-				// mercuryMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
-				// mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
-				// mercuryModel.name = "Mercury";
-				
-				// // Create Jupiter.
-				// jupiterMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
-				// jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
-				// jupiterModel.name = "Jupiter";
-				
-				// // Create Venus.
-				// venusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
-				// venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
-				// venusModel.name = "Venus";
-				
-				// // Create Neptune.
-				// neptuneMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
-				// neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
-				// neptuneModel.name = "Neptune";
-				
-				// // Create Uranus.
-				// uranusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
-				// uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
-				// uranusModel.name = "Uranus";
-				
-				// // Create Pluto.
-				// plutoMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
-				// plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
-				// plutoModel.name = "Pluto";
-				
-				// // Create Saturn.
-				// saturnMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
-				// saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
-				// saturnModel.name = "Saturn";
-				
-				// // Add all the models to an array.
-				// planetModels = [sunModel, mercuryModel, venusModel, earthModel, marsModel, jupiterModel, saturnModel, uranusModel, neptuneModel, plutoModel];
+				// -------------
+				// Startup code is found in isaac_simulation.js
+				// -------------
 
 				// Add everything to the scene.
 				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
@@ -277,7 +222,7 @@
 					}
 				}, false);
 
-				worker.postMessage({'command' : 'set', 'config' : config, 'bodyArray' : ISAAC.Simulation.bodies});
+				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			function animUpdate() {
@@ -308,7 +253,7 @@
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
 
 				// Translate the camera to the planet.
-				var cameraFocus = ISAAC.Simulation.bodies[config.cameraFocus];
+				var cameraFocus = ISAAC.Simulation.bodies[ISAAC.Config.cameraFocus];
 				camera.position.x += cameraFocus.motion.position[0];
 				camera.position.z += cameraFocus.motion.position[1];
 				camera.position.y += cameraFocus.motion.position[2];
@@ -368,18 +313,7 @@
 						var intersects = ray.intersectObjects(ISAAC.Graphics.models);
 						if(intersects.length > 0) {
 							// Move the camera to the planet.
-							switch(intersects[0].object.name) {
-								case "Sun": config.cameraFocus = "0"; break;
-								case "Mercury" : config.cameraFocus = "1"; break;
-								case "Venus" : config.cameraFocus = "2"; break;
-								case "Earth" : config.cameraFocus = "3"; break;
-								case "Mars" : config.cameraFocus = "4"; break;
-								case "Jupiter" : config.cameraFocus = "5"; break;
-								case "Saturn" : config.cameraFocus = "6"; break;
-								case "Uranus" : config.cameraFocus = "7"; break;
-								case "Neptune" : config.cameraFocus = "8"; break;
-								case "Pluto" : config.cameraFocus = "9"; break;
-							}
+							ISAAC.Config.cameraFocus = intersects[0].object.number;
 							camFocusGUI.updateDisplay();
 						}
 					}
@@ -397,7 +331,7 @@
 				middleMouseDown = false;
 				
 				// Send updated settings to the worker.
-				worker.postMessage({'command' : 'set', 'config' : config, 'bodyArray' : ISAAC.Simulation.bodies});
+				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			// Handles mousemove events. Used to move the camera.
