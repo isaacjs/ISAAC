@@ -27,7 +27,7 @@ self.addEventListener('message', function(e) {
 // dropping frames to keep the simulation rate the same.
 
 // Frame rate should always be less than or equal to update rate.
-var posQueue = Queue(1);
+var posQueue = new ISAAC.Queue(1);
 var bodyArray;
 var count = 0;
 var time = 50/3;

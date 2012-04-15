@@ -31,7 +31,8 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		}
 
 		// Create the model.
-		model = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), material);
+		var segmentAmount = ISAAC.Graphics.webGLEnabled ? 16 : 32;
+		model = new THREE.Mesh(new THREE.SphereGeometry(radius, segmentAmount, segmentAmount), material);
 		model.name = orbitalBody.name;
 		model.number = ISAAC.Graphics.models.length; // Used for shifting camera focus.
 
