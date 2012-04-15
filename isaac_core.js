@@ -1,6 +1,6 @@
 // Main logic module for ISAAC.
 
-var ISAAC = ISAAC || { version: "0.1" };
+var ISAAC = ISAAC || { release: "1" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
 

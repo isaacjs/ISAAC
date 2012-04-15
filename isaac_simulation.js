@@ -14,7 +14,7 @@ ISAAC.Simulation = ISAAC.Simulation || {};
 // bodies:
 // Note that the key of each JSON body within the bodies object should be unique and distinct.
 // Fields each orbital body can have:
-// - texture : REQUIRED if graphics are enabled. String pointing to the texture to be used for this body.
+// - texture : String pointing to the texture to be used for this body. If left blank, a random colour will be chosen.
 // - name : Optional - the name of this body.
 // - isStar: Default false. Whether or not this body is a Star.
 // - mass : Default 1. The mass of this body in gigagrams.

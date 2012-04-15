@@ -139,13 +139,10 @@
 					scene.add(ISAAC.Graphics.models[i]);
 				}
 
-				// If we have WebGL support, add a PointLight at the Sun.
 				if(webGLSupport) {
-					light = new THREE.PointLight(0xFFFFFF);
-					light.position.x = 0;
-					light.position.y = 0;
-					light.position.z = 0;
-					scene.add(light);
+					for(var i = 0; i < ISAAC.Graphics.lights.length; i++) {
+						scene.add(ISAAC.Graphics.lights[i]);
+					}
 				}
 				
 				// Render.
@@ -227,12 +224,13 @@
 					ISAAC.Graphics.objUpdate(ISAAC.Simulation.bodies[i], ISAAC.Graphics.models[i]);
 				}
 
-				// Update the position of the light to be that of the Sun.
-				if(light) {
-					var Sun = ISAAC.Simulation.bodies[0];
-					light.position.x = Sun.motion.position[0];
-					light.position.y = Sun.motion.position[1];
-					light.position.z = Sun.motion.position[2];
+				// Update the position of any lights to be that of their respective bodies.
+				for(var i = 0; i < ISAAC.Graphics.lights.length; i++) {
+					var currLight = ISAAC.Graphics.lights[i];
+					var currBody = ISAAC.Simulation.bodies[currLight.number];
+					currLight.position.x = currBody.motion.position[0];
+					currLight.position.y = currBody.motion.position[2];
+					currLight.position.z = currBody.motion.position[1];
 				}
 
 				// Update the camera's position.
