@@ -15,6 +15,16 @@ ISAAC.Force = function (name, vector) {
 };
 
 
+// OrbitalBody Parameters
+// - texture : REQUIRED if graphics are enabled. String pointing to the texture to be used for this body.
+// - name : The name of this body.
+// - isStar: Default false. Whether or not this body is a Star.
+// - mass : Default 1. The mass of this body in gigagrams.
+// - radius : Default 1000. The radius of this body, in kilometres.
+// - position : Default [0, 0, 0]. The X, Y, and Z (right-handed, i.e. Z is up, Y is "left") starting coordinates of the body.
+// - velocity : Default [0, 0, 0]. The X, Y, and Z (right-handed as above) starting velocities of the body.
+// - motionEnabled : Default true. Whether or not this object should move.
+// - accelerationEnabled : Default true. Whether or not this object will have acceleration calculated for it.
 ISAAC.OrbitalBody = function (parameters) {
 	parameters = parameters || {};
 	this.physical = {};
@@ -22,14 +32,20 @@ ISAAC.OrbitalBody = function (parameters) {
 	this.switches = {};
 	this.config = {};
 
+	// Texture path of the object.
+	this.texture = parameters.texture;
+
 	// Name of the object.
-	this.Name = parameters.name !== undefined ? parameters.name : "";
+	this.name = parameters.name !== undefined ? parameters.name : "Default Orbital Body Name";
 
 	// Is this object a Star?
 	this.isStar = parameters.isStar !== undefined ? parameters.isStar : false;
 
 	// Mass of the object, in gigagrams.
 	this.physical.mass = parameters.mass !== undefined ? parameters.mass : 1;
+
+	// Radius of the object, in kilometres.
+	this.physical.radius = parameters.radius !== undefined ? parameters.radius : 1000;
 	
 	this.forceStore = {
 		// External forces on the object will be kept here.
@@ -38,14 +54,14 @@ ISAAC.OrbitalBody = function (parameters) {
 	// The resultant force on the object. Calculated at runtime.
 	this.resultantForce = [0, 0, 0];
 	
-	this.motion.position = parameters.position !== undefined ? parameters.position : [0, 0, 0];
-	this.motion.velocity = parameters.velocity !== undefined ? parameters.velocity : [0, 0, 0];
+	this.motion.position = parameters.position !== undefined ? [parameters.position[1], parameters.position[0], parameters.position[2]] : [0, 0, 0];
+	this.motion.velocity = parameters.velocity !== undefined ? [parameters.velocity[1], parameters.velocity[0], parameters.velocity[2]] : [0, 0, 0];
 		
 	// The acceleration vector of the object, including gravity (if enabled). Calculated at runtime.
 	this.motion.acceleration = [0, 0, 0];
 
-	this.switches.motionEnabled = parameters.motionEnabled !== undefined ? parameters.motionEnabled : false;
-	this.switches.accelerationEnabled = parameters.accelerationEnabled !== undefined ? parameters.accelerationEnabled : false;
+	this.switches.motionEnabled = parameters.motionEnabled !== undefined ? parameters.motionEnabled : true;
+	this.switches.accelerationEnabled = parameters.accelerationEnabled !== undefined ? parameters.accelerationEnabled : true;
 	this.switches.forceChanged = false;
 
 	this.config.massMult = 1;

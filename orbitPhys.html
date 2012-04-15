@@ -9,10 +9,11 @@
 		<script type = "text/javascript" src = "./external/Stats.js"></script>
 		
 		<script type = "text/javascript" src = "./isaac_core.js"></script>
+		<script type = "text/javascript" src = "./isaac_math.js"></script>
 		<script type = "text/javascript" src = "./isaac_obj.js"></script>
-		<script type = "text/javascript" src = "./isaac_planets.js"></script>
 		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
 		<script type = "text/javascript" src = "./isaac_graphics.js"></script>
+		<script type = "text/javascript" src = "./isaac_simulation.js"></script>
 		
 		<style type = "text/css">
 			body { 
@@ -80,7 +81,6 @@
 			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
-			var planetModels;
 
 			// Point light.
 			var light;
@@ -93,7 +93,6 @@
 			var cameraAngleY = 0;
 			var cameraDist = 200;
 			var origin = new THREE.Vector3(0, 0, 0);
-			var cameraFocus = Sun;
 			var camFocusGUI;
 			
 			// Web Worker.
@@ -102,114 +101,6 @@
 			init();
 			
 			function init() {
-				// ------ GUI Initialisation ------ //
-				var gui = new dat.GUI(
-				{ width : 500 }
-				);
-
-				// Create the Camera settings.
-				gui.add(window, 'cameraDist', 5, 750).name("Camera Distance").listen();
-				camFocusGUI = gui.add(config, 'cameraFocus',
-					{ 
-						"Sun" : 0, 
-						"Mercury" : 1, 
-						"Venus" : 2,
-						"Earth" : 3,
-						"Mars" : 4,
-						"Jupiter" : 5,
-						"Saturn" : 6,
-						"Uranus" : 7,
-						"Neptune" : 8,
-						"Pluto" : 9
-					}).name("Camera Focus");
-				
-				// Create the Simulation Settings folder.
-				var simSettings = gui.addFolder("Simulation Settings");
-				var upstepDOM = simSettings.add(config, 'updateStep', 
-					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step").domElement;
-				upstepDOM.onmouseover = timestepShow;
-				upstepDOM.onmouseout = timestepHide;
-
-				var gcmDOM = simSettings.add(config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
-				gcmDOM.onmouseover = gcmShow;
-				gcmDOM.onmouseout = gcmHide;
-				
-				// Create the Orbital Bodies folder.
-				var planetsFolder = gui.addFolder("Orbital Bodies");
-				
-				// Create the Sun's folder.
-				var sunFolder = planetsFolder.addFolder("Sun");
-				var sunFoldDOM = (sunFolder.add(Sun.config, "massMult", 0.1, 100).name("Mass Multiplier")).domElement;
-				sunFoldDOM.onmouseover = massMultShow;
-				sunFoldDOM.onmouseout = massMultHide;
-				
-				// Create Mercury's folder.
-				var mercuryFolder = planetsFolder.addFolder("Mercury");
-				var merFoldDOM = mercuryFolder.add(Mercury.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				merFoldDOM.onmouseover = massMultShow;
-				merFoldDOM.onmouseout = massMultHide;
-				
-				// Create Venus' folder.
-				var venusFolder = planetsFolder.addFolder("Venus");
-				var venFoldDOM = venusFolder.add(Venus.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				venFoldDOM.onmouseover = massMultShow;
-				venFoldDOM.onmouseout = massMultHide;
-
-				// Create Earth's folder.
-				var earthFolder = planetsFolder.addFolder("Earth");
-				var earthFoldDOM = earthFolder.add(Earth.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				earthFoldDOM.onmouseover = massMultShow;
-				earthFoldDOM.onmouseout = massMultHide;
-				
-				// Create Mars' folder.
-				var marsFolder = planetsFolder.addFolder("Mars");
-				var marsFoldDOM = marsFolder.add(Mars.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				marsFoldDOM.onmouseover = massMultShow;
-				marsFoldDOM.onmouseout = massMultHide;
-				
-				// Create Jupiter's folder.
-				var jupiterFolder = planetsFolder.addFolder("Jupiter");
-				var jupFoldDOM = jupiterFolder.add(Jupiter.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				jupFoldDOM.onmouseover = massMultShow;
-				jupFoldDOM.onmouseout = massMultHide;
-				
-				// Create Saturn's folder.
-				var saturnFolder = planetsFolder.addFolder("Saturn");
-				var satFoldDOM = saturnFolder.add(Saturn.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				satFoldDOM.onmouseover = massMultShow;
-				satFoldDOM.onmouseout = massMultHide;
-				
-				// Create Uranus' folder.
-				var uranusFolder = planetsFolder.addFolder("Uranus");
-				var uraFoldDOM = uranusFolder.add(Uranus.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				uraFoldDOM.onmouseover = massMultShow;
-				uraFoldDOM.onmouseout = massMultHide;
-				
-				// Create Neptune's folder.
-				var neptuneFolder = planetsFolder.addFolder("Neptune");
-				var nepFoldDOM = neptuneFolder.add(Neptune.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;	
-				nepFoldDOM.onmouseover = massMultShow;
-				nepFoldDOM.onmouseout = massMultHide;
-				
-				// Create Pluto's folder.
-				var plutoFolder = planetsFolder.addFolder("Pluto");
-				var pluFoldDOM = plutoFolder.add(Pluto.config, "massMult", 0.1, 100).name("Mass Multiplier").domElement;
-				pluFoldDOM.onmouseover = massMultShow;
-				pluFoldDOM.onmouseout = massMultHide;
-				
-				// ------ End of GUI Initialisation ------ //
-				
-				// ------ FPS Counter (for debug only) ------ //
-				stats = new Stats();
-				stats.getDomElement().style.position = 'absolute';
-				stats.getDomElement().style.left = '0px';
-				stats.getDomElement().style.bottom = '0px';
-				
-				document.body.appendChild( stats.getDomElement() );
-				
-				setInterval( function () { stats.update(); }, 1000 / 60 );
-				// ------ End of FPS Counter ------ //
-				
 				// Get the renderArea.
 				var renderArea = document.getElementById('renderArea');
 				
@@ -229,6 +120,7 @@
 					webGLSupport = false;
 				}
 				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
+				ISAAC.Graphics.webGLEnabled = webGLSupport;
 
 				// Setup the renderer.
 				renderer = webGLSupport ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
@@ -236,101 +128,91 @@
 				renderArea.appendChild(renderer.domElement);
 				renderer.setClearColorHex(0x000000, 1.0);
 				renderer.clear();
-				
-				var meshHide = true;
 
-				// If we have WebGL support, double the amount of segments.
-				var webGLMult = webGLSupport ? 2 : 1;
-
-				// If we have WebGL support, use MeshLambertMaterial for everything except the Sun. If not, use MeshBasicMaterial.
-				var material = webGLSupport ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
-
-				// Create the Sun.
-				sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
-				sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
-				sunModel.name = "Sun";
-				
-				// Create the Earth.
-				earthMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
-				earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
-				earthModel.name = "Earth";
-				
-				// Create Mars.
-				marsMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
-				marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
-				marsModel.name = "Mars";
-				
-				// Create Mercury.
-				mercuryMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
-				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
-				mercuryModel.name = "Mercury";
-				
-				// Create Jupiter.
-				jupiterMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
-				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
-				jupiterModel.name = "Jupiter";
-				
-				// Create Venus.
-				venusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
-				venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
-				venusModel.name = "Venus";
-				
-				// Create Neptune.
-				neptuneMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
-				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
-				neptuneModel.name = "Neptune";
-				
-				// Create Uranus.
-				uranusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
-				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
-				uranusModel.name = "Uranus";
-				
-				// Create Pluto.
-				plutoMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
-				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
-				plutoModel.name = "Pluto";
-				
-				// Create Saturn.
-				saturnMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
-				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
-				saturnModel.name = "Saturn";
-				
-				// Add all the models to an array.
-				planetModels = [earthModel, marsModel, sunModel, mercuryModel, jupiterModel, neptuneModel, uranusModel, venusModel, plutoModel, saturnModel];
+				// -------------
+				// Startup code is found in isaac_simulation.js
+				// -------------
+				startISAAC();
 
 				// Add everything to the scene.
-				for(var i = 0; i < planetModels.length; i++) {
-					scene.add(planetModels[i]);
+				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
+					scene.add(ISAAC.Graphics.models[i]);
 				}
 
-				// If we have WebGL support, add a PointLight at the Sun.
 				if(webGLSupport) {
-					light = new THREE.PointLight(0xFFFFFF);
-					light.position.x = 0;
-					light.position.y = 0;
-					light.position.z = 0;
-					scene.add(light);
+					for(var i = 0; i < ISAAC.Graphics.lights.length; i++) {
+						scene.add(ISAAC.Graphics.lights[i]);
+					}
 				}
 				
 				// Render.
 				renderer.render(scene, camera);
+
+				// ------ GUI Initialisation ------ //
+				var gui = new dat.GUI(
+				{ width : 500 }
+				);
+
+				// Create the Camera settings.
+				gui.add(window, 'cameraDist', 5, 2000).name("Camera Distance").listen();
 				
-				// Start the worker.
+				// Camera Focus drop-down.
+				var camFocusObject = {};
+				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
+					camFocusObject[ISAAC.Graphics.models[i].name] = ISAAC.Graphics.models[i].number;
+				}
+				camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
+				
+				// Create the Simulation Settings folder.
+				var simSettings = gui.addFolder("Simulation Settings");
+				var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 
+					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step").domElement;
+				upstepDOM.onmouseover = timestepShow;
+				upstepDOM.onmouseout = timestepHide;
+
+				var gcmDOM = simSettings.add(ISAAC.Config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
+				gcmDOM.onmouseover = gcmShow;
+				gcmDOM.onmouseout = gcmHide;
+				
+				// Create the Orbital Bodies folder.
+				var planetsFolder = gui.addFolder("Orbital Bodies");
+
+				// Create folders for each body.
+				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
+					var curr = ISAAC.Simulation.bodies[i];
+					var folder = planetsFolder.addFolder(curr.name);
+					var controller = folder.add(curr.config, "massMult", 0.1, 100).name("Mass Multiplier");
+					var bodyDOM = controller.domElement;
+					bodyDOM.onmouseover = massMultShow;
+					bodyDOM.onmouseout = massMultHide;
+				}
+				// ------ End of GUI Initialisation ------ //
+				
+				// ------ FPS Counter (for debug only) ------ //
+				stats = new Stats();
+				stats.getDomElement().style.position = 'absolute';
+				stats.getDomElement().style.left = '0px';
+				stats.getDomElement().style.bottom = '0px';
+				
+				document.body.appendChild( stats.getDomElement() );
+				
+				setInterval( function () { stats.update(); }, 1000 / 60 );
+				// ------ End of FPS Counter ------ //
+				
+				// Define what to do when we receive a message from the worker.
 				worker.addEventListener('message', function (e) {
 					var data = e.data.response;
 					if(typeof data !== 'undefined') {
-						Earth.motion.position = data.earthPos;
-						Sun.motion.position = data.sunPos;
-						Mars.motion.position = data.marsPos;
-						Jupiter.motion.position = data.jupiterPos;
-						Neptune.motion.position = data.neptunePos;
-						Venus.motion.position = data.venusPos;
-						Uranus.motion.position = data.uranusPos;
-						Saturn.motion.position = data.saturnPos;
-						Pluto.motion.position = data.plutoPos;
-						Mercury.motion.position = data.mercuryPos;
+						for(var i = 0; i < data.length; i++) {
+							// Update our simulation state.
+							// We don't just copy the data array to avoid
+							// overwriting each object's config.
+							ISAAC.Simulation.bodies[i].motion = data[i].motion;
+						}
 					}
 				}, false);
+
+				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			function animUpdate() {
@@ -338,38 +220,20 @@
 				worker.postMessage({'command' : 'get'});
 				
 				// Update the graphical representations of the objects.
-				ISAAC.Graphics.objUpdate(Earth, earthModel);
-				ISAAC.Graphics.objUpdate(Mars, marsModel);
-				ISAAC.Graphics.objUpdate(Sun, sunModel);
-				ISAAC.Graphics.objUpdate(Mercury, mercuryModel);
-				ISAAC.Graphics.objUpdate(Jupiter, jupiterModel);
-				ISAAC.Graphics.objUpdate(Neptune, neptuneModel);
-				ISAAC.Graphics.objUpdate(Venus, venusModel);
-				ISAAC.Graphics.objUpdate(Uranus, uranusModel);
-				ISAAC.Graphics.objUpdate(Saturn, saturnModel);
-				ISAAC.Graphics.objUpdate(Pluto, plutoModel);
+				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
+					ISAAC.Graphics.objUpdate(ISAAC.Simulation.bodies[i], ISAAC.Graphics.models[i]);
+				}
 
-				// Update the position of the light to be that of the Sun.
-				if(light) {
-					light.position.x = Sun.motion.position[0];
-					light.position.y = Sun.motion.position[1];
-					light.position.z = Sun.motion.position[2];
+				// Update the position of any lights to be that of their respective bodies.
+				for(var i = 0; i < ISAAC.Graphics.lights.length; i++) {
+					var currLight = ISAAC.Graphics.lights[i];
+					var currBody = ISAAC.Simulation.bodies[currLight.number];
+					currLight.position.x = currBody.motion.position[0];
+					currLight.position.y = currBody.motion.position[2];
+					currLight.position.z = currBody.motion.position[1];
 				}
 
 				// Update the camera's position.
-				// Get the planet to centre the camera on.
-				switch(config.cameraFocus){
-					case "0": cameraFocus = Sun; break;
-					case "1": cameraFocus = Mercury; break;
-					case "2": cameraFocus = Venus; break;
-					case "3": cameraFocus = Earth; break;
-					case "4": cameraFocus = Mars; break;
-					case "5": cameraFocus = Jupiter; break;
-					case "6": cameraFocus = Saturn; break;
-					case "7": cameraFocus = Uranus; break;
-					case "8": cameraFocus = Neptune; break;
-					case "9": cameraFocus = Pluto; break;					
-				}
 				// Adjust the camera (horizontal).
 				camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
 				camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
@@ -380,6 +244,7 @@
 				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
 
 				// Translate the camera to the planet.
+				var cameraFocus = ISAAC.Simulation.bodies[ISAAC.Config.cameraFocus];
 				camera.position.x += cameraFocus.motion.position[0];
 				camera.position.z += cameraFocus.motion.position[1];
 				camera.position.y += cameraFocus.motion.position[2];
@@ -436,21 +301,10 @@
 						var vector = new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
 						projector.unprojectVector(vector, camera);
 						var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
-						var intersects = ray.intersectObjects(planetModels);
+						var intersects = ray.intersectObjects(ISAAC.Graphics.models);
 						if(intersects.length > 0) {
 							// Move the camera to the planet.
-							switch(intersects[0].object.name) {
-								case "Sun": config.cameraFocus = "0"; break;
-								case "Mercury" : config.cameraFocus = "1"; break;
-								case "Venus" : config.cameraFocus = "2"; break;
-								case "Earth" : config.cameraFocus = "3"; break;
-								case "Mars" : config.cameraFocus = "4"; break;
-								case "Jupiter" : config.cameraFocus = "5"; break;
-								case "Saturn" : config.cameraFocus = "6"; break;
-								case "Uranus" : config.cameraFocus = "7"; break;
-								case "Neptune" : config.cameraFocus = "8"; break;
-								case "Pluto" : config.cameraFocus = "9"; break;
-							}
+							ISAAC.Config.cameraFocus = intersects[0].object.number;
 							camFocusGUI.updateDisplay();
 						}
 					}
@@ -468,19 +322,7 @@
 				middleMouseDown = false;
 				
 				// Send updated settings to the worker.
-				worker.postMessage({
-					'command' : 'set', 
-					'config' : config, 
-					'earthConfig' : Earth.config,
-					'sunConfig' : Sun.config,
-					'mercuryConfig' : Mercury.config,
-					'venusConfig' : Venus.config,
-					'neptuneConfig' : Neptune.config,
-					'marsConfig' : Mars.config,
-					'jupiterConfig' : Jupiter.config,
-					'uranusConfig': Uranus.config,
-					'saturnConfig' : Saturn.config,
-					'plutoConfig' : Pluto.config});
+				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			// Handles mousemove events. Used to move the camera.
@@ -511,8 +353,8 @@
 				// If middle mouse is down, zoom in or out.
 				if(middleMouseDown) {
 					// Restrict camera zooming to the same range as the UI allows.
-					if(cameraDist > 750) {
-						cameraDist = 750;
+					if(cameraDist > 2000) {
+						cameraDist = 2000;
 					} else if(cameraDist < 5) {
 						cameraDist = 5;
 					} else {

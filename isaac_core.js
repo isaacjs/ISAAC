@@ -1,6 +1,6 @@
 // Main logic module for ISAAC.
 
-var ISAAC = ISAAC || { version: "0.1" };
+var ISAAC = ISAAC || { release: "1" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
 
@@ -126,7 +126,7 @@ ISAAC.Core.gravitationalForce = function (obj1, obj2) {
 	var distance = ISAAC.Math.vectorLength(directionVector);
 
 	// Get Gm1m2 and modify it according to the relevant multipliers.
-	var numerator = ISAAC.Constants.G * config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
+	var numerator = ISAAC.Constants.G * ISAAC.Config.gravConstMult * obj1.physical.mass * obj1.config.massMult * obj2.physical.mass * obj2.config.massMult;
 	
 	// Get the force between the two objects.
 	var force = numerator / ISAAC.Math.sqr(distance);
