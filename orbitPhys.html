@@ -134,6 +134,23 @@
 				// -------------
 				startISAAC();
 
+				// Add everything to the scene.
+				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
+					scene.add(ISAAC.Graphics.models[i]);
+				}
+
+				// If we have WebGL support, add a PointLight at the Sun.
+				if(webGLSupport) {
+					light = new THREE.PointLight(0xFFFFFF);
+					light.position.x = 0;
+					light.position.y = 0;
+					light.position.z = 0;
+					scene.add(light);
+				}
+				
+				// Render.
+				renderer.render(scene, camera);
+
 				// ------ GUI Initialisation ------ //
 				var gui = new dat.GUI(
 				{ width : 500 }
@@ -184,23 +201,6 @@
 				
 				setInterval( function () { stats.update(); }, 1000 / 60 );
 				// ------ End of FPS Counter ------ //
-
-				// Add everything to the scene.
-				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
-					scene.add(ISAAC.Graphics.models[i]);
-				}
-
-				// If we have WebGL support, add a PointLight at the Sun.
-				if(webGLSupport) {
-					light = new THREE.PointLight(0xFFFFFF);
-					light.position.x = 0;
-					light.position.y = 0;
-					light.position.z = 0;
-					scene.add(light);
-				}
-				
-				// Render.
-				renderer.render(scene, camera);
 				
 				// Define what to do when we receive a message from the worker.
 				worker.addEventListener('message', function (e) {
