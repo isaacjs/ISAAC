@@ -15,6 +15,16 @@ ISAAC.Force = function (name, vector) {
 };
 
 
+// OrbitalBody Parameters
+// - texture : REQUIRED if graphics are enabled. String pointing to the texture to be used for this body.
+// - name : The name of this body.
+// - isStar: Default false. Whether or not this body is a Star.
+// - mass : Default 1. The mass of this body in gigagrams.
+// - radius : Default 1000. The radius of this body, in kilometres.
+// - position : Default [0, 0, 0]. The X, Y, and Z (right-handed, i.e. Z is up, Y is "left") starting coordinates of the body.
+// - velocity : Default [0, 0, 0]. The X, Y, and Z (right-handed as above) starting velocities of the body.
+// - motionEnabled : Default true. Whether or not this object should move.
+// - accelerationEnabled : Default true. Whether or not this object will have acceleration calculated for it.
 ISAAC.OrbitalBody = function (parameters) {
 	parameters = parameters || {};
 	this.physical = {};
@@ -22,8 +32,11 @@ ISAAC.OrbitalBody = function (parameters) {
 	this.switches = {};
 	this.config = {};
 
+	// Texture path of the object.
+	this.texture = parameters.texture;
+
 	// Name of the object.
-	this.Name = parameters.name !== undefined ? parameters.name : "";
+	this.Name = parameters.name !== undefined ? parameters.name : "Default Orbital Body Name";
 
 	// Is this object a Star?
 	this.isStar = parameters.isStar !== undefined ? parameters.isStar : false;

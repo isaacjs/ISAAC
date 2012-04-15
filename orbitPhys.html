@@ -12,8 +12,8 @@
 		<script type = "text/javascript" src = "./isaac_math.js"></script>
 		<script type = "text/javascript" src = "./isaac_obj.js"></script>
 		<script type = "text/javascript" src = "./isaac_orbit_phys.js"></script>
-		<script type = "text/javascript" src = "./isaac_simulation.js"></script>
 		<script type = "text/javascript" src = "./isaac_graphics.js"></script>
+		<script type = "text/javascript" src = "./isaac_simulation.js"></script>
 		
 		<style type = "text/css">
 			body { 
@@ -81,7 +81,6 @@
 			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
 			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
 			var plutoMaterial, saturnMaterial;
-			var planetModels;
 
 			// Point light.
 			var light;
@@ -195,62 +194,62 @@
 				// If we have WebGL support, use MeshLambertMaterial for everything except the Sun. If not, use MeshBasicMaterial.
 				var material = webGLSupport ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
 
-				// Create the Sun.
-				sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
-				sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
-				sunModel.name = "Sun";
+				// // Create the Sun.
+				// sunMaterial = new THREE.MeshBasicMaterial( { map : THREE.ImageUtils.loadTexture('external/planets/sun.jpg'), overdraw : meshHide } );
+				// sunModel = new THREE.Mesh(new THREE.SphereGeometry(20, 16 * webGLMult, 16 * webGLMult), sunMaterial);
+				// sunModel.name = "Sun";
 				
-				// Create the Earth.
-				earthMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
-				earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
-				earthModel.name = "Earth";
+				// // Create the Earth.
+				// earthMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/earth.jpg'), overdraw : meshHide } );
+				// earthModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), earthMaterial);
+				// earthModel.name = "Earth";
 				
-				// Create Mars.
-				marsMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
-				marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
-				marsModel.name = "Mars";
+				// // Create Mars.
+				// marsMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mars.jpg'), overdraw : meshHide });
+				// marsModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), marsMaterial);
+				// marsModel.name = "Mars";
 				
-				// Create Mercury.
-				mercuryMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
-				mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
-				mercuryModel.name = "Mercury";
+				// // Create Mercury.
+				// mercuryMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/mercury.jpg'), overdraw : meshHide });
+				// mercuryModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), mercuryMaterial);
+				// mercuryModel.name = "Mercury";
 				
-				// Create Jupiter.
-				jupiterMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
-				jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
-				jupiterModel.name = "Jupiter";
+				// // Create Jupiter.
+				// jupiterMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/jupiter.jpg'), overdraw : meshHide });
+				// jupiterModel = new THREE.Mesh(new THREE.SphereGeometry(10, 16 * webGLMult, 16 * webGLMult), jupiterMaterial);
+				// jupiterModel.name = "Jupiter";
 				
-				// Create Venus.
-				venusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
-				venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
-				venusModel.name = "Venus";
+				// // Create Venus.
+				// venusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/venus.jpg'), overdraw : meshHide });
+				// venusModel = new THREE.Mesh(new THREE.SphereGeometry(4, 16 * webGLMult, 16 * webGLMult), venusMaterial);
+				// venusModel.name = "Venus";
 				
-				// Create Neptune.
-				neptuneMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
-				neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
-				neptuneModel.name = "Neptune";
+				// // Create Neptune.
+				// neptuneMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/neptune.jpg'), overdraw : meshHide });
+				// neptuneModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), neptuneMaterial);
+				// neptuneModel.name = "Neptune";
 				
-				// Create Uranus.
-				uranusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
-				uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
-				uranusModel.name = "Uranus";
+				// // Create Uranus.
+				// uranusMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/uranus.jpg'), overdraw : meshHide });
+				// uranusModel = new THREE.Mesh(new THREE.SphereGeometry(6, 16 * webGLMult, 16 * webGLMult), uranusMaterial);
+				// uranusModel.name = "Uranus";
 				
-				// Create Pluto.
-				plutoMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
-				plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
-				plutoModel.name = "Pluto";
+				// // Create Pluto.
+				// plutoMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/pluto.jpg'), overdraw : meshHide });
+				// plutoModel = new THREE.Mesh(new THREE.SphereGeometry(2, 8 * webGLMult, 8 * webGLMult), plutoMaterial);
+				// plutoModel.name = "Pluto";
 				
-				// Create Saturn.
-				saturnMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
-				saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
-				saturnModel.name = "Saturn";
+				// // Create Saturn.
+				// saturnMaterial = new material( { map : THREE.ImageUtils.loadTexture('external/planets/saturn.jpg'), overdraw : meshHide });
+				// saturnModel = new THREE.Mesh(new THREE.SphereGeometry(8, 16 * webGLMult, 16 * webGLMult), saturnMaterial);
+				// saturnModel.name = "Saturn";
 				
-				// Add all the models to an array.
-				planetModels = [sunModel, mercuryModel, venusModel, earthModel, marsModel, jupiterModel, saturnModel, uranusModel, neptuneModel, plutoModel];
+				// // Add all the models to an array.
+				// planetModels = [sunModel, mercuryModel, venusModel, earthModel, marsModel, jupiterModel, saturnModel, uranusModel, neptuneModel, plutoModel];
 
 				// Add everything to the scene.
-				for(var i = 0; i < planetModels.length; i++) {
-					scene.add(planetModels[i]);
+				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
+					scene.add(ISAAC.Graphics.models[i]);
 				}
 
 				// If we have WebGL support, add a PointLight at the Sun.
@@ -287,7 +286,7 @@
 				
 				// Update the graphical representations of the objects.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
-					ISAAC.Graphics.objUpdate(ISAAC.Simulation.bodies[i], planetModels[i]);
+					ISAAC.Graphics.objUpdate(ISAAC.Simulation.bodies[i], ISAAC.Graphics.models[i]);
 				}
 
 				// Update the position of the light to be that of the Sun.
@@ -366,7 +365,7 @@
 						var vector = new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
 						projector.unprojectVector(vector, camera);
 						var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
-						var intersects = ray.intersectObjects(planetModels);
+						var intersects = ray.intersectObjects(ISAAC.Graphics.models);
 						if(intersects.length > 0) {
 							// Move the camera to the planet.
 							switch(intersects[0].object.name) {
