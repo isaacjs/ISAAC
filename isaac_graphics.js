@@ -21,7 +21,7 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		}
 
 		// If this body is a star, use MeshBasicMaterial. If not, use MeshLambertMaterial (provided we have WebGL support).
-		var materialType = (orbitalBody.isStar && ISAAC.Graphics.webGLEnabled) ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
+		var materialType = (orbitalBody.isStar || !(ISAAC.Graphics.webGLEnabled)) ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
 		
 		// Check if we have a texture. If not, choose a random colour to apply to the model.
 		if(orbitalBody.texture) {
