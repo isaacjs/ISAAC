@@ -17,7 +17,9 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		// Calculate the radius the object's model should have.
 		var radius;
 		switch(scaleMethod) {
-			default : radius = ISAAC.Math.sqr(Math.log(orbitalBody.physical.radius) / Math.log(10))/2;
+			case "linear" : radius = orbitalBody.physical.radius / 20000; break;
+			case "realistic" : radius = orbitalBody.physical.radius / 1e6; break;
+			default : radius = ISAAC.Math.sqr(Math.log(orbitalBody.physical.radius) / Math.log(10))/2; break;
 		}
 
 		// If this body is a star, use MeshBasicMaterial. If not, use MeshLambertMaterial (provided we have WebGL support).

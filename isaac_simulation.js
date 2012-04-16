@@ -9,7 +9,9 @@ ISAAC.Simulation = ISAAC.Simulation || {};
 // config:
 // - graphicsEnabled : REQUIRED. Set to false to use only the core simulation layer, true for graphics support.
 // - scaling : Determines the equation used to scale planets. Has several values, detailed below.
-// --- "default" : Take the base-10 logarithm of radius, square it, then divide by 2.
+// --- "default" : Take the base-10 logarithm of radius, square it, then divide by 2. Produces a decent-looking model, but isn't accurate.
+// --- "linear" : Each body appears 50 times larger than it is in real life. Relative sizes are accurate, but apparent distances are not.
+// --- "realistic" : Each body is the same size it is in real life. Sizes and distances are accurate.
 
 // bodies:
 // Note that the key of each JSON body within the bodies object should be unique and distinct.
@@ -46,7 +48,8 @@ function startISAAC() {
 	ISAAC.Simulation.init(
 	{
 		"config" : {
-			graphicsEnabled : true
+			graphicsEnabled : true,
+			scaling : "default"
 		},
 		"bodies" : {
 			"Sun" : {
