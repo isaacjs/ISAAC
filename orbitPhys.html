@@ -212,7 +212,7 @@
 					}
 				}, false);
 
-				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
+				worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			function animUpdate() {
@@ -322,7 +322,7 @@
 				middleMouseDown = false;
 				
 				// Send updated settings to the worker.
-				worker.postMessage({'command' : 'set', 'config' : ISAAC.Config, 'bodyArray' : ISAAC.Simulation.bodies});
+				worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			// Handles mousemove events. Used to move the camera.

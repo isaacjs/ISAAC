@@ -8,8 +8,9 @@ self.addEventListener('message', function(e) {
 			self.postMessage({ 'response' : front, 'queueLength' : posQueue.contents.length });
 		break;
 		case 'set' :
-			ISAAC.Config = e.data['config'];
-			bodyArray = e.data['bodyArray'];
+			gcm = e.data['gravConstMult'];
+			updateStep = e.data['updateStep'];
+			bodies = e.data['bodyArray'];
 		break;
 		case 'pause' :
 			clearInterval(interval);
@@ -28,13 +29,15 @@ self.addEventListener('message', function(e) {
 
 // Frame rate should always be less than or equal to update rate.
 var posQueue = new ISAAC.Queue(1);
-var bodyArray;
+var bodies;
 var count = 0;
 var time = 50/3;
+var gcm = 1;
+var updateStep = 1;
 
 function timeLoop() {
-	update(bodyArray);
-	posQueue.enqueue(bodyArray);
+	update(bodies);
+	posQueue.enqueue(bodies);
 }
 
 
@@ -47,7 +50,7 @@ var interval = setInterval(function() {
 function update (orbitalBodies) {
 	// Update the position of the planets. Use the updateStep specified by the user
 	// (default: 1 second is 1 day).
-	for (var i = 0; i < ISAAC.Config.updateStep; i++) {
+	for (var i = 0; i < updateStep; i++) {
 		for(var j = 0; j < orbitalBodies.length - 1; j++) {
 			for(var k = j + 1; k < orbitalBodies.length; k++) {
 				updateGravity(orbitalBodies[j], orbitalBodies[k]);
@@ -60,6 +63,6 @@ function update (orbitalBodies) {
 }
 
 function updateGravity(planet1, planet2) {
-	planet1.forceStore["gravity" + planet2.name] = ISAAC.Core.gravitationalForce(planet1, planet2, ISAAC.Config.gravConstMult);
-	planet2.forceStore["gravity" + planet1.name] = ISAAC.Core.gravitationalForce(planet2, planet1, ISAAC.Config.gravConstMult);
+	planet1.forceStore["gravity" + planet2.name] = ISAAC.Core.gravitationalForce(planet1, planet2, gcm);
+	planet2.forceStore["gravity" + planet1.name] = ISAAC.Core.gravitationalForce(planet2, planet1, gcm);
 }
