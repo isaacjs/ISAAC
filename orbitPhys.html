@@ -45,7 +45,7 @@
 	</head>
 	<body>
 		<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
-		<div class = "hidden" id = "timestepTooltip">One second in real time is this amount in the simulation.</div>
+		<div class = "hidden" id = "timestepTooltip">One second in real time is this amount of days in the simulation.</div>
 		<div class = "hidden" id = "gcmTooltip">
 			This value is multiplied by the Gravitational Constant.
 			<p>
@@ -165,8 +165,7 @@
 				
 				// Create the Simulation Settings folder.
 				var simSettings = gui.addFolder("Simulation Settings");
-				var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 
-					{ "One Day" : 1, "One Week" : 7, "One Month" : 30, "Three Months" : 90 }).name("Update Step").domElement;
+				var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 1, 90).step(1).name("Days Per Second").domElement;
 				upstepDOM.onmouseover = timestepShow;
 				upstepDOM.onmouseout = timestepHide;
 
