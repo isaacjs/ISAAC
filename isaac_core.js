@@ -36,12 +36,12 @@ ISAAC.Core.movementModule = function (obj) {
 // Adjusts the position of the object, based on the velocity vector.
 ISAAC.Core.velocityModule = function (obj) {
 	if (obj.switches.motionEnabled) {
-		firstDegreeTerm = ISAAC.Math.scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep);
+		var firstDegreeTerm = ISAAC.Math.scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep);
 
 		//This is certainly the wrong equation (causes closer planets to spiral into the sun)
-		//secondDegreeTerm = ISAAC.Math.scaleVector(obj.motion.acceleration, ISAAC.Math.sqr(ISAAC.Constants.timeStep));
+		//var secondDegreeTerm = ISAAC.Math.scaleVector(obj.motion.acceleration, ISAAC.Math.sqr(ISAAC.Constants.timeStep));
 
-		secondDegreeTerm = [0, 0, 0];
+		var secondDegreeTerm = [0, 0, 0];
 		obj.motion.position = ISAAC.Math.addVector(obj.motion.position, ISAAC.Math.addVector(firstDegreeTerm, secondDegreeTerm));
 		return true;
 	}
@@ -52,9 +52,6 @@ ISAAC.Core.velocityModule = function (obj) {
 // Adjusts the velocity of the object, based on the acceleration vector.
 ISAAC.Core.accelerationModule = function (obj) {
 	if (obj.switches.accelerationEnabled) {
-		//		obj.Position.velX += (obj.Position.accelX * ISAAC.Constants.timeStep);
-		//		obj.Position.velY += (obj.Position.accelY * ISAAC.Constants.timeStep);
-		//		obj.Position.velZ += (obj.Position.accelZ * ISAAC.Constants.timeStep);
 		obj.motion.velocity = ISAAC.Math.addVector(obj.motion.velocity, ISAAC.Math.scaleVector(obj.motion.acceleration, ISAAC.Constants.timeStep));
 		return true;
 	}
