@@ -36,7 +36,13 @@ ISAAC.Core.movementModule = function (obj) {
 // Adjusts the position of the object, based on the velocity vector.
 ISAAC.Core.velocityModule = function (obj) {
 	if (obj.switches.motionEnabled) {
-		obj.motion.position = ISAAC.Math.addVector(obj.motion.position, ISAAC.Math.scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep));
+		firstDegreeTerm = ISAAC.Math.scaleVector(obj.motion.velocity, ISAAC.Constants.timeStep);
+
+		//This is certainly the wrong equation (causes closer planets to spiral into the sun)
+		//secondDegreeTerm = ISAAC.Math.scaleVector(obj.motion.acceleration, ISAAC.Math.sqr(ISAAC.Constants.timeStep));
+
+		secondDegreeTerm = [0, 0, 0];
+		obj.motion.position = ISAAC.Math.addVector(obj.motion.position, ISAAC.Math.addVector(firstDegreeTerm, secondDegreeTerm));
 		return true;
 	}
 	return false;
@@ -65,18 +71,14 @@ ISAAC.Core.forceModule = function(obj) {
 		// Iterate through the forces acting on the object and add them
 		// to the resultant force.
 		for(var force in obj.forceStore) {
-			for(var i = 0; i < 3; i++) {
-				newResultant[i] += obj.forceStore[force][i];
-			}
+				newResultant = ISAAC.Math.addVector(newResultant, obj.forceStore[force]);
 		}
 		
 		// Set the resultant force.
 		obj.resultantForce = newResultant;
 		
 		// Adjust the object's acceleration based on the resultant force.
-		for(var i = 0; i < 3; i++) {
-			obj.motion.acceleration[i] = obj.resultantForce[i] / obj.physical.mass;
-		}
+		obj.motion.acceleration = ISAAC.Math.scaleVector(obj.resultantForce, 1/obj.physical.mass);
 		
 		// Reset the forceChanged switch.
 		obj.switches.forceChanged = false;
