@@ -1,6 +1,6 @@
 // Main logic module for ISAAC.
 
-var ISAAC = ISAAC || { release: "1" };
+var ISAAC = ISAAC || { release: "2 - Dev" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
 ISAAC.Config = ISAAC.Config || {"updateStep" : 1, "gravConstMult" : 1, "cameraFocus" : 0};
