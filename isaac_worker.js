@@ -20,6 +20,10 @@ self.addEventListener('message', function(e) {
 				timeLoop();
 			}, time);
 		break;
+		case 'terminate' :
+			clearInterval(interval);
+			close();
+		break;
 	}
 });
 

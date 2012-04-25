@@ -49,7 +49,22 @@ ISAAC.Simulation.init = function (JSON) {
 		ISAAC.Graphics.init();
 	}
 
+	// Setup the Web Worker.
 	ISAAC.Simulation.worker = new Worker('isaac_worker.js');
+	ISAAC.Simulation.worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
+
+	// Define what to do when we receive a message from the worker.
+	ISAAC.Simulation.worker.addEventListener('message', function (e) {
+		var data = e.data.response;
+		if(typeof data !== 'undefined') {
+			for(var i = 0; i < data.length; i++) {
+				// Update our simulation state.
+				// We don't just copy the data array to avoid
+				// overwriting each object's config.
+				ISAAC.Simulation.bodies[i].motion = data[i].motion;
+			}
+		}
+	}, false);
 }
 
 ISAAC.Simulation.reset = function() {
