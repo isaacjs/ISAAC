@@ -27,6 +27,11 @@ ISAAC.Simulation = ISAAC.Simulation || {};
 // - accelerationEnabled : Default true. Whether or not this object will have acceleration calculated for it.
 
 ISAAC.Simulation.init = function (JSON) {
+	ISAAC.Graphics.enabled = JSON.config.graphicsEnabled;
+
+	// Reset the system.
+	ISAAC.Simulation.reset();
+
 	// Create the Orbital Body objects.
 	ISAAC.Simulation.bodies = [];
 	for(var key in JSON.bodies) {
@@ -37,6 +42,30 @@ ISAAC.Simulation.init = function (JSON) {
 		if(JSON.config.graphicsEnabled) {
 			ISAAC.Graphics.createModel(curr, JSON.config.scaling);
 		}
+	}
+
+	// Setup graphics, if applicable.
+	if(JSON.config.graphicsEnabled) {
+		ISAAC.Graphics.init();
+	}
+
+	ISAAC.Simulation.worker = new Worker('isaac_worker.js');
+}
+
+ISAAC.Simulation.reset = function() {
+	// Halt the worker.
+	if(ISAAC.Simulation.worker) {
+		ISAAC.Simulation.worker.terminate();
+	}
+
+	// Remove any existing UI elements.
+	if(ISAAC.Graphics.guiDOMElement) {
+		ISAAC.Graphics.guiDOMElement.parentNode.removeChild(ISAAC.Graphics.guiDOMElement);
+	}
+
+	// Reset graphics, if needed.
+	if(ISAAC.Graphics.enabled) {
+		ISAAC.Graphics.reset();
 	}
 }
 

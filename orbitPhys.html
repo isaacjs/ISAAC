@@ -68,22 +68,9 @@
 			var timestepHide = function() { document.getElementById("timestepTooltip").className = "hidden"; };
 			var gcmShow = function() { document.getElementById("gcmTooltip").className = "overlay"; };
 			var gcmHide = function() { document.getElementById("gcmTooltip").className = "hidden"; };
-
-			// Three.js elements.
-			var camera, scene, renderer;
 			
 			// Stats (for debugging)
 			var stats;
-			
-			// Planets and their materials.
-			var sunModel, earthModel, marsModel, mercuryModel;
-			var jupiterModel, venusModel, neptuneModel, uranusModel, plutoModel, saturnModel;
-			var sunMaterial, earthMaterial, marsMaterial, mercuryModel;
-			var jupiterMaterial, venusMaterial, neptuneMaterial, uranusMaterial;
-			var plutoMaterial, saturnMaterial;
-
-			// Point light.
-			var light;
 
 			// Camera movement-related variables.
 			var isMouseDown = false;
@@ -95,8 +82,6 @@
 			var origin = new THREE.Vector3(0, 0, 0);
 			var camFocusGUI;
 			
-			// Web Worker.
-			var worker = new Worker('isaac_worker.js');
 			
 			init();
 			
@@ -104,88 +89,26 @@
 				// Get the renderArea.
 				var renderArea = document.getElementById('renderArea');
 				
-				// Setup the camera and scene.
-				camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
-				camera.position.x = cameraDist;
-				camera.lookAt(origin);
-				scene = new THREE.Scene();
-				scene.add(camera);
-				
 				// Check if we have WebGL support using a temporary canvas.
 				var tempCanvas = document.createElement('canvas');
-				var webGLSupport;
 				try {
-					webGLSupport = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));	
+					ISAAC.Graphics.webGLEnabled = window.WebGLRenderingContext && (tempCanvas.getContext("webgl") || tempCanvas.getContext("experimental-webgl"));	
 				} catch (x) {
-					webGLSupport = false;
+					ISAAC.Graphics.webGLEnabled = false;
 				}
-				console.log(webGLSupport ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
-				ISAAC.Graphics.webGLEnabled = webGLSupport;
+				console.log(ISAAC.Graphics.webGLEnabled ? "WebGL supported. Using WebGLRenderer." : "WebGL unsupported. Using CanvasRenderer.");
 
 				// Setup the renderer.
-				renderer = webGLSupport ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
-				renderer.setSize(window.innerWidth, window.innerHeight);
-				renderArea.appendChild(renderer.domElement);
-				renderer.setClearColorHex(0x000000, 1.0);
-				renderer.clear();
+				ISAAC.Graphics.THREE.renderer = ISAAC.Graphics.webGLEnabled ? new THREE.WebGLRenderer() : new THREE.CanvasRenderer();
+				ISAAC.Graphics.THREE.renderer.setSize(window.innerWidth, window.innerHeight);
+				renderArea.appendChild(ISAAC.Graphics.THREE.renderer.domElement);
+				ISAAC.Graphics.THREE.renderer.setClearColorHex(0x000000, 1.0);
+				ISAAC.Graphics.THREE.renderer.clear();
 
 				// -------------
 				// Startup code is found in isaac_simulation.js
 				// -------------
 				startISAAC();
-
-				// Add everything to the scene.
-				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
-					scene.add(ISAAC.Graphics.models[i]);
-				}
-
-				if(webGLSupport) {
-					for(var i = 0; i < ISAAC.Graphics.lights.length; i++) {
-						scene.add(ISAAC.Graphics.lights[i]);
-					}
-				}
-				
-				// Render.
-				renderer.render(scene, camera);
-
-				// ------ GUI Initialisation ------ //
-				var gui = new dat.GUI(
-				{ width : 500 }
-				);
-
-				// Create the Camera settings.
-				gui.add(window, 'cameraDist', 5, 2000).name("Camera Distance").listen();
-				
-				// Camera Focus drop-down.
-				var camFocusObject = {};
-				for(var i = 0; i < ISAAC.Graphics.models.length; i++) {
-					camFocusObject[ISAAC.Graphics.models[i].name] = ISAAC.Graphics.models[i].number;
-				}
-				camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
-				
-				// Create the Simulation Settings folder.
-				var simSettings = gui.addFolder("Simulation Settings");
-				var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 1, 90).step(1).name("Days Per Second").domElement;
-				upstepDOM.onmouseover = timestepShow;
-				upstepDOM.onmouseout = timestepHide;
-
-				var gcmDOM = simSettings.add(ISAAC.Config, "gravConstMult", 0.1, 10).name("Gravitational Constant Multiplier").domElement;
-				gcmDOM.onmouseover = gcmShow;
-				gcmDOM.onmouseout = gcmHide;
-				
-				// Create the Orbital Bodies folder.
-				var planetsFolder = gui.addFolder("Orbital Bodies");
-
-				// Create folders for each body.
-				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
-					var curr = ISAAC.Simulation.bodies[i];
-					var folder = planetsFolder.addFolder(curr.name);
-					var controller = folder.add(curr.config, "massMult", 0.1, 100).name("Mass Multiplier");
-					var bodyDOM = controller.domElement;
-					bodyDOM.onmouseover = massMultShow;
-					bodyDOM.onmouseout = massMultHide;
-				}
-				// ------ End of GUI Initialisation ------ //
 				
 				// ------ FPS Counter (for debug only) ------ //
 				stats = new Stats();
@@ -199,7 +122,7 @@
 				// ------ End of FPS Counter ------ //
 				
 				// Define what to do when we receive a message from the worker.
-				worker.addEventListener('message', function (e) {
+				ISAAC.Simulation.worker.addEventListener('message', function (e) {
 					var data = e.data.response;
 					if(typeof data !== 'undefined') {
 						for(var i = 0; i < data.length; i++) {
@@ -211,12 +134,12 @@
 					}
 				}, false);
 
-				worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
+				ISAAC.Simulation.worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			function animUpdate() {
 				// Ping the worker to get updated positions.
-				worker.postMessage({'command' : 'get'});
+				ISAAC.Simulation.worker.postMessage({'command' : 'get'});
 				
 				// Update the graphical representations of the objects.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
@@ -234,28 +157,28 @@
 
 				// Update the camera's position.
 				// Adjust the camera (horizontal).
-				camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
-				camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
+				ISAAC.Graphics.THREE.camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+				ISAAC.Graphics.THREE.camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
 				
 				// Adjust the camera (vertical).
-				camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
-				camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
-				camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
+				ISAAC.Graphics.THREE.camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+				ISAAC.Graphics.THREE.camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
+				ISAAC.Graphics.THREE.camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
 
 				// Translate the camera to the planet.
 				var cameraFocus = ISAAC.Simulation.bodies[ISAAC.Config.cameraFocus];
-				camera.position.x += cameraFocus.motion.position[0];
-				camera.position.z += cameraFocus.motion.position[1];
-				camera.position.y += cameraFocus.motion.position[2];
+				ISAAC.Graphics.THREE.camera.position.x += cameraFocus.motion.position[0];
+				ISAAC.Graphics.THREE.camera.position.z += cameraFocus.motion.position[1];
+				ISAAC.Graphics.THREE.camera.position.y += cameraFocus.motion.position[2];
 
 				// Point the camera at the planet.
-				camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
+				ISAAC.Graphics.THREE.camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
 				
 				// Setup continuous updates.
-				window.requestAnimationFrame(animUpdate, renderer.domElement);
+				window.requestAnimationFrame(animUpdate, ISAAC.Graphics.THREE.renderer.domElement);
 				
 				// Render!
-				renderer.render(scene, camera);
+				ISAAC.Graphics.THREE.renderer.render(ISAAC.Graphics.THREE.scene, ISAAC.Graphics.THREE.camera);
 			}
 			
 			animUpdate();
@@ -276,9 +199,9 @@
 				var width = window.innerWidth;
 				var height = window.innerHeight;
 				
-				renderer.setSize(width, height);
-				camera.aspect = width/height;
-				camera.updateProjectionMatrix();
+				ISAAC.Graphics.THREE.renderer.setSize(width, height);
+				ISAAC.Graphics.THREE.camera.aspect = width/height;
+				ISAAC.Graphics.THREE.camera.updateProjectionMatrix();
 			}
 			
 			// Handles mousedown events.
@@ -297,6 +220,7 @@
 						// Figure out if the mouse clicked any planet.
 						var x = event.clientX;
 						var y = event.clientY;
+						var camera = ISAAC.Graphics.THREE.camera;
 						var vector = new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
 						projector.unprojectVector(vector, camera);
 						var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
@@ -321,7 +245,7 @@
 				middleMouseDown = false;
 				
 				// Send updated settings to the worker.
-				worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
+				ISAAC.Simulation.worker.postMessage({'command' : 'set', 'updateStep' : ISAAC.Config.updateStep, 'gravConstMult' : ISAAC.Config.gravConstMult, 'bodyArray' : ISAAC.Simulation.bodies});
 			}
 			
 			// Handles mousemove events. Used to move the camera.
@@ -366,10 +290,10 @@
 
 			// Pause when we aren't visible.
 			function pageHidden() {
-				worker.postMessage( {'command' : 'pause'} );
+				ISAAC.Simulation.worker.postMessage( {'command' : 'pause'} );
 			}
 			function pageVisible() {
-				worker.postMessage( {'command' : 'resume'} );
+				ISAAC.Simulation.worker.postMessage( {'command' : 'resume'} );
 			}
 			// Figure out which Page Visibility handler to use.
 			if(typeof document.hidden !== "undefined") {
