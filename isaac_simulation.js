@@ -32,6 +32,9 @@ ISAAC.Simulation.init = function (JSON) {
 	// Reset the system.
 	ISAAC.Simulation.reset();
 
+	// Store the JSON.
+	ISAAC.Simulation.specifications = JSON;
+
 	// Create the Orbital Body objects.
 	ISAAC.Simulation.bodies = [];
 	for(var key in JSON.bodies) {
@@ -81,6 +84,14 @@ ISAAC.Simulation.reset = function() {
 	// Reset graphics, if needed.
 	if(ISAAC.Graphics.enabled) {
 		ISAAC.Graphics.reset();
+	}
+}
+
+ISAAC.Simulation.restart = function() {
+	// Only execute if we already have a set of specifications.
+	if(ISAAC.Simulation.specifications) {
+		ISAAC.Config = new ISAAC.Defaults.Config();
+		ISAAC.Simulation.init(ISAAC.Simulation.specifications);
 	}
 }
 

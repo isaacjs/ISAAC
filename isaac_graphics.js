@@ -74,6 +74,8 @@ ISAAC.Graphics.init = function() {
 	
 	// Create the Simulation Settings folder.
 	var simSettings = gui.addFolder("Simulation Settings");
+	simSettings.add(ISAAC.Simulation, 'restart').name("Reset Simulation");
+
 	var upstepDOM = simSettings.add(ISAAC.Config, 'updateStep', 1, 90).step(1).name("Days Per Second").domElement;
 	upstepDOM.onmouseover = timestepShow;
 	upstepDOM.onmouseout = timestepHide;

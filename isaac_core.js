@@ -3,7 +3,9 @@
 var ISAAC = ISAAC || { release: "2 - Dev" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
-ISAAC.Config = ISAAC.Config || {"updateStep" : 1, "gravConstMult" : 1, "cameraFocus" : 0};
+ISAAC.Defaults = {};
+ISAAC.Defaults.Config = function () { this.updateStep = 1; this.gravConstMult = 1; this.cameraFocus = 0; };
+ISAAC.Config = ISAAC.Config || new ISAAC.Defaults.Config();
 
 // Units
 // Distance: gigameters
