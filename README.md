@@ -13,6 +13,7 @@ Full details can be found in `isaac_simulation`.
 
 ## What can I do with ISAAC?
 In order of increasing difficulty (and coding required):
+
 1. Simulate a star system from a basic set of information, specified in JSON.
 2. Create a new sandbox tool powered by ISAAC's simulation and graphics, with minor changes to the UI.
 3. Completely rip out the graphical layer (replacing it with another solution), while keeping the same underlying simulation systems and UI.
