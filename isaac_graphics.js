@@ -2,6 +2,8 @@
 
 ISAAC.Graphics = ISAAC.Graphics || {};
 ISAAC.Graphics.models = [];
+ISAAC.Graphics.velLines = [];
+ISAAC.Graphics.accelLines = [];
 ISAAC.Graphics.lights = [];
 ISAAC.Graphics.webGLEnabled = false;
 ISAAC.Graphics.guiDOMElement = undefined;
@@ -28,10 +30,12 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		var materialType = (orbitalBody.isStar || !(ISAAC.Graphics.webGLEnabled)) ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
 		
 		// Check if we have a texture. If not, choose a random colour to apply to the model.
+		// We use the random colour to draw acceleration and velocity lines, too.
+		var objColor = Math.random() * 0x808008 + 0x808080;
 		if(orbitalBody.texture) {
 			material = new materialType( { map : THREE.ImageUtils.loadTexture(orbitalBody.texture), overdraw : true } );
 		} else {
-			material = new materialType( { color : Math.random() * 0x808008 + 0x808080, overdraw : true })
+			material = new materialType( { color : objColor, overdraw : true })
 		}
 
 		// Create the model.
@@ -39,6 +43,8 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		model = new THREE.Mesh(new THREE.SphereGeometry(radius, segmentAmount, segmentAmount), material);
 		model.name = orbitalBody.name;
 		model.number = ISAAC.Graphics.models.length; // Used for shifting camera focus.
+		model.colour = objColor;
+		model.radius = radius;
 
 		// If this body is a star (and we have WebGL support), create a point light at its position.
 		if(orbitalBody.isStar && ISAAC.Graphics.webGLEnabled) {
@@ -71,6 +77,9 @@ ISAAC.Graphics.init = function() {
 		camFocusObject[ISAAC.Graphics.models[i].name] = ISAAC.Graphics.models[i].number;
 	}
 	camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
+
+	// Velocity and Acceleration Vectors.
+	gui.add(ISAAC.Config, 'showVectors').name("Show Velocity and Acceleration");
 	
 	// Create the Simulation Settings folder.
 	var simSettings = gui.addFolder("Simulation Settings");

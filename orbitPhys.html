@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html>
 <!--Planet Textures courtesy of James Hastings-Trew, http://planetpixelemporium.com/planets.html -->
-	<head>
-		<meta charset="UTF-8">
-		<title>...eppur si muove.</title>
-		<script type = "text/javascript" src = "./external/Three.js"></script>
-		<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
-		<script type = "text/javascript" src = "./external/Stats.js"></script>
-		
-		<script type = "text/javascript" src = "./isaac_core.js"></script>
-		<script type = "text/javascript" src = "./isaac_math.js"></script>
-		<script type = "text/javascript" src = "./isaac_obj.js"></script>
-		<script type = "text/javascript" src = "./isaac_graphics.js"></script>
-		<script type = "text/javascript" src = "./isaac_simulation.js"></script>
-		<script type = "text/javascript" src = "./isaac_queue.js"></script>
-		
-		<style type = "text/css">
-			body { 
-				margin: 0px; 
-				overflow: hidden;
-				background-color: black;
-			}
-			.overlay {
-				margin-left: auto;
-				margin-right: auto;
-				width: 25em;
-				position: fixed;
-				display: block;
+<head>
+	<meta charset="UTF-8">
+	<title>...eppur si muove.</title>
+	<script type = "text/javascript" src = "./external/Three.js"></script>
+	<script type = "text/javascript" src = "./external/dat.gui.min.js"></script>
+	<script type = "text/javascript" src = "./external/Stats.js"></script>
 
-				pointer-events: none;
-				z-index: 50;
-				padding: 0px 3px 0px 3px;
-				border: solid 1px white;
-				color: white;
+	<script type = "text/javascript" src = "./isaac_core.js"></script>
+	<script type = "text/javascript" src = "./isaac_math.js"></script>
+	<script type = "text/javascript" src = "./isaac_obj.js"></script>
+	<script type = "text/javascript" src = "./isaac_graphics.js"></script>
+	<script type = "text/javascript" src = "./isaac_simulation.js"></script>
+	<script type = "text/javascript" src = "./isaac_queue.js"></script>
 
-				font-family: "Segoe UI", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
-				font-size: 90%;
-				text-align: justify;
-			}
-			.hidden {
-				display: none;
-			}
-		</style>
-	</head>
-	<body>
-		<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
-		<div class = "hidden" id = "timestepTooltip">One second in real time is this amount of days in the simulation.</div>
-		<div class = "hidden" id = "gcmTooltip">
-			This value is multiplied by the Gravitational Constant.
-			<p>
-				The force of gravity between two bodies is given by
-				multiplying	the Gravitational Constant by the masses
-				of the bodies, then dividing the result by the
-				square of the distance between them.
-			</p>
+	<style type = "text/css">
+	body { 
+		margin: 0px; 
+		overflow: hidden;
+		background-color: black;
+	}
+	.overlay {
+		margin-left: auto;
+		margin-right: auto;
+		width: 25em;
+		position: fixed;
+		display: block;
 
-			By adjusting the Gravitational Constant, gravitational force
-			is changed all throughout the solar system (and the universe!)
-		</div>
-		<div id="renderArea"></div>
-		
-		<script type = "text/javascript">
+		pointer-events: none;
+		z-index: 50;
+		padding: 0px 3px 0px 3px;
+		border: solid 1px white;
+		color: white;
+
+		font-family: "Segoe UI", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+		font-size: 90%;
+		text-align: justify;
+	}
+	.hidden {
+		display: none;
+	}
+	</style>
+</head>
+<body>
+	<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
+	<div class = "hidden" id = "timestepTooltip">One second in real time is this amount of days in the simulation.</div>
+	<div class = "hidden" id = "gcmTooltip">
+		This value is multiplied by the Gravitational Constant.
+		<p>
+			The force of gravity between two bodies is given by
+			multiplying	the Gravitational Constant by the masses
+			of the bodies, then dividing the result by the
+			square of the distance between them.
+		</p>
+
+		By adjusting the Gravitational Constant, gravitational force
+		is changed all throughout the solar system (and the universe!)
+	</div>
+	<div id="renderArea"></div>
+
+	<script type = "text/javascript">
 			// Tooltips. So, so hackish >.>
 			var massMultShow = function() { document.getElementById("massMultTooltip").className = "overlay"; };
 			var massMultHide = function() { document.getElementById("massMultTooltip").className = "hidden"; };
@@ -128,7 +128,47 @@
 				
 				// Update the graphical representations of the objects.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
-					ISAAC.Graphics.objUpdate(ISAAC.Simulation.bodies[i], ISAAC.Graphics.models[i]);
+					var currModel = ISAAC.Graphics.models[i];
+					var currBody = ISAAC.Simulation.bodies[i];
+					ISAAC.Graphics.objUpdate(currBody, currModel);
+
+					// Remove the existing velocity and acceleration vectors.
+					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.velLines[i]);
+					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.accelLines[i]);
+
+					if(ISAAC.Config.showVectors) {
+						// Create new velocity and acceleration lines.
+						var accelGeometry = new THREE.Geometry();
+						var accelVertexStart = new THREE.Vector3();
+						accelVertexStart.x = currModel.position.x;
+						accelVertexStart.y = currModel.position.y;
+						accelVertexStart.z = currModel.position.z;
+						accelGeometry.vertices.push(accelVertexStart);
+						var accelVertexEnd = new THREE.Vector3();
+						var accelScaled = ISAAC.Math.vectorFitToLength(currBody.motion.acceleration, currModel.radius + 10);
+						accelScaled = ISAAC.Math.addVector(currBody.motion.position, accelScaled);
+						accelVertexEnd.x = accelScaled[0];
+						accelVertexEnd.y = accelScaled[2];
+						accelVertexEnd.z = accelScaled[1];
+						accelGeometry.vertices.push(accelVertexEnd);
+						var accelLine = new THREE.Line(accelGeometry, new THREE.LineBasicMaterial({ "color" : currModel.colour }));
+
+						var velGeometry = new THREE.Geometry();
+						velGeometry.vertices.push(accelVertexStart);
+						var velVertexEnd = new THREE.Vector3();
+						var endPosition = ISAAC.Math.vectorFitToLength(currBody.motion.velocity, currModel.radius + 10);
+						endPosition = ISAAC.Math.addVector(currBody.motion.position, endPosition);
+						velVertexEnd.x = endPosition[0];
+						velVertexEnd.y = endPosition[2];
+						velVertexEnd.z = endPosition[1];
+						velGeometry.vertices.push(velVertexEnd);
+						var velLine = new THREE.Line(velGeometry, new THREE.LineBasicMaterial({ "color" : (currModel.colour + 5)}));
+
+						ISAAC.Graphics.THREE.scene.add(accelLine);
+						ISAAC.Graphics.THREE.scene.add(velLine);
+						ISAAC.Graphics.velLines[i] = velLine;
+						ISAAC.Graphics.accelLines[i] = accelLine;
+					}
 				}
 
 				// Update the position of any lights to be that of their respective bodies.
@@ -318,6 +358,6 @@
 					}
 				}
 			}
-		</script>
-	</body>
-</html>
+			</script>
+		</body>
+		</html>
