@@ -137,33 +137,31 @@
 					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.accelLines[i]);
 
 					if(ISAAC.Config.showVectors) {
-						// Create new velocity and acceleration lines.
+						// Create a new line to represent the acceleration vector.
 						var accelGeometry = new THREE.Geometry();
-						var accelVertexStart = new THREE.Vector3();
-						accelVertexStart.x = currModel.position.x;
-						accelVertexStart.y = currModel.position.y;
-						accelVertexStart.z = currModel.position.z;
-						accelGeometry.vertices.push(accelVertexStart);
-						var accelVertexEnd = new THREE.Vector3();
-						var accelScaled = ISAAC.Math.vectorFitToLength(currBody.motion.acceleration, currModel.radius + 10);
+						accelGeometry.vertices.push(currModel.position);
+
+						// Scale the acceleration of the body so that it is visible when represented as a line.
+						var accelScaled = ISAAC.Math.scaleVector(currBody.motion.acceleration, 1e11);
+						accelScaled = ISAAC.Math.addVector(ISAAC.Math.vectorFitToLength(currBody.motion.acceleration, currModel.radius + 5), accelScaled);
 						accelScaled = ISAAC.Math.addVector(currBody.motion.position, accelScaled);
-						accelVertexEnd.x = accelScaled[0];
-						accelVertexEnd.y = accelScaled[2];
-						accelVertexEnd.z = accelScaled[1];
+						var accelVertexEnd = new THREE.Vector3(accelScaled[0], accelScaled[2], accelScaled[1]);
 						accelGeometry.vertices.push(accelVertexEnd);
 						var accelLine = new THREE.Line(accelGeometry, new THREE.LineBasicMaterial({ "color" : currModel.colour }));
 
+						// Create a new line to represent the velocity vector.
 						var velGeometry = new THREE.Geometry();
-						velGeometry.vertices.push(accelVertexStart);
-						var velVertexEnd = new THREE.Vector3();
-						var endPosition = ISAAC.Math.vectorFitToLength(currBody.motion.velocity, currModel.radius + 10);
+						velGeometry.vertices.push(currModel.position);
+
+						// Scale the velocity of the body so that it is visible when represented as a line.
+						var endPosition = ISAAC.Math.scaleVector(currBody.motion.velocity, 1e5);
+						endPosition = ISAAC.Math.addVector(ISAAC.Math.vectorFitToLength(currBody.motion.velocity, currModel.radius + 5), endPosition);
 						endPosition = ISAAC.Math.addVector(currBody.motion.position, endPosition);
-						velVertexEnd.x = endPosition[0];
-						velVertexEnd.y = endPosition[2];
-						velVertexEnd.z = endPosition[1];
+						var velVertexEnd = new THREE.Vector3(endPosition[0], endPosition[2], endPosition[1]);
 						velGeometry.vertices.push(velVertexEnd);
 						var velLine = new THREE.Line(velGeometry, new THREE.LineBasicMaterial({ "color" : (currModel.colour + 5)}));
 
+						// Add the lines to the scene, and keep track of them.
 						ISAAC.Graphics.THREE.scene.add(accelLine);
 						ISAAC.Graphics.THREE.scene.add(velLine);
 						ISAAC.Graphics.velLines[i] = velLine;
