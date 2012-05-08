@@ -1,6 +1,6 @@
 ISAAC.Queue = function (size) {
 	this.size = size;
-	this.contents = new Array();
+	this.contents = [];
 	this.enqueue =  function(element) {
 		if(this.contents.length === this.size) {
 			this.contents.shift();

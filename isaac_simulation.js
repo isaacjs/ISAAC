@@ -61,10 +61,14 @@ ISAAC.Simulation.init = function (JSON) {
 		var data = e.data.response;
 		if(typeof data !== 'undefined') {
 			for(var i = 0; i < data.length; i++) {
+				var currBody = ISAAC.Simulation.bodies[i];
+				
 				// Update our simulation state.
 				// We don't just copy the data array to avoid
 				// overwriting each object's config.
-				ISAAC.Simulation.bodies[i].motion = data[i].motion;
+				currBody.motion.position = data[i].motion.position;
+				currBody.motion.velocity = data[i].motion.velocity;
+				currBody.motion.acceleration = data[i].motion.acceleration;
 			}
 		}
 	}, false);

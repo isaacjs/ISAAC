@@ -130,11 +130,17 @@
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
 					var currModel = ISAAC.Graphics.models[i];
 					var currBody = ISAAC.Simulation.bodies[i];
+
+					// Save the current position before updating it.
+					currModel.prevPositions.enqueue(currModel.position);
 					ISAAC.Graphics.objUpdate(currBody, currModel);
 
 					// Remove the existing velocity and acceleration vectors.
 					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.velLines[i]);
 					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.accelLines[i]);
+
+					// Remove the existing motion trail.
+					ISAAC.Graphics.THREE.scene.remove(ISAAC.Graphics.trails[i]);
 
 					if(ISAAC.Config.showVectors) {
 						// Create a new line to represent the acceleration vector.
@@ -167,6 +173,24 @@
 						ISAAC.Graphics.velLines[i] = velLine;
 						ISAAC.Graphics.accelLines[i] = accelLine;
 					}
+
+					// if(ISAAC.Config.showTrails) {
+					// 	// Get the points to plot the motion trail.
+					// 	var trailGeometry = new THREE.Geometry();
+					// 	for(var i = 0; i < currModel.prevPositions.contents.length; i += 5) {
+					// 		var curr = currModel.prevPositions.contents[i];
+					// 		trailGeometry.vertices.push(curr);
+					// 	}
+
+					// 	if(trailGeometry.vertices.length > 2) {
+					// 		// Create the line from the points.
+					// 		var motionPath = new THREE.Line(trailGeometry, new THREE.LineBasicMaterial({ "color" : (currModel.colour + 5)}));
+
+					// 		// Add the path to the scene, and keep track of it.
+					// 		ISAAC.Graphics.THREE.scene.add(motionPath);
+					// 		ISAAC.Graphics.trails[i] = motionPath;
+					// 	}
+					// }
 				}
 
 				// Update the position of any lights to be that of their respective bodies.
@@ -178,7 +202,7 @@
 					currLight.position.z = currBody.motion.position[1];
 				}
 
-				// Update the camera's position.
+				// -- Update the camera's position.
 				// Adjust the camera (horizontal).
 				ISAAC.Graphics.THREE.camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
 				ISAAC.Graphics.THREE.camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);

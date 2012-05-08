@@ -1,13 +1,17 @@
 // Graphics module for ISAAC. Requires Three.js.
 
+// Core elements.
 ISAAC.Graphics = ISAAC.Graphics || {};
 ISAAC.Graphics.models = [];
-ISAAC.Graphics.velLines = [];
-ISAAC.Graphics.accelLines = [];
 ISAAC.Graphics.lights = [];
 ISAAC.Graphics.webGLEnabled = false;
 ISAAC.Graphics.guiDOMElement = undefined;
 ISAAC.Graphics.THREE = ISAAC.Graphics.THREE || {};
+
+// Optional prettiness.
+ISAAC.Graphics.velLines = [];
+ISAAC.Graphics.accelLines = [];
+ISAAC.Graphics.trails = [];
 
 ISAAC.Graphics.objUpdate = function (object, model) {
 	model.position.x = object.motion.position[0];
@@ -46,6 +50,9 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		model.colour = objColor;
 		model.radius = radius;
 
+		// Used for motion trails. Keep track of the last 60 positions this model was at.
+		model.prevPositions = new ISAAC.Queue(60);
+
 		// If this body is a star (and we have WebGL support), create a point light at its position.
 		if(orbitalBody.isStar && ISAAC.Graphics.webGLEnabled) {
 			var light = new THREE.PointLight(0xFFFFFF, 1.5);
@@ -78,8 +85,10 @@ ISAAC.Graphics.init = function() {
 	}
 	camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
 
-	// Velocity and Acceleration Vectors.
-	gui.add(ISAAC.Config, 'showVectors').name("Show Velocity and Acceleration");
+	// Create the Graphics Settings folder.
+	var graphicSettings = gui.addFolder("Graphics Settings");
+	graphicSettings.add(ISAAC.Config, 'showVectors').name("Show Velocity and Acceleration");
+	// graphicSettings.add(ISAAC.Config, 'showTrails').name("Show Motion Trails");
 	
 	// Create the Simulation Settings folder.
 	var simSettings = gui.addFolder("Simulation Settings");
@@ -124,6 +133,9 @@ ISAAC.Graphics.init = function() {
 ISAAC.Graphics.reset = function() {
 	ISAAC.Graphics.models = [];
 	ISAAC.Graphics.lights = [];
+	ISAAC.Graphics.velLines = [];
+	ISAAC.Graphics.accelLines = [];
+	ISAAC.Graphics.trails = [];
 
 	// Setup the camera and scene.
 	ISAAC.Graphics.THREE.camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
