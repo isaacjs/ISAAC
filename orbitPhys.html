@@ -338,9 +338,12 @@
 			// Pause when we aren't visible.
 			function pageHidden() {
 				ISAAC.Simulation.worker.postMessage( {'command' : 'pause'} );
+				ISAAC.title = document.title;
+				document.title = "Paused: " + ISAAC.title;
 			}
 			function pageVisible() {
 				ISAAC.Simulation.worker.postMessage( {'command' : 'resume'} );
+				document.title = ISAAC.title;
 			}
 			// Figure out which Page Visibility handler to use.
 			if(typeof document.hidden !== "undefined") {
