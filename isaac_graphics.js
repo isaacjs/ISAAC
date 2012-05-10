@@ -12,6 +12,7 @@ ISAAC.Graphics.THREE = ISAAC.Graphics.THREE || {};
 ISAAC.Graphics.velLines = [];
 ISAAC.Graphics.accelLines = [];
 ISAAC.Graphics.trails = [];
+ISAAC.Graphics.freeCamera = true;
 
 ISAAC.Graphics.objUpdate = function (object, model) {
 	model.position.x = object.motion.position[0];
@@ -143,4 +144,11 @@ ISAAC.Graphics.reset = function() {
 	ISAAC.Graphics.THREE.camera.lookAt(origin);
 	ISAAC.Graphics.THREE.scene = new THREE.Scene();
 	ISAAC.Graphics.THREE.scene.add(ISAAC.Graphics.THREE.camera);
+
+	// Swoosh. Fly the camera in (if we have WebGL support.)
+	cameraAngleY = 10;
+	if(ISAAC.Graphics.webGLEnabled) {
+		cameraDist *= 5;
+		ISAAC.Graphics.freeCamera = false;
+	}
 }

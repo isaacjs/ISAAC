@@ -125,6 +125,17 @@
 			function animUpdate() {
 				// Ping the worker to get updated positions.
 				ISAAC.Simulation.worker.postMessage({'command' : 'get'});
+
+				// Fly the camera in (for initialisation).
+				if(!ISAAC.Graphics.freeCamera) {
+					if(cameraDist > 200) {
+						// Decrease the distance, and rotate the camera.
+						cameraDist -= 5;
+						cameraAngleX += 5;
+					} else {
+						ISAAC.Graphics.freeCamera = true;
+					}
+				}				
 				
 				// Update the graphical representations of the objects.
 				for(var i = 0; i < ISAAC.Simulation.bodies.length; i++) {
@@ -206,7 +217,7 @@
 				// Adjust the camera (horizontal).
 				ISAAC.Graphics.THREE.camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
 				ISAAC.Graphics.THREE.camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
-				
+
 				// Adjust the camera (vertical).
 				ISAAC.Graphics.THREE.camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
 				ISAAC.Graphics.THREE.camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
@@ -220,7 +231,7 @@
 
 				// Point the camera at the planet.
 				ISAAC.Graphics.THREE.camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
-				
+
 				// Setup continuous updates.
 				window.requestAnimationFrame(animUpdate, ISAAC.Graphics.THREE.renderer.domElement);
 				
@@ -306,7 +317,7 @@
 				var mouseYDelta = event.clientY - mouseLastY;
 
 				// Check if the left mouse button is down.
-				if(isMouseDown) {
+				if(isMouseDown && ISAAC.Graphics.freeCamera) {
 					// Add the corresponding rotation to the camera angle.
 					cameraAngleX += mouseXDelta;
 					
@@ -321,7 +332,7 @@
 				} 
 
 				// If middle mouse is down, zoom in or out.
-				if(middleMouseDown) {
+				if(middleMouseDown && ISAAC.Graphics.freeCamera) {
 					// Restrict camera zooming to the same range as the UI allows.
 					if(cameraDist > 2000) {
 						cameraDist = 2000;
