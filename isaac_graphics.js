@@ -139,6 +139,8 @@ ISAAC.Graphics.reset = function() {
 	ISAAC.Graphics.trails = [];
 
 	// Setup the camera and scene.
+	cameraAngleY = 10;
+	cameraDist = 200;
 	ISAAC.Graphics.THREE.camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 1, 10000);
 	ISAAC.Graphics.THREE.camera.position.x = cameraDist;
 	ISAAC.Graphics.THREE.camera.lookAt(origin);
@@ -146,9 +148,8 @@ ISAAC.Graphics.reset = function() {
 	ISAAC.Graphics.THREE.scene.add(ISAAC.Graphics.THREE.camera);
 
 	// Swoosh. Fly the camera in (if we have WebGL support.)
-	cameraAngleY = 10;
 	if(ISAAC.Graphics.webGLEnabled) {
-		cameraDist *= 5;
+		cameraDist *= 10;
 		ISAAC.Graphics.freeCamera = false;
 	}
 }
