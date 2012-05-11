@@ -193,7 +193,7 @@
 						endPosition = ISAAC.Math.addVector(currBody.motion.position, endPosition);
 						var velVertexEnd = new THREE.Vector3(endPosition[0], endPosition[2], endPosition[1]);
 						velGeometry.vertices.push(velVertexEnd);
-						var velLine = new THREE.Line(velGeometry, new THREE.LineBasicMaterial({ "color" : (currModel.colour + 5)}));
+						var velLine = new THREE.Line(velGeometry, new THREE.LineBasicMaterial({ "color" : (currModel.colour << 2)}));
 
 						// Add the lines to the scene, and keep track of them.
 						ISAAC.Graphics.THREE.scene.add(accelLine);

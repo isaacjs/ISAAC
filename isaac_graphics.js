@@ -36,7 +36,7 @@ ISAAC.Graphics.createModel = function(orbitalBody, scaleMethod) {
 		
 		// Check if we have a texture. If not, choose a random colour to apply to the model.
 		// We use the random colour to draw acceleration and velocity lines, too.
-		var objColor = Math.random() * 0x808008 + 0x808080;
+		var objColor = Math.random() * 16777215;
 		if(orbitalBody.texture) {
 			material = new materialType( { map : THREE.ImageUtils.loadTexture(orbitalBody.texture), overdraw : true } );
 		} else {
