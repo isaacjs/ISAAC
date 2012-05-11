@@ -38,25 +38,36 @@
 		font-size: 90%;
 		text-align: justify;
 	}
+	.tooltip {
+		position: absolute;
+		color: white;
+		background-color: gray;
+		opacity: 0.8;
+		-moz-opacity: 0.8;
+		filter:alpha(opacity=8);
+		font-family: "Segoe UI", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
+	}
 	.hidden {
 		display: none;
 	}
 	</style>
 </head>
 <body>
-	<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
-	<div class = "hidden" id = "timestepTooltip">One second in real time is this amount of days in the simulation.</div>
-	<div class = "hidden" id = "gcmTooltip">
-		This value is multiplied by the Gravitational Constant.
-		<p>
-			The force of gravity between two bodies is given by
-			multiplying	the Gravitational Constant by the masses
-			of the bodies, then dividing the result by the
-			square of the distance between them.
-		</p>
+	<div id = "tooltips">
+		<div class = "hidden" id = "massMultTooltip">This value is multiplied by the original mass of the body.</div>
+		<div class = "hidden" id = "timestepTooltip">One second in real time is this amount of days in the simulation.</div>
+		<div class = "hidden" id = "gcmTooltip">
+			This value is multiplied by the Gravitational Constant.
+			<p>
+				The force of gravity between two bodies is given by
+				multiplying	the Gravitational Constant by the masses
+				of the bodies, then dividing the result by the
+				square of the distance between them.
+			</p>
 
-		By adjusting the Gravitational Constant, gravitational force
-		is changed all throughout the solar system (and the universe!)
+			By adjusting the Gravitational Constant, gravitational force
+			is changed all throughout the solar system (and the universe!)
+		</div>
 	</div>
 	<div id="renderArea"></div>
 
@@ -241,7 +252,7 @@
 			
 			animUpdate();
 
-			// Projector to detect which planet is being clicked.
+			// Projector to detect the planet under the mouse.
 			var projector = new THREE.Projector();
 
 			// Add hooks for mouse events, to move the camera around.
@@ -275,17 +286,9 @@
 					if(event.button === 0) {
 						isMouseDown = true;
 
-						// Figure out if the mouse clicked any planet.
-						var x = event.clientX;
-						var y = event.clientY;
-						var camera = ISAAC.Graphics.THREE.camera;
-						var vector = new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
-						projector.unprojectVector(vector, camera);
-						var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
-						var intersects = ray.intersectObjects(ISAAC.Graphics.models);
-						if(intersects.length > 0) {
-							// Move the camera to the planet.
-							ISAAC.Config.cameraFocus = intersects[0].object.number;
+						// If the mouse clicked a planet, move the camera to it.						
+						if(ISAAC.Graphics.intersects.length > 0) {
+							ISAAC.Config.cameraFocus = ISAAC.Graphics.intersects[0].object.number;
 							camFocusGUI.updateDisplay();
 						}
 					}
@@ -344,6 +347,41 @@
 				}
 				mouseLastX = event.clientX;
 				mouseLastY = event.clientY;
+
+				// Figure out what planets the mouse is intersecting.
+				var camera = ISAAC.Graphics.THREE.camera;
+				var vector = new THREE.Vector3((mouseX / window.innerWidth) * 2 - 1, -(mouseY / window.innerHeight) * 2 + 1, 0.5);
+				projector.unprojectVector(vector, camera);
+				var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+				ISAAC.Graphics.intersects = ray.intersectObjects(ISAAC.Graphics.models);
+
+				// Remove the previous planet name tooltip.
+				if(ISAAC.Graphics.lastTooltip) {
+					document.getElementById("tooltips").removeChild(ISAAC.Graphics.lastTooltip);
+					ISAAC.Graphics.lastTooltip = undefined;
+					ISAAC.Graphics.lastIntersected = undefined;
+				}
+
+				// If the mouse is intersecting a planet, display its name.
+				if(ISAAC.Graphics.intersects.length > 0) {
+					// Get the name of the intersected planet.
+					var intersectedObj = ISAAC.Graphics.intersects[0].object.name;
+
+					// If the intersected planet is not the same as the last one, create a div and display it.
+					if(ISAAC.Graphics.lastIntersected !== intersectedObj) {
+						var nameDiv = document.createElement('div');
+						nameDiv.id = "nameTooltip";
+						nameDiv.className = "tooltip";
+						var divContents = document.createTextNode(intersectedObj);
+						nameDiv.appendChild(divContents);
+
+						document.getElementById("tooltips").appendChild(nameDiv);
+						nameDiv.style.left = "" + mouseLastX + "px";
+						nameDiv.style.top = "" + (mouseLastY - 20) + "px";
+						ISAAC.Graphics.lastIntersected = intersectedObj;
+						ISAAC.Graphics.lastTooltip = nameDiv;
+					}
+				}
 			}
 
 			// Pause when we aren't visible.
