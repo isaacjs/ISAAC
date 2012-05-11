@@ -4,7 +4,13 @@ var ISAAC = ISAAC || { release: "2 - Dev" };
 ISAAC.Constants = ISAAC.Constants || {};
 ISAAC.Core = ISAAC.Core || {};
 ISAAC.Defaults = {};
-ISAAC.Defaults.Config = function () { this.updateStep = 1; this.gravConstMult = 1; this.cameraFocus = 0; this.showVectors = false; this.showTrails = false; };
+ISAAC.Defaults.Config = function () { 
+	this.updateStep = 1; 
+	this.gravConstMult = 1; 
+	this.cameraFocus = 0; 
+	this.showVectors = false; 
+	this.showTrails = false; 
+	this.cameraTransitions = true};
 ISAAC.Config = ISAAC.Config || new ISAAC.Defaults.Config();
 
 // Units

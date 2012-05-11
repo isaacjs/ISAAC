@@ -7,6 +7,7 @@ ISAAC.Graphics.lights = [];
 ISAAC.Graphics.webGLEnabled = false;
 ISAAC.Graphics.guiDOMElement = undefined;
 ISAAC.Graphics.THREE = ISAAC.Graphics.THREE || {};
+ISAAC.Graphics.camera = ISAAC.Graphics.camera || { "transitioning" : false };
 
 // Optional prettiness.
 ISAAC.Graphics.velLines = [];
@@ -85,6 +86,8 @@ ISAAC.Graphics.init = function() {
 		camFocusObject[ISAAC.Graphics.models[i].name] = ISAAC.Graphics.models[i].number;
 	}
 	camFocusGUI = gui.add(ISAAC.Config, 'cameraFocus', camFocusObject).name("Camera Focus");
+	camFocusGUI.onChange(function(value) { ISAAC.Graphics.camera.transitioning = true;});
+	gui.add(ISAAC.Config, 'cameraTransitions').name("Camera Transitions");
 
 	// Create the Graphics Settings folder.
 	var graphicSettings = gui.addFolder("Graphics Settings");

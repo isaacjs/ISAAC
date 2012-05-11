@@ -230,21 +230,43 @@
 					currLight.position.z = currBody.motion.position[1];
 				}
 
-				// -- Update the camera's position.
-				// Adjust the camera (horizontal).
-				ISAAC.Graphics.THREE.camera.position.x = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
-				ISAAC.Graphics.THREE.camera.position.z = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
-
-				// Adjust the camera (vertical).
-				ISAAC.Graphics.THREE.camera.position.y = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
-				ISAAC.Graphics.THREE.camera.position.x *= Math.cos(cameraAngleY * Math.PI / 360);
-				ISAAC.Graphics.THREE.camera.position.z *= Math.cos(cameraAngleY * Math.PI / 360);
-
-				// Translate the camera to the planet.
+				// Update the camera's position.
 				var cameraFocus = ISAAC.Simulation.bodies[ISAAC.Config.cameraFocus];
-				ISAAC.Graphics.THREE.camera.position.x += cameraFocus.motion.position[0];
-				ISAAC.Graphics.THREE.camera.position.z += cameraFocus.motion.position[1];
-				ISAAC.Graphics.THREE.camera.position.y += cameraFocus.motion.position[2];
+
+				// Calculate the horizontal camera offset.
+				ISAAC.Graphics.camera.offsetX = cameraDist * Math.cos(cameraAngleX * Math.PI / 360);
+				ISAAC.Graphics.camera.offsetZ = cameraDist * Math.sin(cameraAngleX * Math.PI / 360);
+
+				// Calculate the vertical camera offset.
+				ISAAC.Graphics.camera.offsetY = cameraDist * Math.sin(cameraAngleY * Math.PI / 360);
+				ISAAC.Graphics.camera.offsetX *= Math.cos(cameraAngleY * Math.PI / 360);
+				ISAAC.Graphics.camera.offsetZ *= Math.cos(cameraAngleY * Math.PI / 360);
+
+				// If we're transitioning, transition. If not, translate the camera to the planet.
+				if(ISAAC.Graphics.camera.transitioning && ISAAC.Config.cameraTransitions) {
+					// Get the vector from the current camera position to the destination planet.
+					var cameraPos = [ISAAC.Graphics.THREE.camera.position.x, ISAAC.Graphics.THREE.camera.position.z, ISAAC.Graphics.THREE.camera.position.y];
+					var offset = [ISAAC.Graphics.camera.offsetX, ISAAC.Graphics.camera.offsetZ, ISAAC.Graphics.camera.offsetY];
+					var destPos = ISAAC.Math.addVector(offset, cameraFocus.motion.position);
+					var travelVector = ISAAC.Math.subtractVector(destPos, cameraPos);
+
+					// If we're less than two units from the destination, we're done.
+					var lengthTravelVect = ISAAC.Math.vectorLength(travelVector);
+					if(lengthTravelVect < 2) {
+						ISAAC.Graphics.camera.transitioning = false;
+					} else {
+						// Move along that vector. Speed determined by the distance remaining to travel.
+						travelVector = ISAAC.Math.vectorFitToLength(travelVector, lengthTravelVect / 10);
+						ISAAC.Graphics.THREE.camera.position.x += travelVector[0];
+						ISAAC.Graphics.THREE.camera.position.z += travelVector[1];
+						ISAAC.Graphics.THREE.camera.position.y += travelVector[2];
+					}
+				} else {
+					// Translate the camera.
+					ISAAC.Graphics.THREE.camera.position.x = ISAAC.Graphics.camera.offsetX + cameraFocus.motion.position[0];
+					ISAAC.Graphics.THREE.camera.position.z = ISAAC.Graphics.camera.offsetZ + cameraFocus.motion.position[1];
+					ISAAC.Graphics.THREE.camera.position.y = ISAAC.Graphics.camera.offsetY + cameraFocus.motion.position[2];
+				}
 
 				// Point the camera at the planet.
 				ISAAC.Graphics.THREE.camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
@@ -294,6 +316,9 @@
 
 						// If the mouse clicked a planet, move the camera to it.						
 						if(ISAAC.Graphics.intersects.length > 0) {
+							if(ISAAC.Config.cameraTransitions) {
+								ISAAC.Graphics.camera.transitioning = true;
+							}
 							ISAAC.Config.cameraFocus = ISAAC.Graphics.intersects[0].object.number;
 							camFocusGUI.updateDisplay();
 						}
