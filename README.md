@@ -18,3 +18,14 @@ In order of increasing difficulty (and coding required):
 2. Create a new sandbox tool powered by ISAAC's simulation and graphics, with minor changes to the UI.
 3. Completely rip out the graphical layer (replacing it with another solution), while keeping the same underlying simulation systems and UI.
 4. Create an entirely new application altogether, with a custom UI and new graphics, using the same underlying simulation systems.
+
+## New in Release 2
+* Back-end: Updated to Three.js r49.
+* Back-end: Support for scenario reset.
+* Camera: "Fly-by" animation on initialisation.
+* Camera: Smooth transitions between planets. Old "teleporting" behaviour can be toggled in the UI.
+* Graphics: Added ability to display Velocity and Acceleration vectors.
+* UI: Added elements to toggle camera transitions, Velocity/Acceleration vectors, and to reset the simulation.
+* UI: Changed default font to Open Sans.
+* UI: Moving the mouse over a body now displays a label containing that body's name.
+* UI: Switching tabs would pause the simulation (as it isn't visible). The document title now updates to reflect this.
