@@ -22,6 +22,7 @@ In order of increasing difficulty (and coding required):
 ## New in Release 2
 * Back-end: Updated to Three.js r49.
 * Back-end: Support for scenario reset.
+* Camera: Added inertia. Possibly inspired by EVE Online ship spinning.
 * Camera: "Fly-by" animation on initialisation.
 * Camera: Smooth transitions between planets. Old "teleporting" behaviour can be toggled in the UI.
 * Graphics: Added ability to display Velocity and Acceleration vectors.
