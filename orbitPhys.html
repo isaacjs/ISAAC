@@ -269,10 +269,10 @@
 				}
 
 				// If the absolute mouse delta is not less than 1, give the camera inertia.
-				if(ISAAC.Graphics.camera.mouseXDelta > 1 && !isMouseDown) {
+				if(ISAAC.Graphics.camera.mouseXDelta > 1) {
 					cameraAngleX += ISAAC.Graphics.camera.mouseXDelta;
 					ISAAC.Graphics.camera.mouseXDelta -= 0.5;
-				} else if(ISAAC.Graphics.camera.mouseXDelta < 1 && !isMouseDown) {
+				} else if(ISAAC.Graphics.camera.mouseXDelta < 1) {
 					cameraAngleX += ISAAC.Graphics.camera.mouseXDelta;
 					ISAAC.Graphics.camera.mouseXDelta += 0.5;
 				}
@@ -313,6 +313,11 @@
 			// Handles mousedown events.
 			function onDocumentMouseDown(event) {
 				var element;
+
+				// Wipe the camera inertia.
+				ISAAC.Graphics.camera.mouseXDelta = 0;
+				ISAAC.Graphics.camera.mouseYDelta = 0;
+
 				// Check if the mouse is over the canvas.
 				if(event.target) {
 					element = event.target.nodeName;
