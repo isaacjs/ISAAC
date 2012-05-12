@@ -268,6 +268,15 @@
 					ISAAC.Graphics.THREE.camera.position.y = ISAAC.Graphics.camera.offsetY + cameraFocus.motion.position[2];
 				}
 
+				// If the absolute mouse delta is not less than 1, give the camera inertia.
+				if(ISAAC.Graphics.camera.mouseXDelta > 1 && !isMouseDown) {
+					cameraAngleX += ISAAC.Graphics.camera.mouseXDelta;
+					ISAAC.Graphics.camera.mouseXDelta -= 0.5;
+				} else if(ISAAC.Graphics.camera.mouseXDelta < 1 && !isMouseDown) {
+					cameraAngleX += ISAAC.Graphics.camera.mouseXDelta;
+					ISAAC.Graphics.camera.mouseXDelta += 0.5;
+				}
+
 				// Point the camera at the planet.
 				ISAAC.Graphics.THREE.camera.lookAt(new THREE.Vector3(cameraFocus.motion.position[0], cameraFocus.motion.position[2], cameraFocus.motion.position[1]));
 
@@ -346,14 +355,14 @@
 				var mouseX = event.clientX;
 				var mouseY = event.clientY;
 
-				// Get the delta of the mouse's position.
-				var mouseXDelta = event.clientX - mouseLastX;
-				var mouseYDelta = event.clientY - mouseLastY;
-
 				// Check if the left mouse button is down.
 				if(isMouseDown && ISAAC.Graphics.freeCamera) {
+					// Get the delta of the mouse's position.
+					ISAAC.Graphics.camera.mouseXDelta = mouseX - mouseLastX;
+					ISAAC.Graphics.camera.mouseYDelta = mouseY - mouseLastY;
+
 					// Add the corresponding rotation to the camera angle.
-					cameraAngleX += mouseXDelta;
+					cameraAngleX += ISAAC.Graphics.camera.mouseXDelta;
 					
 					// Restrict camera panning to 90 degrees up or down.
 					if(cameraAngleY > 175) {
@@ -361,7 +370,7 @@
 					} else if(cameraAngleY < -175) {
 						cameraAngleY = -175;
 					} else {
-						cameraAngleY += mouseYDelta;
+						cameraAngleY += ISAAC.Graphics.camera.mouseYDelta;
 					}
 				} 
 
@@ -373,7 +382,7 @@
 					} else if(cameraDist < 5) {
 						cameraDist = 5;
 					} else {
-						cameraDist += mouseYDelta;
+						cameraDist += ISAAC.Graphics.camera.mouseYDelta;
 					}
 				}
 				mouseLastX = event.clientX;
