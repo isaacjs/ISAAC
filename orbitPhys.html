@@ -381,6 +381,8 @@
 
 				// If middle mouse is down, zoom in or out.
 				if(middleMouseDown && ISAAC.Graphics.freeCamera) {
+					ISAAC.Graphics.camera.mouseYDelta = mouseY - mouseLastY;
+
 					// Restrict camera zooming to the same range as the UI allows.
 					if(cameraDist > 2000) {
 						cameraDist = 2000;
