@@ -314,10 +314,6 @@
 			function onDocumentMouseDown(event) {
 				var element;
 
-				// Wipe the camera inertia.
-				ISAAC.Graphics.camera.mouseXDelta = 0;
-				ISAAC.Graphics.camera.mouseYDelta = 0;
-
 				// Check if the mouse is over the canvas.
 				if(event.target) {
 					element = event.target.nodeName;
@@ -327,6 +323,10 @@
 					// Only adjust the camera's position if the mouse was over the canvas and the left-mouse button was clicked.
 					if(event.button === 0) {
 						isMouseDown = true;
+
+						// Wipe the camera inertia.
+						ISAAC.Graphics.camera.mouseXDelta = 0;
+						ISAAC.Graphics.camera.mouseYDelta = 0;
 
 						// If the mouse clicked a planet, move the camera to it.						
 						if(ISAAC.Graphics.intersects.length > 0) {
