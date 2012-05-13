@@ -1,4 +1,5 @@
-The stable (`master`) release of ISAAC can be found [here](http://isaac.ayulin.net).
+The stable (`master`) release of ISAAC can be found [here](http://isaac.ayulin.net).  
+The latest functional `development` branch version can be found [here](http://isaac.ayulin.net/edge.html).
 
 ## What is ISAAC?
 ISAAC is a star system simulator, with full n-body gravity calculations between orbital bodies. Star systems are defined through a set of specifications given as JSON.
